@@ -162,7 +162,7 @@ function resetFilter(){
 function showDetail(idx){
   const d=filteredData[idx];if(!d)return;
   document.getElementById('modalBody').innerHTML=[
-    ['Nomor Surat',d['Kode Surat']],['Nomor Surat',d['Kode Klasifikasi']],
+    ['Kode Surat',d['Kode Surat']],['Nomor Surat',d['Kode Klasifikasi']],
     ['Tanggal Surat',Utils.formatDateLong(d['Tanggal Surat'])],
     ['Asal',d['Asal']],['Tujuan',d['Tujuan']],['Perihal',d['Perihal']],
     ['Sifat',d['Sifat']],['Status',d['Status']],['File',d['File']||d['Link File']],
