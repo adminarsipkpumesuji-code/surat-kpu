@@ -161,12 +161,18 @@ function resetFilter(){
 }
 function showDetail(idx){
   const d=filteredData[idx];if(!d)return;
+  const file = d['File']||d['Link File']||'';
+  const fileHtml = file
+    ? `<a href="${file}" target="_blank" class="btn-view btn-view-blue" style="font-size:12px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Buka Dokumen</a>`
+    : '<span style="color:#9CA3AF">—</span>';
   document.getElementById('modalBody').innerHTML=[
-    ['Kode Surat',d['Kode Surat']],['Nomor Surat',d['Nomor Surat']||d['Kode Klasifikasi']],
-    ['Tanggal Surat',Utils.formatDateLong(d['Tanggal Surat'])],
-    ['Asal',d['Asal']],['Tujuan',d['Tujuan']],['Perihal',d['Perihal']],
-    ['Sifat',d['Sifat']],['Status',d['Status']],['File',d['File']||d['Link File']],
-  ].map(([l,v])=>`<div class="detail-row"><div class="detail-label">${l}</div><div class="detail-value">${l==='File'&&v?`<a href="${v}" target="_blank" class="btn-view btn-view-blue" style="font-size:12px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Buka</a>`:(v||'<span style="color:#9CA3AF">—</span>')}</div></div>`).join('');
+    ['Kode Surat', d['Kode Surat']],
+    ['Nomor Surat', d['Nomor Surat']||d['Kode Klasifikasi']],
+    ['Tanggal Surat', Utils.formatDateLong(d['Tanggal Surat'])],
+    ['Asal', d['Asal']],['Tujuan', d['Tujuan']],['Perihal', d['Perihal']],
+    ['Sifat', d['Sifat']],['Status', d['Status']],
+  ].map(([l,v])=>`<div class="detail-row"><div class="detail-label">${l}</div><div class="detail-value">${v||'<span style="color:#9CA3AF">—</span>'}</div></div>`).join('')
+  + `<div class="detail-row"><div class="detail-label">File</div><div class="detail-value">${fileHtml}</div></div>`;
   document.getElementById('modalDetail').classList.add('open');
 }
 function closeModal(){document.getElementById('modalDetail').classList.remove('open');}
