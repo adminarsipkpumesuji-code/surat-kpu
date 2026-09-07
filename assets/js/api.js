@@ -42,11 +42,6 @@ const SheetsAPI = {
     // Ambil nama kolom dari label atau id
     const headers = table.cols.map(c => (c.label || c.id || "").trim());
 
-    // DEBUG: log 1 baris pertama untuk cek format tanggal
-    if (table.rows[0]) {
-      console.log('[DEBUG] Row 0 raw cells:', JSON.stringify(table.rows[0].c?.slice(0,5)));
-    }
-
     return table.rows.map(row => {
       const obj = {};
       headers.forEach((h, i) => {
