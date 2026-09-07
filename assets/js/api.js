@@ -42,6 +42,11 @@ const SheetsAPI = {
     // Ambil nama kolom dari label atau id
     const headers = table.cols.map(c => (c.label || c.id || "").trim());
 
+    // DEBUG: log 1 baris pertama untuk cek format tanggal
+    if (table.rows[0]) {
+      console.log('[DEBUG] Row 0 raw cells:', JSON.stringify(table.rows[0].c?.slice(0,5)));
+    }
+
     return table.rows.map(row => {
       const obj = {};
       headers.forEach((h, i) => {
@@ -56,6 +61,20 @@ const SheetsAPI = {
               const m = String(parseInt(parts[2]) + 1).padStart(2, '0');
               const day = String(parts[3]).padStart(2, '0');
               val = `${y}-${m}-${day}`; // format YYYY-MM-DD tanpa konversi UTC
+            } else {
+              val = cell.f || String(cell.v);
+            }
+          } else if (cell.f && /\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4}/.test(cell.f)) {
+            // Format dari cell.f seperti "03/09/2026" atau "3-9-2026"
+            const sep = cell.f.includes('/') ? '/' : '-';
+            const parts = cell.f.split(sep);
+            if (parts.length === 3) {
+              // Coba deteksi apakah dd/mm/yyyy atau mm/dd/yyyy
+              // Google Sheets Indonesia biasanya dd/mm/yyyy
+              const d2 = parts[0].padStart(2,'0');
+              const m2 = parts[1].padStart(2,'0');
+              const y2 = parts[2].length === 4 ? parts[2] : '20'+parts[2];
+              val = `${y2}-${m2}-${d2}`; // konversi ke YYYY-MM-DD
             } else {
               val = cell.f || String(cell.v);
             }
