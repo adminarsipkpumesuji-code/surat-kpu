@@ -1,0 +1,248 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — KPU Kabupaten Mesuji</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+      font-family:'Inter',sans-serif;
+      min-height:100vh;
+      background:linear-gradient(135deg,#0F1117 0%,#1a1d2e 50%,#0F1117 100%);
+      display:flex;align-items:center;justify-content:center;
+      padding:20px;
+      position:relative;overflow:hidden;
+    }
+    /* Background pattern */
+    body::before{
+      content:'';position:absolute;inset:0;
+      background-image:radial-gradient(circle at 20% 50%,rgba(192,57,43,0.08) 0%,transparent 50%),
+                       radial-gradient(circle at 80% 20%,rgba(41,128,185,0.06) 0%,transparent 40%);
+    }
+    .login-card{
+      background:rgba(255,255,255,0.03);
+      backdrop-filter:blur(20px);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:20px;
+      padding:40px 44px;
+      width:100%;max-width:420px;
+      position:relative;z-index:1;
+      box-shadow:0 25px 60px rgba(0,0,0,0.5);
+    }
+    .login-header{text-align:center;margin-bottom:32px;}
+    .login-logo{
+      width:72px;height:72px;
+      object-fit:contain;
+      margin:0 auto 16px;
+      display:block;
+      filter:drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+    }
+    .login-logo-fallback{
+      width:72px;height:72px;border-radius:50%;
+      background:linear-gradient(135deg,#C0392B,#96281B);
+      display:flex;align-items:center;justify-content:center;
+      font-size:22px;font-weight:800;color:white;
+      margin:0 auto 16px;
+    }
+    .login-header h1{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:4px;}
+    .login-header h2{font-size:20px;font-weight:800;color:#fff;line-height:1.3;}
+    .login-header p{font-size:12px;color:rgba(255,255,255,0.35);margin-top:6px;}
+    .divider{border:none;border-top:1px solid rgba(255,255,255,0.07);margin:0 0 28px;}
+    .form-group{margin-bottom:18px;}
+    .form-group label{
+      display:block;font-size:11px;font-weight:600;
+      text-transform:uppercase;letter-spacing:0.5px;
+      color:rgba(255,255,255,0.45);margin-bottom:8px;
+    }
+    .input-wrap{position:relative;}
+    .input-wrap svg{
+      position:absolute;left:14px;top:50%;transform:translateY(-50%);
+      width:16px;height:16px;color:rgba(255,255,255,0.3);
+      pointer-events:none;
+    }
+    .form-group input{
+      width:100%;padding:12px 14px 12px 42px;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:10px;
+      font-size:14px;color:#fff;
+      font-family:'Inter',sans-serif;
+      outline:none;
+      transition:all 0.2s;
+    }
+    .form-group input::placeholder{color:rgba(255,255,255,0.2);}
+    .form-group input:focus{
+      border-color:rgba(192,57,43,0.6);
+      background:rgba(255,255,255,0.08);
+      box-shadow:0 0 0 3px rgba(192,57,43,0.15);
+    }
+    .toggle-pass{
+      position:absolute;right:14px;top:50%;transform:translateY(-50%);
+      background:none;border:none;cursor:pointer;
+      color:rgba(255,255,255,0.3);padding:2px;
+    }
+    .toggle-pass:hover{color:rgba(255,255,255,0.6);}
+    .toggle-pass svg{width:16px;height:16px;}
+    .btn-login{
+      width:100%;padding:13px;
+      background:linear-gradient(135deg,#C0392B,#96281B);
+      color:#fff;border:none;border-radius:10px;
+      font-size:14px;font-weight:700;
+      font-family:'Inter',sans-serif;
+      cursor:pointer;
+      transition:all 0.2s;
+      margin-top:8px;
+      position:relative;overflow:hidden;
+    }
+    .btn-login:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(192,57,43,0.4);}
+    .btn-login:active{transform:translateY(0);}
+    .btn-login.loading{pointer-events:none;opacity:0.8;}
+    .error-msg{
+      background:rgba(229,62,62,0.12);
+      border:1px solid rgba(229,62,62,0.3);
+      color:#FC8181;
+      border-radius:8px;padding:10px 14px;
+      font-size:12.5px;margin-bottom:16px;
+      display:none;align-items:center;gap:8px;
+    }
+    .error-msg.show{display:flex;}
+    .error-msg svg{width:14px;height:14px;flex-shrink:0;}
+    .login-footer{text-align:center;margin-top:28px;font-size:11px;color:rgba(255,255,255,0.2);}
+    /* Loading spinner */
+    .spinner-sm{
+      width:16px;height:16px;
+      border:2px solid rgba(255,255,255,0.3);
+      border-top-color:#fff;
+      border-radius:50%;
+      animation:spin 0.6s linear infinite;
+      display:inline-block;vertical-align:middle;margin-right:6px;
+    }
+    @keyframes spin{to{transform:rotate(360deg);}}
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <div class="login-header">
+      <img src="assets/img/logo-kpu.png" alt="KPU" class="login-logo"
+        onerror="this.style.display='none';document.getElementById('logoFallback').style.display='flex'">
+      <div class="login-logo-fallback" id="logoFallback" style="display:none">KPU</div>
+      <h1>Sistem Administrasi Surat</h1>
+      <h2>KPU Kabupaten Mesuji</h2>
+      <p>Masuk untuk mengakses dashboard</p>
+    </div>
+    <hr class="divider">
+
+    <div class="error-msg" id="errorMsg">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      <span id="errorText">Username atau password salah</span>
+    </div>
+
+    <form onsubmit="doLogin(event)">
+      <div class="form-group">
+        <label>Username</label>
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <input type="text" id="username" placeholder="Masukkan username" autocomplete="username" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          <input type="password" id="password" placeholder="Masukkan password" autocomplete="current-password" required>
+          <button type="button" class="toggle-pass" onclick="togglePass()">
+            <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <button type="submit" class="btn-login" id="btnLogin">
+        Masuk ke Dashboard
+      </button>
+    </form>
+
+    <div class="login-footer">© 2026 KPU Kabupaten Mesuji — Sistem Administrasi Surat</div>
+  </div>
+
+<script>
+// ── AUTH CONFIG ───────────────────────────────────────────
+// Default credentials (simpan di localStorage setelah pertama kali)
+const DEFAULT_USERS = [
+  { username: 'admin',       password: 'kpu2024',    role: 'admin',    name: 'Administrator' },
+  { username: 'ketua',       password: 'ketua2024',  role: 'ketua',    name: 'Ketua KPU' },
+  { username: 'sekretaris',  password: 'sekr2024',   role: 'sekretaris', name: 'Sekretaris KPU' },
+];
+
+// Redirect jika sudah login
+if (localStorage.getItem('kpu_logged_in') === 'true') {
+  window.location.replace('index.html');
+}
+
+function doLogin(e) {
+  e.preventDefault();
+  const btn  = document.getElementById('btnLogin');
+  const user = document.getElementById('username').value.trim();
+  const pass = document.getElementById('password').value;
+
+  btn.innerHTML = '<span class="spinner-sm"></span> Memverifikasi...';
+  btn.classList.add('loading');
+
+  setTimeout(() => {
+    // Ambil users dari localStorage atau default
+    const stored = localStorage.getItem('kpu_users');
+    const users  = stored ? JSON.parse(stored) : DEFAULT_USERS;
+    const found  = users.find(u => u.username === user && u.password === pass);
+
+    if (found) {
+      // Simpan session
+      localStorage.setItem('kpu_logged_in', 'true');
+      localStorage.setItem('kpu_user', JSON.stringify({
+        username: found.username,
+        name:     found.name,
+        role:     found.role,
+        loginAt:  new Date().toISOString(),
+      }));
+      // Log aktivitas
+      const logs = JSON.parse(localStorage.getItem('kpu_activity_log') || '[]');
+      logs.unshift({ time: new Date().toISOString(), action: `Login: ${found.name}`, type: 'login' });
+      localStorage.setItem('kpu_activity_log', JSON.stringify(logs.slice(0, 100)));
+      window.location.replace('index.html');
+    } else {
+      btn.innerHTML = 'Masuk ke Dashboard';
+      btn.classList.remove('loading');
+      const err = document.getElementById('errorMsg');
+      err.classList.add('show');
+      document.getElementById('errorText').textContent = 'Username atau password salah. Coba lagi.';
+      document.getElementById('password').value = '';
+      document.getElementById('password').focus();
+      setTimeout(() => err.classList.remove('show'), 4000);
+    }
+  }, 600);
+}
+
+function togglePass() {
+  const inp = document.getElementById('password');
+  const ico = document.getElementById('eyeIcon');
+  if (inp.type === 'password') {
+    inp.type = 'text';
+    ico.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
+  } else {
+    inp.type = 'password';
+    ico.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  }
+}
+
+// Enter key
+document.getElementById('username').focus();
+</script>
+</body>
+</html>
+
+
+
+
+

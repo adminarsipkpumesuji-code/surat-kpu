@@ -1,0 +1,271 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pencarian Lanjutan — KPU Kabupaten Mesuji</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<aside class="sidebar" id="sidebar"></aside>
+<div class="main-content">
+  <header class="topbar" id="topbar"></header>
+  <main class="page-content">
+    <div id="alertContainer"></div>
+
+    <!-- FORM PENCARIAN -->
+    <div class="form-card" style="margin-bottom:22px;max-width:100%">
+      <div class="form-head">
+        <h3>Pencarian Lanjutan</h3>
+        <p>Gunakan kombinasi filter untuk menemukan surat dengan lebih presisi</p>
+      </div>
+      <div class="form-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Kata Kunci</label>
+            <input type="text" id="q" placeholder="Cari perihal, asal, nomor surat..." oninput="doSearch()">
+          </div>
+          <div class="form-group">
+            <label>Jenis Surat</label>
+            <select id="fJenis" onchange="doSearch()">
+              <option value="">Semua Jenis</option>
+              <option>Surat Masuk Ketua</option>
+              <option>Surat Masuk Sekretaris</option>
+              <option>Surat Keluar Ketua</option>
+              <option>Surat Keluar Sekretaris</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Status</label>
+            <select id="fStatus" onchange="doSearch()">
+              <option value="">Semua Status</option>
+              <option>Diterima</option><option>Terkirim</option>
+              <option>Sudah Disposisi</option><option>Pending</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Sifat</label>
+            <select id="fSifat" onchange="doSearch()">
+              <option value="">Semua Sifat</option>
+              <option>Biasa</option><option>Segera</option>
+              <option>Penting</option><option>Rahasia</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Dari Tanggal</label>
+            <input type="date" id="fDari" onchange="doSearch()">
+          </div>
+          <div class="form-group">
+            <label>Sampai Tanggal</label>
+            <input type="date" id="fSampai" onchange="doSearch()">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Asal / Pengirim</label>
+            <input type="text" id="fAsal" placeholder="Nama instansi atau pengirim..." oninput="doSearch()">
+          </div>
+          <div class="form-group">
+            <label>Tahun</label>
+            <select id="fTahun" onchange="doSearch()">
+              <option value="">Semua Tahun</option>
+              <option>2026</option><option>2025</option><option>2024</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="form-foot">
+        <button class="btn-secondary" onclick="resetAll()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+          Reset Semua
+        </button>
+        <button class="btn-primary" onclick="exportCSV()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export Hasil
+        </button>
+      </div>
+    </div>
+
+    <!-- HASIL -->
+    <div class="table-card">
+      <div class="table-toolbar">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="table-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Hasil Pencarian
+          </div>
+          <span class="badge-count" id="totalBadge">0 hasil</span>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Tanggal</th><th>Jenis</th><th>Nomor Surat</th>
+            <th>Perihal</th><th>Asal</th><th>Sifat</th><th>Aksi</th>
+          </tr></thead>
+          <tbody id="tableBody">
+            <tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-muted)">
+              <div class="spinner" style="margin:0 auto 10px"></div>Memuat data...
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-footer">
+        <span id="paginasiInfo" style="font-size:12px;color:var(--text-muted)">—</span>
+        <div class="pagination" id="paginasi"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalDetail">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Detail Surat</h3>
+      <button class="modal-close" onclick="closeModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script src="../assets/js/config.js"></script>
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/log.js"></script>
+<script src="../assets/js/notifications.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+let allData=[], filteredData=[], currentPage=1;
+const ROWS=20;
+
+document.addEventListener('DOMContentLoaded', async () => {
+  initLayout('search','Pencarian Lanjutan',CONFIG.INSTANSI);
+  Utils.showLoading('Memuat semua data surat...');
+  try {
+    const {smk,sms,skk,sks}=await SheetsAPI.getAllData();
+    const tag=(arr,j)=>arr.map(r=>({...r,_jenis:j}));
+    allData=[...tag(smk,'Surat Masuk Ketua'),...tag(sms,'Surat Masuk Sekretaris'),
+             ...tag(skk,'Surat Keluar Ketua'),...tag(sks,'Surat Keluar Sekretaris')]
+      .sort((a,b)=>new Date(b['Tanggal Surat']||0)-new Date(a['Tanggal Surat']||0));
+    filteredData=[...allData];
+
+    // Cek apakah ada parameter ?q= dari pencarian global topbar
+    const urlParams = new URLSearchParams(window.location.search);
+    const qParam = urlParams.get('q');
+    if (qParam) {
+      document.getElementById('q').value = qParam;
+      doSearch();
+    } else {
+      renderTable();
+    }
+  } catch(e){ Utils.showAlert('Gagal memuat: '+e.message,'danger'); }
+  Utils.hideLoading();
+});
+
+function doSearch(){
+  const q=document.getElementById('q').value.toLowerCase();
+  const jenis=document.getElementById('fJenis').value;
+  const status=document.getElementById('fStatus').value;
+  const sifat=document.getElementById('fSifat').value;
+  const dari=document.getElementById('fDari').value;
+  const sampai=document.getElementById('fSampai').value;
+  const asal=document.getElementById('fAsal').value.toLowerCase();
+  const tahun=document.getElementById('fTahun').value;
+
+  filteredData=allData.filter(d=>{
+    const text=JSON.stringify(d).toLowerCase();
+    const tgl=new Date(d['Tanggal Surat']||d['Timestamp']||'');
+    const y=d['Tahun']||(d['Tanggal Surat']||'').substring(0,4);
+    return(!q||text.includes(q))&&
+           (!jenis||d._jenis===jenis)&&
+           (!status||(d['Status']||'')===status)&&
+           (!sifat||(d['Sifat']||'')===sifat)&&
+           (!dari||tgl>=new Date(dari))&&
+           (!sampai||tgl<=new Date(sampai+'T23:59:59'))&&
+           (!asal||(d['Asal']||'').toLowerCase().includes(asal))&&
+           (!tahun||y===tahun);
+  });
+  currentPage=1; renderTable();
+  ActivityLog.add('Pencarian lanjutan','view',`${filteredData.length} hasil ditemukan`);
+}
+
+function resetAll(){
+  ['q','fAsal'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['fJenis','fStatus','fSifat','fTahun','fDari','fSampai'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  filteredData=[...allData]; currentPage=1; renderTable();
+}
+
+function renderTable(){
+  const tbody=document.getElementById('tableBody');
+  const start=(currentPage-1)*ROWS;
+  const page=filteredData.slice(start,start+ROWS);
+  document.getElementById('totalBadge').textContent=filteredData.length+' hasil';
+  if(!page.length){
+    tbody.innerHTML=`<tr><td colspan="8" class="empty-state">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <p>Tidak ada hasil yang cocok</p></td></tr>`;
+    document.getElementById('paginasiInfo').textContent='0 hasil';
+    document.getElementById('paginasi').innerHTML=''; return;
+  }
+  const sifatCls={Penting:'badge-red',Segera:'badge-yellow',Rahasia:'badge-purple',Biasa:'badge-gray'};
+  const statusCls={Diterima:'badge-green',Terkirim:'badge-blue','Sudah Disposisi':'badge-yellow',Pending:'badge-red'};
+  tbody.innerHTML=page.map((d,i)=>{
+    const idx=start+i; const file=d['File']||d['Link File']||'';
+    return `<tr>
+      <td style="white-space:nowrap;color:var(--text-muted);font-size:12px">${Utils.formatDate(d['Tanggal Surat']||d['Timestamp'])}</td>
+      <td><span class="badge ${d._jenis?.includes('Masuk')?'badge-blue':'badge-green'}"><span class="badge-dot"></span>${d._jenis||'—'}</span></td>
+      <td class="td-mono">${Utils.truncate(d['Kode Klasifikasi']||d['Kode Surat']||'—',28)}</td>
+      <td class="td-truncate" style="max-width:220px" title="${d['Perihal']||''}">${Utils.truncate(d['Perihal']||'—',48)}</td>
+      <td class="td-truncate" style="max-width:150px;color:var(--text-sub)" title="${d['Asal']||''}">${Utils.truncate(d['Asal']||'—',26)}</td>
+      <td><span class="badge ${sifatCls[d['Sifat']]||'badge-gray'}">${d['Sifat']||'—'}</span></td>
+      <td style="white-space:nowrap;display:flex;gap:4px">
+        ${file?`<a href="${file}" target="_blank" class="btn-view btn-view-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>File</a>`:''}
+        <button class="btn-view btn-view-gray" onclick="showDetail(${idx})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Detail</button>
+      </td>
+    </tr>`;
+  }).join('');
+  const total=filteredData.length; const tp=Math.ceil(total/ROWS);
+  document.getElementById('paginasiInfo').textContent=`${start+1}–${Math.min(start+ROWS,total)} dari ${total} hasil`;
+  let btns=`<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
+  for(let p=Math.max(1,currentPage-2);p<=Math.min(tp,currentPage+2);p++)
+    btns+=`<button class="page-btn ${p===currentPage?'active':''}" onclick="goPage(${p})">${p}</button>`;
+  btns+=`<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===tp?'disabled':''}>›</button>`;
+  document.getElementById('paginasi').innerHTML=btns;
+}
+function goPage(p){const max=Math.ceil(filteredData.length/ROWS);if(p<1||p>max)return;currentPage=p;renderTable();}
+function showDetail(idx){
+  const d=filteredData[idx];if(!d)return;
+  document.getElementById('modalBody').innerHTML=[
+    ['Jenis',d._jenis],['Kode Surat',d['Kode Surat']],['Tanggal',Utils.formatDateLong(d['Tanggal Surat'])],
+    ['Asal',d['Asal']],['Tujuan',d['Tujuan']],['Perihal',d['Perihal']],
+    ['Sifat',d['Sifat']],['Status',d['Status']],['File',d['File']||d['Link File']],
+  ].map(([l,v])=>`<div class="detail-row"><div class="detail-label">${l}</div>
+    <div class="detail-value">${l==='File'&&v?`<a href="${v}" target="_blank" class="btn-view btn-view-blue" style="font-size:12px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Buka</a>`:(v||'—')}</div></div>`).join('');
+  document.getElementById('modalDetail').classList.add('open');
+}
+function closeModal(){document.getElementById('modalDetail').classList.remove('open');}
+document.getElementById('modalDetail').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
+function exportCSV(){
+  const h=['Tanggal','Jenis','Nomor Surat','Perihal','Asal','Sifat','Status'];
+  const rows=filteredData.map(d=>[d['Tanggal Surat']||'',d._jenis||'',d['Kode Klasifikasi']||d['Kode Surat']||'',(d['Perihal']||'').replace(/,/g,';'),(d['Asal']||'').replace(/,/g,';'),d['Sifat']||'',d['Status']||'']);
+  const csv=[h,...rows].map(r=>r.join(',')).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv'}));a.download='hasil-pencarian.csv';a.click();
+}
+</script>
+</body>
+</html>
+
+
+
+
+
+
+

@@ -1,0 +1,352 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Statistik — KPU Kabupaten Mesuji</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<aside class="sidebar" id="sidebar"></aside>
+<div class="main-content">
+  <header class="topbar" id="topbar"></header>
+  <main class="page-content">
+    <div id="alertContainer"></div>
+
+    <!-- FILTER BAR -->
+    <div style="display:flex;gap:10px;margin-bottom:20px;align-items:center;flex-wrap:wrap;">
+      <span style="font-size:13px;font-weight:600;color:var(--text-sub)">Filter:</span>
+      <select class="filter-select" id="fTahun" onchange="applyFilter()">
+        <option value="">Semua Tahun</option>
+        <option>2026</option><option>2025</option><option>2024</option>
+      </select>
+      <select class="filter-select" id="fJenis" onchange="applyFilter()">
+        <option value="">Semua Jenis</option>
+        <option>Surat Masuk Ketua</option><option>Surat Masuk Sekretaris</option>
+        <option>Surat Keluar Ketua</option><option>Surat Keluar Sekretaris</option>
+      </select>
+      <button class="btn-icon" onclick="exportStatistikPDF()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Export PDF
+      </button>
+      <button class="btn-icon" onclick="exportStatistikCSV()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export CSV
+      </button>
+      <button class="btn-icon" onclick="window.print()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Cetak
+      </button>
+    </div>
+
+    <!-- STAT CARDS -->
+    <div class="stats-grid" style="margin-bottom:20px">
+      <div class="stat-card c-blue"><div class="stat-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="#2B6CB0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg></div><div class="stat-info"><div class="stat-val" id="rSMK">—</div><div class="stat-lbl">Masuk Ketua</div></div></div>
+      <div class="stat-card c-orange"><div class="stat-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="#DD6B20" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg></div><div class="stat-info"><div class="stat-val" id="rSMS">—</div><div class="stat-lbl">Masuk Sekretaris</div></div></div>
+      <div class="stat-card c-green"><div class="stat-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="#2F855A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div><div class="stat-info"><div class="stat-val" id="rSKK">—</div><div class="stat-lbl">Keluar Ketua</div></div></div>
+      <div class="stat-card c-red"><div class="stat-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="#E53E3E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div><div class="stat-info"><div class="stat-val" id="rSKS">—</div><div class="stat-lbl">Keluar Sekretaris</div></div></div>
+      <div class="stat-card c-purple"><div class="stat-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="#6B46C1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div class="stat-info"><div class="stat-val" id="rTotal">—</div><div class="stat-lbl">Total Surat</div></div></div>
+      <div class="stat-card c-teal"><div class="stat-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div class="stat-info"><div class="stat-val" id="rDisposisi">—</div><div class="stat-lbl">Terdisposisi</div></div></div>
+    </div>
+
+    <!-- CHARTS ROW 1 -->
+    <div class="charts-grid" style="margin-bottom:16px">
+      <div class="chart-card">
+        <div class="card-header">
+          <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>Tren Bulanan</div>
+          <div class="card-actions">
+            <button class="btn-tab active" onclick="switchTipe('line',this)">Line</button>
+            <button class="btn-tab" onclick="switchTipe('bar',this)">Bar</button>
+          </div>
+        </div>
+        <div class="chart-wrap"><canvas id="cTren"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg>Proporsi Jenis</div></div>
+        <div class="chart-wrap"><canvas id="cProporsi"></canvas></div>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW 2 -->
+    <div class="charts-grid-3" style="margin-bottom:16px">
+      <div class="chart-card">
+        <div class="card-header"><div class="card-title">Per Tahun</div></div>
+        <div class="chart-wrap-sm"><canvas id="cTahunan"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="card-header"><div class="card-title">Status Surat</div></div>
+        <div class="chart-wrap-sm"><canvas id="cStatus"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="card-header"><div class="card-title">Sifat Surat</div></div>
+        <div class="chart-wrap-sm"><canvas id="cSifat"></canvas></div>
+      </div>
+    </div>
+
+    <!-- TOP PENGIRIM -->
+    <div class="charts-grid" style="margin-bottom:16px">
+      <div class="chart-card">
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>Top 10 Pengirim Surat Masuk</div></div>
+        <div class="chart-wrap"><canvas id="cTopAsal"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>Surat per Bulan (Tahun Ini)</div></div>
+        <div class="chart-wrap"><canvas id="cBulan"></canvas></div>
+      </div>
+    </div>
+
+    <!-- REKAP TABLE -->
+    <div class="table-card">
+      <div class="table-toolbar">
+        <div class="table-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>Rekap per Bulan</div>
+        <button class="btn-icon" onclick="exportRekap()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export
+        </button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Bulan</th>
+            <th style="text-align:center">Masuk Ketua</th>
+            <th style="text-align:center">Masuk Sekretaris</th>
+            <th style="text-align:center">Keluar Ketua</th>
+            <th style="text-align:center">Keluar Sekretaris</th>
+            <th style="text-align:center;font-weight:700">Total</th>
+          </tr></thead>
+          <tbody id="rekapBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="../assets/js/config.js"></script>
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/log.js"></script>
+<script src="../assets/js/notifications.js"></script>
+<script src="../assets/js/pdf-export.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+function exportStatistikPDF() {
+  const tahun = document.getElementById('fTahun').value;
+  PDFExport.exportStatistik(tahun);
+}
+function exportStatistikCSV() {
+  const BLN=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  const cnt=(arr,m)=>arr.filter(d=>getMonth(d)===m).length;
+  const h=['Bulan','Masuk Ketua','Masuk Sekretaris','Keluar Ketua','Keluar Sekretaris','Total'];
+  const rows=BLN.map((nama,i)=>{
+    const a=cnt(smk,i),b=cnt(sms,i),c=cnt(skk,i),d=cnt(sks,i);
+    return[nama,a,b,c,d,a+b+c+d];
+  });
+  rows.push(['TOTAL',smk.length,sms.length,skk.length,sks.length,smk.length+sms.length+skk.length+sks.length]);
+  const tahun=document.getElementById('fTahun').value||'semua';
+  PDFExport.exportCSV(h,rows,`statistik-surat-${tahun}`);
+}
+let rawSMK=[],rawSMS=[],rawSKK=[],rawSKS=[];
+let smk=[],sms=[],skk=[],sks=[];
+let charts={};
+const BLN=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const COLORS=['#2B6CB0','#DD6B20','#2F855A','#E53E3E'];
+
+document.addEventListener('DOMContentLoaded', async () => {
+  initLayout('statistik','Statistik',CONFIG.INSTANSI);
+  Utils.showLoading('Memuat data statistik...');
+  try {
+    [rawSMK,rawSMS,rawSKK,rawSKS]=await Promise.all([
+      SheetsAPI.getSuratMasukKetua(),SheetsAPI.getSuratMasukSekretaris(),
+      SheetsAPI.getSuratKeluarKetua(),SheetsAPI.getSuratKeluarSekretaris()
+    ]);
+    applyFilter();
+    ActivityLog.add('Membuka Statistik','view');
+  } catch(e){ Utils.showAlert('Gagal: '+e.message,'danger'); }
+  Utils.hideLoading();
+});
+
+function applyFilter(){
+  const tahun=document.getElementById('fTahun').value;
+  const jenis=document.getElementById('fJenis').value;
+  const f=(arr,j)=>{
+    let r=tahun?arr.filter(d=>(d['Tahun']||(d['Tanggal Surat']||'').substring(0,4))===tahun):arr;
+    return jenis&&jenis!==j?[]:r;
+  };
+  smk=f(rawSMK,'Surat Masuk Ketua');
+  sms=f(rawSMS,'Surat Masuk Sekretaris');
+  skk=f(rawSKK,'Surat Keluar Ketua');
+  sks=f(rawSKS,'Surat Keluar Sekretaris');
+  updateCards(); buildAllCharts();
+}
+
+function updateCards(){
+  const total=smk.length+sms.length+skk.length+sks.length;
+  document.getElementById('rSMK').textContent=smk.length;
+  document.getElementById('rSMS').textContent=sms.length;
+  document.getElementById('rSKK').textContent=skk.length;
+  document.getElementById('rSKS').textContent=sks.length;
+  document.getElementById('rTotal').textContent=total;
+  document.getElementById('rDisposisi').textContent=Utils.countTerdisposisi([...smk,...sms]);
+}
+
+function getMonth(d){const t=new Date(d['Tanggal Surat']||d['Timestamp']);return isNaN(t)?-1:t.getMonth();}
+function toMonthKey(d){const t=new Date(d['Tanggal Surat']||d['Timestamp']);if(isNaN(t))return null;return`${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}`;}
+
+function buildAllCharts(){
+  buildTren('line'); buildProporsi(); buildTahunan();
+  buildStatus(); buildSifat(); buildTopAsal(); buildBulan(); buildRekap();
+}
+
+function buildTren(type){
+  const keys=new Set();
+  [...smk,...sms,...skk,...sks].forEach(d=>{const k=toMonthKey(d);if(k)keys.add(k);});
+  const labels=[...keys].sort();
+  const cnt=(arr,m)=>arr.filter(d=>toMonthKey(d)===m).length;
+  const lFmt=labels.map(l=>{const[y,m]=l.split('-');return Utils.namaBulan(parseInt(m)).slice(0,3)+' '+y.slice(2);});
+  if(charts.tren)charts.tren.destroy();
+  charts.tren=new Chart(document.getElementById('cTren'),{type,
+    data:{labels:lFmt,datasets:[
+      {label:'Masuk Ketua',data:labels.map(m=>cnt(smk,m)),borderColor:COLORS[0],backgroundColor:type==='line'?'rgba(43,108,176,0.07)':COLORS[0],tension:0.4,fill:type==='line',borderWidth:2,pointRadius:3},
+      {label:'Masuk Sekretaris',data:labels.map(m=>cnt(sms,m)),borderColor:COLORS[1],backgroundColor:type==='line'?'rgba(221,107,32,0.07)':COLORS[1],tension:0.4,fill:type==='line',borderWidth:2,pointRadius:3},
+      {label:'Keluar Ketua',data:labels.map(m=>cnt(skk,m)),borderColor:COLORS[2],backgroundColor:type==='line'?'rgba(47,133,90,0.07)':COLORS[2],tension:0.4,fill:type==='line',borderWidth:2,pointRadius:3},
+      {label:'Keluar Sekretaris',data:labels.map(m=>cnt(sks,m)),borderColor:COLORS[3],backgroundColor:type==='line'?'rgba(229,62,62,0.07)':COLORS[3],tension:0.4,fill:type==='line',borderWidth:2,pointRadius:3},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11},usePointStyle:true,padding:12}}},
+      scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:11},color:'#9CA3AF'}},x:{grid:{display:false},ticks:{font:{size:10},color:'#9CA3AF'}}}}
+  });
+}
+
+function buildProporsi(){
+  if(charts.prop)charts.prop.destroy();
+  charts.prop=new Chart(document.getElementById('cProporsi'),{type:'doughnut',
+    data:{labels:['Masuk Ketua','Masuk Sekretaris','Keluar Ketua','Keluar Sekretaris'],
+      datasets:[{data:[smk.length,sms.length,skk.length,sks.length],backgroundColor:COLORS,borderWidth:0,hoverOffset:6}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'68%',
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11},usePointStyle:true,padding:12}},
+        tooltip:{callbacks:{label:c=>` ${c.label}: ${c.raw} surat (${Math.round(c.raw/(smk.length+sms.length+skk.length+sks.length)*100)||0}%)`}}}}
+  });
+}
+
+function buildTahunan(){
+  const years=['2024','2025','2026'];
+  const getY=d=>d['Tahun']||(d['Tanggal Surat']||'').substring(0,4);
+  const cnt=(arr,y)=>arr.filter(d=>getY(d)===y).length;
+  if(charts.thn)charts.thn.destroy();
+  charts.thn=new Chart(document.getElementById('cTahunan'),{type:'bar',
+    data:{labels:years,datasets:[
+      {label:'Masuk Ketua',data:years.map(y=>cnt(rawSMK,y)),backgroundColor:COLORS[0]},
+      {label:'Masuk Sekretaris',data:years.map(y=>cnt(rawSMS,y)),backgroundColor:COLORS[1]},
+      {label:'Keluar Ketua',data:years.map(y=>cnt(rawSKK,y)),backgroundColor:COLORS[2]},
+      {label:'Keluar Sekretaris',data:years.map(y=>cnt(rawSKS,y)),backgroundColor:COLORS[3]},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:8,font:{size:10},usePointStyle:true,padding:8}}},
+      scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:10}}},y:{stacked:true,beginAtZero:true,ticks:{font:{size:10}}}}}
+  });
+}
+
+function buildStatus(){
+  const all=[...smk,...sms,...skk,...sks];
+  const sc={};all.forEach(d=>{const s=d['Status']||'Tidak Diketahui';sc[s]=(sc[s]||0)+1;});
+  const sCols={'Diterima':'#2F855A','Terkirim':'#2B6CB0','Sudah Disposisi':'#975A16','Pending':'#C53030'};
+  if(charts.status)charts.status.destroy();
+  charts.status=new Chart(document.getElementById('cStatus'),{type:'doughnut',
+    data:{labels:Object.keys(sc),datasets:[{data:Object.values(sc),backgroundColor:Object.keys(sc).map(k=>sCols[k]||'#9CA3AF'),borderWidth:0,hoverOffset:4}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{position:'bottom',labels:{boxWidth:9,font:{size:10},usePointStyle:true,padding:8}}}}
+  });
+}
+
+function buildSifat(){
+  const all=[...smk,...sms,...skk,...sks];
+  const sc={};all.forEach(d=>{const s=d['Sifat']||'Tidak Diketahui';sc[s]=(sc[s]||0)+1;});
+  const sCols={Biasa:'#4A5568',Segera:'#975A16',Penting:'#C53030',Rahasia:'#6B46C1'};
+  if(charts.sifat)charts.sifat.destroy();
+  charts.sifat=new Chart(document.getElementById('cSifat'),{type:'bar',
+    data:{labels:Object.keys(sc),datasets:[{data:Object.values(sc),backgroundColor:Object.keys(sc).map(k=>sCols[k]||'#9CA3AF'),borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:11}}},y:{beginAtZero:true,ticks:{font:{size:10}}}}}
+  });
+}
+
+function buildTopAsal(){
+  const all=[...smk,...sms];
+  const ac={};all.forEach(d=>{const a=(d['Asal']||'Tidak Diketahui').trim();ac[a]=(ac[a]||0)+1;});
+  const sorted=Object.entries(ac).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  if(charts.asal)charts.asal.destroy();
+  charts.asal=new Chart(document.getElementById('cTopAsal'),{type:'bar',
+    data:{labels:sorted.map(([k])=>k.length>30?k.substring(0,30)+'...':k),
+      datasets:[{data:sorted.map(([,v])=>v),backgroundColor:'rgba(43,108,176,0.7)',borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},
+      scales:{x:{beginAtZero:true,ticks:{font:{size:10}}},y:{ticks:{font:{size:10}}}}}
+  });
+}
+
+function buildBulan(){
+  const now=new Date(); const y=now.getFullYear();
+  const thisYear=arr=>arr.filter(d=>(d['Tahun']||(d['Tanggal Surat']||'').substring(0,4))===String(y));
+  const cnt=(arr,m)=>arr.filter(d=>getMonth(d)===m).length;
+  const ysmk=thisYear(smk),ysms=thisYear(sms),yskk=thisYear(skk),ysks=thisYear(sks);
+  if(charts.bulan)charts.bulan.destroy();
+  charts.bulan=new Chart(document.getElementById('cBulan'),{type:'bar',
+    data:{labels:BLN.map(b=>b.slice(0,3)),datasets:[
+      {label:'Masuk Ketua',data:BLN.map((_,i)=>cnt(ysmk,i)),backgroundColor:COLORS[0]},
+      {label:'Masuk Sekretaris',data:BLN.map((_,i)=>cnt(ysms,i)),backgroundColor:COLORS[1]},
+      {label:'Keluar Ketua',data:BLN.map((_,i)=>cnt(yskk,i)),backgroundColor:COLORS[2]},
+      {label:'Keluar Sekretaris',data:BLN.map((_,i)=>cnt(ysks,i)),backgroundColor:COLORS[3]},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:8,font:{size:10},usePointStyle:true,padding:8}}},
+      scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:10}}},y:{stacked:true,beginAtZero:true,ticks:{font:{size:10}}}}}
+  });
+}
+
+function buildRekap(){
+  const cnt=(arr,m)=>arr.filter(d=>getMonth(d)===m).length;
+  let grand=0;
+  const rows=BLN.map((nama,i)=>{
+    const a=cnt(smk,i),b=cnt(sms,i),c=cnt(skk,i),d=cnt(sks,i);
+    const t=a+b+c+d; grand+=t;
+    return `<tr style="${t===0?'color:var(--text-muted)':''}">
+      <td style="font-weight:${t>0?'500':'400'}">${nama}</td>
+      <td style="text-align:center">${a||'—'}</td>
+      <td style="text-align:center">${b||'—'}</td>
+      <td style="text-align:center">${c||'—'}</td>
+      <td style="text-align:center">${d||'—'}</td>
+      <td style="text-align:center;font-weight:700;color:${t>0?'var(--primary)':'var(--text-muted)'}">${t||'—'}</td>
+    </tr>`;
+  });
+  document.getElementById('rekapBody').innerHTML=rows.join('')+
+    `<tr style="background:var(--bg-page);font-weight:700;border-top:2px solid var(--border)">
+      <td>TOTAL</td>
+      <td style="text-align:center;color:#2B6CB0">${smk.length}</td>
+      <td style="text-align:center;color:#DD6B20">${sms.length}</td>
+      <td style="text-align:center;color:#2F855A">${skk.length}</td>
+      <td style="text-align:center;color:#E53E3E">${sks.length}</td>
+      <td style="text-align:center;color:var(--primary);font-size:15px">${grand}</td>
+    </tr>`;
+}
+
+function switchTipe(type,btn){
+  document.querySelectorAll('.btn-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  buildTren(type);
+}
+
+function exportRekap(){
+  const h=['Bulan','Masuk Ketua','Masuk Sekretaris','Keluar Ketua','Keluar Sekretaris','Total'];
+  const cnt=(arr,m)=>arr.filter(d=>getMonth(d)===m).length;
+  const rows=BLN.map((nama,i)=>{
+    const a=cnt(smk,i),b=cnt(sms,i),c=cnt(skk,i),d=cnt(sks,i);
+    return [nama,a,b,c,d,a+b+c+d];
+  });
+  const csv=[h,...rows].map(r=>r.join(',')).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv'}));a.download='rekap-statistik.csv';a.click();
+}
+</script>
+</body>
+</html>
+
+
+
+
+
+

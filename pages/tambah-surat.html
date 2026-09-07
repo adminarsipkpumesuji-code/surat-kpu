@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Input Surat — KPU Kabupaten Mesuji</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<aside class="sidebar" id="sidebar"></aside>
+<div class="main-content">
+  <header class="topbar" id="topbar"></header>
+  <main class="page-content">
+    <div id="alertContainer"></div>
+
+    <!-- Hero card -->
+    <div style="background:linear-gradient(135deg,#C0392B,#922B21);border-radius:14px;padding:28px 32px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;">
+      <div>
+        <h2 style="color:#fff;font-size:20px;font-weight:800;margin-bottom:6px;">Input Surat Baru</h2>
+        <p style="color:rgba(255,255,255,0.75);font-size:13px;max-width:480px;">Data surat diinput melalui Google Form. Setelah submit, data otomatis masuk ke Google Sheets dan langsung ter-update di dashboard.</p>
+      </div>
+      <a id="btnBukaForm" href="#" target="_blank"
+        style="display:inline-flex;align-items:center;gap:8px;background:#fff;color:#C0392B;padding:12px 24px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;white-space:nowrap;transition:opacity 0.2s;"
+        onmouseover="this.style.opacity='.9'" onmouseout="this.style.opacity='1'">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Buka Google Form
+      </a>
+    </div>
+
+    <!-- Info cards -->
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card-head">
+          <div class="info-card-icon" style="background:#EBF8FF;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#2B6CB0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg>
+          </div>
+          <h3 style="font-size:13px;font-weight:700;">Surat Masuk</h3>
+        </div>
+        <ol style="padding-left:16px;font-size:12.5px;color:#6B7280;line-height:2;">
+          <li>Buka Google Form</li>
+          <li>Pilih jenis: <strong>Surat Masuk Ketua</strong> atau <strong>Surat Masuk Sekretaris</strong></li>
+          <li>Isi semua kolom yang diperlukan</li>
+          <li>Upload scan surat ke Google Drive, paste link-nya</li>
+          <li>Submit — data langsung masuk ke spreadsheet</li>
+        </ol>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-head">
+          <div class="info-card-icon" style="background:#F0FFF4;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#2F855A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </div>
+          <h3 style="font-size:13px;font-weight:700;">Surat Keluar</h3>
+        </div>
+        <ol style="padding-left:16px;font-size:12.5px;color:#6B7280;line-height:2;">
+          <li>Buka Google Form</li>
+          <li>Pilih jenis: <strong>Surat Keluar Ketua</strong> atau <strong>Surat Keluar Sekretaris</strong></li>
+          <li>Isi nomor surat, tujuan, dan perihal</li>
+          <li>Upload file surat ke Google Drive, paste link-nya</li>
+          <li>Submit — data langsung masuk ke spreadsheet</li>
+        </ol>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-head">
+          <div class="info-card-icon" style="background:#FFFFF0;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#975A16" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
+          </div>
+          <h3 style="font-size:13px;font-weight:700;">Alur Disposisi</h3>
+        </div>
+        <ol style="padding-left:16px;font-size:12.5px;color:#6B7280;line-height:2;">
+          <li>Surat masuk diterima &amp; diinput via form</li>
+          <li>Ketua / Sekretaris membaca &amp; menentukan disposisi</li>
+          <li>Disposisi diisi langsung di Google Sheets</li>
+          <li>Status surat diubah ke <strong>Sudah Disposisi</strong></li>
+          <li>Monitor di halaman Lembar Disposisi</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Struktur kolom -->
+    <div class="table-card">
+      <div class="table-toolbar">
+        <div class="table-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+          Struktur Kolom Google Form / Spreadsheet
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>No</th><th>Nama Kolom</th><th>Tipe</th><th>Keterangan</th><th>Wajib</th></tr></thead>
+          <tbody>
+            <tr><td class="td-mono">1</td><td>Timestamp</td><td><span class="badge badge-gray">Otomatis</span></td><td style="color:#6B7280">Waktu pengisian form, diisi otomatis</td><td>—</td></tr>
+            <tr><td class="td-mono">2</td><td>Jenis Surat</td><td><span class="badge badge-blue">Pilihan</span></td><td style="color:#6B7280">Masuk Ketua / Masuk Sekretaris / Keluar Ketua / Keluar Sekretaris</td><td style="color:#2F855A;font-weight:700">✓</td></tr>
+            <tr><td class="td-mono">3</td><td>Kode Klasifikasi</td><td><span class="badge badge-gray">Teks</span></td><td style="color:#6B7280">Kode klasifikasi arsip</td><td style="color:#2F855A;font-weight:700">✓</td></tr>
+            <tr><td class="td-mono">4</td><td>Tanggal Surat</td><td><span class="badge badge-yellow">Tanggal</span></td><td style="color:#6B7280">Tanggal tertera di surat</td><td style="color:#2F855A;font-weight:700">✓</td></tr>
+            <tr><td class="td-mono">5</td><td>Asal</td><td><span class="badge badge-gray">Teks</span></td><td style="color:#6B7280">Instansi / orang pengirim</td><td style="color:#2F855A;font-weight:700">✓</td></tr>
+            <tr><td class="td-mono">6</td><td>Tujuan</td><td><span class="badge badge-gray">Teks</span></td><td style="color:#6B7280">Tujuan surat dikirimkan</td><td style="color:#2F855A;font-weight:700">✓</td></tr>
+            <tr><td class="td-mono">7</td><td>Perihal</td><td><span class="badge badge-gray">Teks</span></td><td style="color:#6B7280">Pokok/isi surat secara ringkas</td><td style="color:#2F855A;font-weight:700">✓</td></tr>
+            <tr><td class="td-mono">8</td><td>Sifat</td><td><span class="badge badge-blue">Pilihan</span></td><td style="color:#6B7280">Biasa / Segera / Penting / Rahasia</td><td style="color:#2F855A;font-weight:700">✓</td></tr>
+            <tr><td class="td-mono">9</td><td>Status</td><td><span class="badge badge-blue">Pilihan</span></td><td style="color:#6B7280">Diterima / Terkirim / Sudah Disposisi / Pending</td><td style="color:#2F855A;font-weight:700">✓</td></tr>
+            <tr><td class="td-mono">10</td><td>File</td><td><span class="badge badge-gray">URL</span></td><td style="color:#6B7280">Link Google Drive scan surat</td><td>—</td></tr>
+            <tr><td class="td-mono">11</td><td>Kode Surat</td><td><span class="badge badge-gray">Teks</span></td><td style="color:#6B7280">Nomor / kode surat (SMK/001, dst.)</td><td style="color:#2F855A;font-weight:700">✓</td></tr>
+            <tr><td class="td-mono">12</td><td>Bulan</td><td><span class="badge badge-gray">Angka</span></td><td style="color:#6B7280">1–12, bisa diisi otomatis dengan formula</td><td>—</td></tr>
+            <tr><td class="td-mono">13</td><td>Tahun</td><td><span class="badge badge-gray">Angka</span></td><td style="color:#6B7280">Misal: 2026, bisa diisi otomatis</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="../assets/js/config.js"></script>
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/log.js"></script>
+<script src="../assets/js/notifications.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  initLayout('tambah','Input Surat',CONFIG.INSTANSI);
+  document.getElementById('btnBukaForm').href = CONFIG.FORM_URL;
+});
+</script>
+</body>
+</html>
+
+
+
+
+

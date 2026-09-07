@@ -1,0 +1,567 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — KPU Kabupaten Mesuji</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<aside class="sidebar" id="sidebar"></aside>
+<div class="main-content" id="mainContent">
+  <header class="topbar" id="topbar"></header>
+  <main class="page-content">
+    <div id="alertContainer"></div>
+
+    <!-- STAT CARDS -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card c-blue" onclick="location.href='pages/surat-masuk-ketua.html'" title="Lihat Surat Masuk Ketua">
+        <div class="stat-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#2B6CB0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-val" id="statSMK">—</div>
+          <div class="stat-lbl">Surat Masuk Ketua</div>
+          <div class="stat-delta" id="deltaSMK">— bulan ini</div>
+        </div>
+      </div>
+      <div class="stat-card c-orange" onclick="location.href='pages/surat-masuk-sekretaris.html'" title="Lihat Surat Masuk Sekretaris">
+        <div class="stat-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#DD6B20" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-val" id="statSMS">—</div>
+          <div class="stat-lbl">Surat Masuk Sekretaris</div>
+          <div class="stat-delta" id="deltaSMS">— bulan ini</div>
+        </div>
+      </div>
+      <div class="stat-card c-green" onclick="location.href='pages/surat-keluar-ketua.html'" title="Lihat Surat Keluar Ketua">
+        <div class="stat-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#2F855A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-val" id="statSKK">—</div>
+          <div class="stat-lbl">Surat Keluar Ketua</div>
+          <div class="stat-delta" id="deltaSKK">— bulan ini</div>
+        </div>
+      </div>
+      <div class="stat-card c-red" onclick="location.href='pages/surat-keluar-sekretaris.html'" title="Lihat Surat Keluar Sekretaris">
+        <div class="stat-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#E53E3E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-val" id="statSKS">—</div>
+          <div class="stat-lbl">Surat Keluar Sekretaris</div>
+          <div class="stat-delta" id="deltaSKS">— bulan ini</div>
+        </div>
+      </div>
+      <div class="stat-card c-purple">
+        <div class="stat-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#6B46C1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-val" id="statTotal">—</div>
+          <div class="stat-lbl">Total Surat</div>
+          <div class="stat-delta">semua kategori</div>
+        </div>
+      </div>
+      <div class="stat-card c-teal" onclick="location.href='pages/disposisi.html'">
+        <div class="stat-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-val" id="statDisposisi">—</div>
+          <div class="stat-lbl">Terdisposisi</div>
+          <div class="stat-delta">sudah ditindaklanjuti</div>
+        </div>
+      </div>
+      <div class="stat-card c-yellow">
+        <div class="stat-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#975A16" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-val" id="statPerhatian">—</div>
+          <div class="stat-lbl">Perlu Perhatian</div>
+          <div class="stat-delta">belum ditindaklanjuti</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW 1 -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            Tren Surat per Bulan
+          </div>
+          <div class="card-actions">
+            <button class="btn-tab active" onclick="switchTren('line',this)">Line</button>
+            <button class="btn-tab" onclick="switchTren('bar',this)">Bar</button>
+            <select class="filter-select" id="trenTahun" onchange="refreshTren()" style="padding:4px 8px;font-size:11px;">
+              <option value="">Semua</option>
+              <option value="2026" selected>2026</option>
+              <option value="2025">2025</option>
+              <option value="2024">2024</option>
+            </select>
+          </div>
+        </div>
+        <div class="chart-wrap"><canvas id="chartTren"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Proporsi Surat
+          </div>
+        </div>
+        <div class="chart-wrap"><canvas id="chartProporsi"></canvas></div>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW 2 -->
+    <div class="charts-grid-3" style="margin-bottom:22px">
+      <div class="chart-card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
+            Per Tahun
+          </div>
+        </div>
+        <div class="chart-wrap-sm"><canvas id="chartTahunan"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Status Surat
+          </div>
+        </div>
+        <div class="chart-wrap-sm"><canvas id="chartStatus"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+            Sifat Surat
+          </div>
+        </div>
+        <div class="chart-wrap-sm"><canvas id="chartSifat"></canvas></div>
+      </div>
+    </div>
+
+    <!-- FILTER + TABLE -->
+    <div class="table-card">
+      <div class="table-toolbar">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <div class="table-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Daftar Surat
+          </div>
+          <span class="badge-count" id="totalBadge">0</span>
+        </div>
+        <div class="table-actions">
+          <div class="search-box" style="width:200px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="searchSurat" placeholder="Cari surat..." oninput="applyFilter()">
+          </div>
+          <select class="filter-select" id="filterJenis" onchange="applyFilter()">
+            <option value="">Semua Jenis</option>
+            <option>Surat Masuk Ketua</option>
+            <option>Surat Masuk Sekretaris</option>
+            <option>Surat Keluar Ketua</option>
+            <option>Surat Keluar Sekretaris</option>
+          </select>
+          <select class="filter-select" id="filterStatus" onchange="applyFilter()">
+            <option value="">Semua Status</option>
+            <option>Diterima</option><option>Terkirim</option>
+            <option>Sudah Disposisi</option><option>Pending</option>
+          </select>
+          <select class="filter-select" id="filterTahun" onchange="applyFilter()">
+            <option value="">Semua Tahun</option>
+            <option>2026</option><option>2025</option><option>2024</option>
+          </select>
+          <input type="date" class="filter-input" id="filterTglDari" onchange="applyFilter()" title="Dari tanggal" style="font-size:12px;padding:6px 8px;">
+          <input type="date" class="filter-input" id="filterTglSampai" onchange="applyFilter()" title="Sampai tanggal" style="font-size:12px;padding:6px 8px;">
+          <button class="btn-icon" onclick="resetFilter()" title="Reset filter">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+            Reset
+          </button>
+          <button class="btn-icon" onclick="exportCSV()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export
+          </button>
+          <button class="btn-icon" onclick="window.print()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Cetak
+          </button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table id="mainTable">
+          <thead>
+            <tr>
+              <th class="sortable" onclick="sortTable('tgl')">Tanggal <span class="sort-arrow" id="sort_tgl">↕</span></th>
+              <th>Jenis</th>
+              <th class="sortable" onclick="sortTable('kode')">Nomor Surat <span class="sort-arrow" id="sort_kode">↕</span></th>
+              <th>Perihal</th>
+              <th>Asal / Tujuan</th>
+              <th>Sifat</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-muted);">
+              <div class="spinner" style="margin:0 auto 10px"></div>Memuat data...
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-footer">
+        <span id="paginasiInfo" style="font-size:12px;color:var(--text-muted)">—</span>
+        <div class="pagination" id="paginasi"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- MODAL DETAIL -->
+<div class="modal-overlay" id="modalDetail">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Detail Surat</h3>
+      <button class="modal-close" onclick="closeModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/log.js"></script>
+<script src="assets/js/notifications.js"></script>
+<script src="assets/js/layout.js"></script>
+<script>
+let allData=[], filteredData=[], currentPage=1;
+const ROWS=15;
+let chartTren=null, chartProporsi=null, chartTahunan=null, chartStatus=null, chartSifat=null;
+let rawSMK=[], rawSMS=[], rawSKK=[], rawSKS=[];
+let sortKey='tgl', sortDir=1;
+const COLORS={smk:'#2B6CB0',sms:'#DD6B20',skk:'#2F855A',sks:'#E53E3E'};
+
+document.addEventListener('DOMContentLoaded', async () => {
+  initLayout('dashboard','Dashboard',CONFIG.INSTANSI);
+  Utils.showLoading('Memuat data dari Google Sheets...');
+  try {
+    const {smk,sms,skk,sks} = await SheetsAPI.getAllData();
+    rawSMK=smk; rawSMS=sms; rawSKK=skk; rawSKS=sks;
+
+    const tag=(arr,j)=>arr.map(r=>({...r,_jenis:j}));
+    allData=[...tag(smk,'Surat Masuk Ketua'),...tag(sms,'Surat Masuk Sekretaris'),
+             ...tag(skk,'Surat Keluar Ketua'),...tag(sks,'Surat Keluar Sekretaris')]
+      .sort((a,b)=>new Date(b['Tanggal Surat']||b['Timestamp']||0)-new Date(a['Tanggal Surat']||a['Timestamp']||0));
+    filteredData=[...allData];
+
+    // Stat cards
+    const now=new Date(); const m=now.getMonth(); const y=now.getFullYear();
+    const thisM=arr=>arr.filter(d=>{const t=new Date(d['Tanggal Surat']||d['Timestamp']);return t.getMonth()===m&&t.getFullYear()===y;}).length;
+    document.getElementById('statSMK').textContent=smk.length;
+    document.getElementById('statSMS').textContent=sms.length;
+    document.getElementById('statSKK').textContent=skk.length;
+    document.getElementById('statSKS').textContent=sks.length;
+    document.getElementById('statTotal').textContent=allData.length;
+    document.getElementById('statDisposisi').textContent=Utils.countTerdisposisi([...smk,...sms]);
+    document.getElementById('statPerhatian').textContent=Utils.countPerluPerhatian([...smk,...sms]);
+    document.getElementById('deltaSMK').textContent=thisM(smk)+' bulan ini';
+    document.getElementById('deltaSMS').textContent=thisM(sms)+' bulan ini';
+    document.getElementById('deltaSKK').textContent=thisM(skk)+' bulan ini';
+    document.getElementById('deltaSKS').textContent=thisM(sks)+' bulan ini';
+
+    renderTable();
+    buildAllCharts();
+
+    // Deteksi surat baru & urgent
+    Notif.detectNewSurat(smk,sms,skk,sks);
+    Notif.detectUrgent(smk,sms);
+    Notif.updateBadge();
+    ActivityLog.add('Membuka Dashboard','view',`Total ${allData.length} surat dimuat`);
+
+    // Cek parameter pencarian dari URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const qParam = urlParams.get('q');
+    if (qParam) {
+      document.getElementById('searchSurat').value = qParam;
+      applyFilter();
+      // Scroll ke tabel
+      setTimeout(() => {
+        document.querySelector('.table-card')?.scrollIntoView({behavior:'smooth'});
+      }, 500);
+    }
+
+  } catch(err) {
+    Utils.hideLoading();
+    Utils.showAlert('Gagal memuat data: '+err.message,'danger');
+    return;
+  }
+  Utils.hideLoading();
+});
+
+// ── TABLE ──────────────────────────────────────────────────
+function renderTable(){
+  const tbody=document.getElementById('tableBody');
+  const start=(currentPage-1)*ROWS;
+  const page=filteredData.slice(start,start+ROWS);
+  document.getElementById('totalBadge').textContent=filteredData.length+' surat';
+
+  if(!page.length){
+    tbody.innerHTML=`<tr><td colspan="7" class="empty-state">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <p>Tidak ada data ditemukan</p></td></tr>`;
+    document.getElementById('paginasiInfo').textContent='0 data';
+    document.getElementById('paginasi').innerHTML=''; return;
+  }
+
+  const now=new Date(); const threeDaysAgo=new Date(now-3*86400000);
+
+  tbody.innerHTML=page.map((d,i)=>{
+    const tglStr=d['Tanggal Surat']||d['Timestamp']||'';
+    const tgl=new Date(tglStr);
+    const isNew=tgl>=threeDaysAgo;
+    const isUrgent=(d['Sifat']||'').match(/penting|segera/i)&&(d['Status']||'')!=='Sudah Disposisi';
+    const rowClass=isNew?'highlight-new':isUrgent?'highlight-urgent':'';
+    const nomor=d['Kode Klasifikasi']||d['Kode Surat']||d['Nomor Surat']||'—';
+    const perihal=d['Perihal']||'—';
+    const asal=d['Asal']||d['Tujuan']||'—';
+    const sifat=d['Sifat']||'—';
+    const status=d['Status']||'—';
+    const file=d['File']||d['Link File']||'';
+    const idx=start+i;
+    const isMasuk=d._jenis?.includes('Masuk');
+    const sifatCls={Penting:'badge-red',Segera:'badge-yellow',Rahasia:'badge-purple',Biasa:'badge-gray'}[sifat]||'badge-gray';
+    const statusCls={Diterima:'badge-green',Terkirim:'badge-blue','Sudah Disposisi':'badge-yellow',Pending:'badge-red'}[status]||'badge-gray';
+    return `<tr class="${rowClass}">
+      <td style="white-space:nowrap;color:var(--text-muted);font-size:12px">
+        ${Utils.formatDate(tglStr)}
+        ${isNew?'<span class="badge badge-blue" style="font-size:9px;padding:1px 5px;margin-left:3px">Baru</span>':''}
+      </td>
+      <td><span class="badge ${isMasuk?'badge-blue':'badge-green'}"><span class="badge-dot"></span>${d._jenis||'—'}</span></td>
+      <td class="td-mono">${Utils.truncate(nomor,22)}</td>
+      <td class="td-truncate" style="max-width:220px" title="${perihal}">${Utils.truncate(perihal,48)}</td>
+      <td class="td-truncate" style="max-width:160px;color:var(--text-sub)" title="${asal}">${Utils.truncate(asal,32)}</td>
+      <td><span class="badge ${sifatCls}">${sifat}</span></td>
+      <td style="white-space:nowrap;display:flex;gap:4px">
+        ${file?`<a href="${file}" target="_blank" class="btn-view btn-view-blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>File</a>`:''}
+        <button class="btn-view btn-view-gray" onclick="showDetail(${idx})">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Detail
+        </button>
+      </td>
+    </tr>`;
+  }).join('');
+
+  const total=filteredData.length, totalPages=Math.ceil(total/ROWS);
+  document.getElementById('paginasiInfo').textContent=`${start+1}–${Math.min(start+ROWS,total)} dari ${total} surat`;
+  let btns=`<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
+  for(let p=Math.max(1,currentPage-2);p<=Math.min(totalPages,currentPage+2);p++)
+    btns+=`<button class="page-btn ${p===currentPage?'active':''}" onclick="goPage(${p})">${p}</button>`;
+  btns+=`<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>›</button>`;
+  document.getElementById('paginasi').innerHTML=btns;
+}
+
+function goPage(p){const max=Math.ceil(filteredData.length/ROWS);if(p<1||p>max)return;currentPage=p;renderTable();window.scrollTo({top:document.querySelector('.table-card').offsetTop-80,behavior:'smooth'});}
+
+// ── FILTER ─────────────────────────────────────────────────
+function applyFilter(){
+  const kw=document.getElementById('searchSurat').value.toLowerCase();
+  const jenis=document.getElementById('filterJenis').value;
+  const status=document.getElementById('filterStatus').value;
+  const tahun=document.getElementById('filterTahun').value;
+  const dari=document.getElementById('filterTglDari').value;
+  const sampai=document.getElementById('filterTglSampai').value;
+  filteredData=allData.filter(d=>{
+    const text=JSON.stringify(d).toLowerCase();
+    const y=d['Tahun']||(d['Tanggal Surat']||'').substring(0,4);
+    const tgl=new Date(d['Tanggal Surat']||d['Timestamp']||'');
+    return(!kw||text.includes(kw))&&(!jenis||d._jenis===jenis)&&
+           (!status||(d['Status']||'')===status)&&(!tahun||y===tahun)&&
+           (!dari||tgl>=new Date(dari))&&(!sampai||tgl<=new Date(sampai+'T23:59:59'));
+  });
+  currentPage=1; renderTable();
+}
+function resetFilter(){
+  ['searchSurat','filterJenis','filterStatus','filterTahun','filterTglDari','filterTglSampai']
+    .forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  filteredData=[...allData]; currentPage=1; renderTable();
+}
+
+// ── SORT ───────────────────────────────────────────────────
+function sortTable(key){
+  if(sortKey===key) sortDir*=-1; else {sortKey=key;sortDir=1;}
+  document.querySelectorAll('.sort-arrow').forEach(el=>el.textContent='↕');
+  const arrow=document.getElementById('sort_'+key);
+  if(arrow)arrow.textContent=sortDir===1?'↑':'↓';
+  filteredData.sort((a,b)=>{
+    let va='',vb='';
+    if(key==='tgl'){va=new Date(a['Tanggal Surat']||0);vb=new Date(b['Tanggal Surat']||0);}
+    else if(key==='kode'){va=a['Kode Surat']||'';vb=b['Kode Surat']||'';}
+    return va<vb?-sortDir:va>vb?sortDir:0;
+  });
+  currentPage=1; renderTable();
+}
+
+// ── MODAL ──────────────────────────────────────────────────
+function showDetail(idx){
+  const d=filteredData[idx]; if(!d) return;
+  const rows=[
+    ['Jenis Surat',d._jenis],['Kode Surat',d['Kode Surat']],
+    ['Nomor Surat',d['Nomor Surat']],['Tanggal Surat',Utils.formatDateLong(d['Tanggal Surat'])],
+    ['Asal',d['Asal']],['Tujuan',d['Tujuan']],['Perihal',d['Perihal']],
+    ['Sifat',d['Sifat']],['Status',d['Status']],
+    ['Kode Klasifikasi',d['Kode Klasifikasi']],['File Dokumen',d['File']||d['Link File']],
+  ];
+  document.getElementById('modalBody').innerHTML=rows.map(([l,v])=>`
+    <div class="detail-row">
+      <div class="detail-label">${l}</div>
+      <div class="detail-value">${l==='File Dokumen'&&v?
+        `<a href="${v}" target="_blank" class="btn-view btn-view-blue" style="font-size:12px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Buka Dokumen</a>`
+        :(v||'<span style="color:var(--text-muted)">—</span>')}</div>
+    </div>`).join('');
+  document.getElementById('modalDetail').classList.add('open');
+  ActivityLog.add('Lihat detail surat','view',d['Perihal']||d['Kode Surat']||'');
+}
+function closeModal(){document.getElementById('modalDetail').classList.remove('open');}
+document.getElementById('modalDetail').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
+
+// ── CHARTS ─────────────────────────────────────────────────
+function toMonthKey(d){const t=new Date(d['Tanggal Surat']||d['Timestamp']);if(isNaN(t))return null;return`${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}`;}
+
+function buildAllCharts(){
+  buildTrenChart(rawSMK,rawSMS,rawSKK,rawSKS,'line');
+  buildProporsiChart();
+  buildTahunanChart();
+  buildStatusChart();
+  buildSifatChart();
+}
+
+function buildTrenChart(smk,sms,skk,sks,type){
+  const tahun=document.getElementById('trenTahun')?.value||'';
+  const filterY=arr=>tahun?arr.filter(d=>(d['Tahun']||(d['Tanggal Surat']||'').substring(0,4))===tahun):arr;
+  const fsmk=filterY(smk),fsms=filterY(sms),fskk=filterY(skk),fsks=filterY(sks);
+  const keys=new Set();
+  [...fsmk,...fsms,...fskk,...fsks].forEach(d=>{const k=toMonthKey(d);if(k)keys.add(k);});
+  const labels=[...keys].sort();
+  const cnt=(arr,m)=>arr.filter(d=>toMonthKey(d)===m).length;
+  const labelsFmt=labels.map(l=>{const[y,m]=l.split('-');return Utils.namaBulan(parseInt(m)).slice(0,3)+' '+y.slice(2);});
+  if(chartTren)chartTren.destroy();
+  const ctx=document.getElementById('chartTren').getContext('2d');
+  chartTren=new Chart(ctx,{
+    type,
+    data:{labels:labelsFmt,datasets:[
+      {label:'Masuk Ketua',data:labels.map(m=>cnt(fsmk,m)),borderColor:COLORS.smk,backgroundColor:type==='line'?'rgba(43,108,176,0.07)':COLORS.smk,tension:0.4,fill:type==='line',borderWidth:2,pointRadius:3},
+      {label:'Masuk Sekretaris',data:labels.map(m=>cnt(fsms,m)),borderColor:COLORS.sms,backgroundColor:type==='line'?'rgba(221,107,32,0.07)':COLORS.sms,tension:0.4,fill:type==='line',borderWidth:2,pointRadius:3},
+      {label:'Keluar Ketua',data:labels.map(m=>cnt(fskk,m)),borderColor:COLORS.skk,backgroundColor:type==='line'?'rgba(47,133,90,0.07)':COLORS.skk,tension:0.4,fill:type==='line',borderWidth:2,pointRadius:3},
+      {label:'Keluar Sekretaris',data:labels.map(m=>cnt(fsks,m)),borderColor:COLORS.sks,backgroundColor:type==='line'?'rgba(229,62,62,0.07)':COLORS.sks,tension:0.4,fill:type==='line',borderWidth:2,pointRadius:3},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11},usePointStyle:true,padding:14}}},
+      scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:11},color:'#9CA3AF'}},x:{grid:{display:false},ticks:{font:{size:10},color:'#9CA3AF'}}}}
+  });
+}
+
+function buildProporsiChart(){
+  if(chartProporsi)chartProporsi.destroy();
+  const ctx=document.getElementById('chartProporsi').getContext('2d');
+  chartProporsi=new Chart(ctx,{type:'doughnut',
+    data:{labels:['Masuk Ketua','Masuk Sekretaris','Keluar Ketua','Keluar Sekretaris'],
+      datasets:[{data:[rawSMK.length,rawSMS.length,rawSKK.length,rawSKS.length],
+        backgroundColor:[COLORS.smk,COLORS.sms,COLORS.skk,COLORS.sks],borderWidth:0,hoverOffset:6}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'68%',
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11},usePointStyle:true,padding:12}},
+        tooltip:{callbacks:{label:c=>` ${c.label}: ${c.raw} surat`}}}}
+  });
+}
+
+function buildTahunanChart(){
+  const years=['2024','2025','2026'];
+  const getY=d=>d['Tahun']||(d['Tanggal Surat']||'').substring(0,4);
+  const cnt=(arr,y)=>arr.filter(d=>getY(d)===y).length;
+  if(chartTahunan)chartTahunan.destroy();
+  const ctx=document.getElementById('chartTahunan').getContext('2d');
+  chartTahunan=new Chart(ctx,{type:'bar',
+    data:{labels:years,datasets:[
+      {label:'Masuk Ketua',data:years.map(y=>cnt(rawSMK,y)),backgroundColor:COLORS.smk},
+      {label:'Masuk Sekretaris',data:years.map(y=>cnt(rawSMS,y)),backgroundColor:COLORS.sms},
+      {label:'Keluar Ketua',data:years.map(y=>cnt(rawSKK,y)),backgroundColor:COLORS.skk},
+      {label:'Keluar Sekretaris',data:years.map(y=>cnt(rawSKS,y)),backgroundColor:COLORS.sks},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:8,font:{size:10},usePointStyle:true,padding:8}}},
+      scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:10}}},y:{stacked:true,beginAtZero:true,ticks:{font:{size:10}}}}}
+  });
+}
+
+function buildStatusChart(){
+  const all=[...rawSMK,...rawSMS,...rawSKK,...rawSKS];
+  const statusCount={};
+  all.forEach(d=>{const s=d['Status']||'Tidak Diketahui';statusCount[s]=(statusCount[s]||0)+1;});
+  const sCols={'Diterima':'#2F855A','Terkirim':'#2B6CB0','Sudah Disposisi':'#975A16','Pending':'#C53030'};
+  if(chartStatus)chartStatus.destroy();
+  const ctx=document.getElementById('chartStatus').getContext('2d');
+  chartStatus=new Chart(ctx,{type:'doughnut',
+    data:{labels:Object.keys(statusCount),
+      datasets:[{data:Object.values(statusCount),backgroundColor:Object.keys(statusCount).map(k=>sCols[k]||'#9CA3AF'),borderWidth:0,hoverOffset:4}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'65%',
+      plugins:{legend:{position:'bottom',labels:{boxWidth:9,font:{size:10},usePointStyle:true,padding:8}}}}
+  });
+}
+
+function buildSifatChart(){
+  const all=[...rawSMK,...rawSMS,...rawSKK,...rawSKS];
+  const sifatCount={};
+  all.forEach(d=>{const s=d['Sifat']||'Tidak Diketahui';sifatCount[s]=(sifatCount[s]||0)+1;});
+  const sCols={Biasa:'#4A5568',Segera:'#975A16',Penting:'#C53030',Rahasia:'#6B46C1'};
+  if(chartSifat)chartSifat.destroy();
+  const ctx=document.getElementById('chartSifat').getContext('2d');
+  chartSifat=new Chart(ctx,{type:'bar',
+    data:{labels:Object.keys(sifatCount),
+      datasets:[{data:Object.values(sifatCount),backgroundColor:Object.keys(sifatCount).map(k=>sCols[k]||'#9CA3AF'),borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:11}}},y:{beginAtZero:true,ticks:{font:{size:10}}}}}
+  });
+}
+
+function switchTren(type,btn){
+  document.querySelectorAll('.btn-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  buildTrenChart(rawSMK,rawSMS,rawSKK,rawSKS,type);
+}
+function refreshTren(){buildTrenChart(rawSMK,rawSMS,rawSKK,rawSKS,chartTren?.config?.type||'line');}
+
+// ── EXPORT CSV ─────────────────────────────────────────────
+function exportCSV(){
+  const h=['Tanggal','Jenis','Nomor Surat','Perihal','Asal','Tujuan','Sifat','Status'];
+  const rows=filteredData.map(d=>[
+    d['Tanggal Surat']||'',d._jenis||'',d['Kode Klasifikasi']||d['Kode Surat']||'',
+    (d['Perihal']||'').replace(/,/g,';'),(d['Asal']||'').replace(/,/g,';'),
+    (d['Tujuan']||'').replace(/,/g,';'),d['Sifat']||'',d['Status']||''
+  ]);
+  const csv=[h,...rows].map(r=>r.join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv'}));
+  a.download=`surat-kpu-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  ActivityLog.add('Export CSV','export',`${filteredData.length} baris`);
+}
+</script>
+</body>
+</html>
+
+
+

@@ -1,0 +1,479 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pengaturan — KPU Kabupaten Mesuji</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<aside class="sidebar" id="sidebar"></aside>
+<div class="main-content">
+  <header class="topbar" id="topbar"></header>
+  <main class="page-content">
+    <div id="alertContainer"></div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:960px">
+
+      <!-- PROFIL PENGGUNA -->
+      <div class="form-card">
+        <div class="form-head">
+          <h3>Profil Pengguna</h3>
+          <p>Informasi akun yang sedang login</p>
+        </div>
+        <div class="form-body">
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;padding:16px;background:var(--bg-page);border-radius:var(--radius);border:1px solid var(--border)">
+            <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-dark));display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:white;flex-shrink:0" id="avatarInitials">A</div>
+            <div>
+              <div style="font-size:15px;font-weight:700;color:var(--text-main)" id="profileName">—</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:2px" id="profileRole">—</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px" id="profileLogin">—</div>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:14px">
+            <label>Username</label>
+            <input type="text" id="inpUsername" placeholder="Username">
+          </div>
+          <div class="form-group" style="margin-bottom:14px">
+            <label>Nama Lengkap</label>
+            <input type="text" id="inpName" placeholder="Nama lengkap">
+          </div>
+          <div class="form-group" style="margin-bottom:14px">
+            <label>Password Baru</label>
+            <input type="password" id="inpPass" placeholder="Kosongkan jika tidak diubah">
+          </div>
+          <div class="form-group" style="margin-bottom:14px">
+            <label>Konfirmasi Password</label>
+            <input type="password" id="inpPassConf" placeholder="Ulangi password baru">
+          </div>
+        </div>
+        <div class="form-foot">
+          <button class="btn-primary" onclick="saveProfile()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Simpan Perubahan
+          </button>
+        </div>
+      </div>
+
+      <!-- TAMPILAN -->
+      <div class="form-card">
+        <div class="form-head">
+          <h3>Tampilan</h3>
+          <p>Pengaturan tema dan tampilan antarmuka</p>
+        </div>
+        <div class="form-body">
+          <div class="toggle-wrap">
+            <div class="toggle-info">
+              <h4>Mode Gelap (Dark Mode)</h4>
+              <p>Tampilan gelap lebih nyaman di malam hari</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="togDark" onchange="toggleDarkMode()">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="toggle-wrap" style="margin-top:4px">
+            <div class="toggle-info">
+              <h4>Notifikasi Surat Baru</h4>
+              <p>Tampilkan notifikasi saat ada surat baru</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="togNotif" onchange="saveToggle('notif',this.checked)" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="toggle-wrap" style="margin-top:4px">
+            <div class="toggle-info">
+              <h4>Highlight Surat Baru (3 hari)</h4>
+              <p>Tandai surat yang masuk dalam 3 hari terakhir</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="togHighlight" onchange="saveToggle('highlight',this.checked)" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- KONFIGURASI SISTEM -->
+      <div class="form-card" style="grid-column:1/-1">
+        <div class="form-head">
+          <h3>🔧 Konfigurasi Koneksi Sistem</h3>
+          <p>Ganti koneksi spreadsheet jika sistem digunakan oleh satker lain</p>
+        </div>
+        <div class="form-body">
+
+          <!-- PANDUAN -->
+          <div style="background:#EBF8FF;border:1px solid #BEE3F8;border-radius:8px;padding:14px;margin-bottom:20px;font-size:13px;color:#2B6CB0;line-height:1.8;">
+            <strong>📋 Cara ganti koneksi untuk satker lain:</strong><br>
+            <strong>1.</strong> Buat Google Sheets baru dengan struktur kolom yang sama<br>
+            <strong>2.</strong> Share spreadsheet ke "Anyone with the link → Viewer"<br>
+            <strong>3.</strong> Salin ID dari URL spreadsheet: <code style="background:#fff;padding:1px 6px;border-radius:3px;font-size:11px">docs.google.com/spreadsheets/d/<strong>[ID INI]</strong>/edit</code><br>
+            <strong>4.</strong> Tempel ID di kolom "Spreadsheet ID" di bawah<br>
+            <strong>5.</strong> Klik "Test Koneksi" untuk memastikan terhubung<br>
+            <strong>6.</strong> Klik "Simpan & Terapkan" — sistem langsung pakai data baru
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <div class="form-group">
+              <label>Nama Instansi / Satker</label>
+              <input type="text" id="inpInstansi" placeholder="Contoh: KPU Kabupaten Tulang Bawang">
+            </div>
+            <div class="form-group">
+              <label>Nama Sistem</label>
+              <input type="text" id="inpSistem" placeholder="Contoh: SIAS KPU Tulang Bawang">
+            </div>
+            <div class="form-group">
+              <label>Spreadsheet ID (Data Surat Utama)</label>
+              <input type="text" id="inpSpreadsheetId" placeholder="Contoh: 1JdMfzSbzlqA44etCQ5Ray...">
+              <small style="font-size:11px;color:var(--text-muted);margin-top:3px;display:block">
+                Ambil dari URL: docs.google.com/spreadsheets/d/<strong>[ID INI]</strong>/edit
+              </small>
+            </div>
+            <div class="form-group">
+              <label>Spreadsheet ID (Lembar Disposisi)</label>
+              <input type="text" id="inpDisposisiId" placeholder="Contoh: 1CygIm3S5yq2m0cA9DgH...">
+              <small style="font-size:11px;color:var(--text-muted);margin-top:3px;display:block">
+                ID spreadsheet lembar disposisi satker
+              </small>
+            </div>
+            <div class="form-group">
+              <label>API Key Google Sheets</label>
+              <input type="password" id="inpApiKey" placeholder="AIzaSy...">
+              <small style="font-size:11px;color:var(--text-muted);margin-top:3px;display:block">
+                Buat di: console.cloud.google.com → Credentials
+              </small>
+            </div>
+            <div class="form-group">
+              <label>URL Google Form Input Surat</label>
+              <input type="text" id="inpFormUrl" placeholder="https://docs.google.com/forms/d/e/.../viewform">
+            </div>
+          </div>
+
+          <!-- STATUS KONEKSI -->
+          <div id="statusKoneksi" style="display:none;margin-top:14px;padding:12px 16px;border-radius:8px;font-size:13px;font-weight:500;"></div>
+
+          <!-- INFO NAMA SHEET -->
+          <div style="background:#FFFFF0;border:1px solid #FAF089;border-radius:8px;padding:14px;margin-top:16px;font-size:12.5px;color:#975A16;line-height:1.9;">
+            <strong>⚠️ Nama tab sheet di Google Sheets harus persis:</strong><br>
+            📥 <code style="background:#fff;padding:1px 5px;border-radius:3px">Surat Masuk Ketua</code> &nbsp;
+            📥 <code style="background:#fff;padding:1px 5px;border-radius:3px">Surat Masuk Sekretaris</code><br>
+            📤 <code style="background:#fff;padding:1px 5px;border-radius:3px">Surat Keluar Ketua</code> &nbsp;
+            📤 <code style="background:#fff;padding:1px 5px;border-radius:3px">Surat Keluar Sekretaris</code><br>
+            📋 <code style="background:#fff;padding:1px 5px;border-radius:3px">Lembar Disposisi Ketua</code> &nbsp;
+            📋 <code style="background:#fff;padding:1px 5px;border-radius:3px">Lembar Disposisi Sekretaris</code>
+          </div>
+
+        </div>
+        <div class="form-foot">
+          <button class="btn-secondary" onclick="loadConfig()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+            Reset ke Default
+          </button>
+          <button class="btn-secondary" onclick="testKoneksi()" style="background:#EBF8FF;color:#2B6CB0;border-color:#BEE3F8;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Test Koneksi
+          </button>
+          <button class="btn-primary" onclick="saveConfig()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Simpan & Terapkan
+          </button>
+        </div>
+      </div>
+
+      <!-- MANAJEMEN USER -->
+      <div class="form-card">
+        <div class="form-head">
+          <h3>Manajemen Pengguna</h3>
+          <p>Daftar pengguna yang dapat mengakses sistem</p>
+        </div>
+        <div class="form-body" style="padding-bottom:0">
+          <div id="userList" style="margin-bottom:16px"></div>
+          <div style="padding:14px;background:var(--bg-page);border-radius:var(--radius);border:1px solid var(--border)">
+            <div style="font-size:12px;font-weight:700;color:var(--text-sub);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px">Tambah Pengguna</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+              <input type="text" id="newUsername" class="filter-input" placeholder="Username">
+              <input type="text" id="newName" class="filter-input" placeholder="Nama Lengkap">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+              <input type="password" id="newPass" class="filter-input" placeholder="Password">
+              <select id="newRole" class="filter-select" style="width:100%">
+                <option value="admin">Admin</option>
+                <option value="ketua">Ketua</option>
+                <option value="sekretaris">Sekretaris</option>
+              </select>
+            </div>
+            <button class="btn-primary" onclick="addUser()" style="width:100%;justify-content:center">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Tambah Pengguna
+            </button>
+          </div>
+        </div>
+        <div style="height:16px"></div>
+      </div>
+
+      <!-- ACTIVITY LOG -->
+      <div class="form-card" style="grid-column:1/-1">
+        <div class="form-head" style="display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <h3>Log Aktivitas</h3>
+            <p>Riwayat aktivitas pengguna dalam sistem</p>
+          </div>
+          <button class="btn-danger" onclick="clearLog()" style="padding:6px 14px;font-size:12px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+            Hapus Log
+          </button>
+        </div>
+        <div class="form-body" style="max-height:300px;overflow-y:auto">
+          <div id="activityLogContainer"></div>
+        </div>
+      </div>
+
+      <!-- LOGOUT / BAHAYA -->
+      <div class="form-card" style="grid-column:1/-1">
+        <div class="form-head">
+          <h3 style="color:var(--primary)">Zona Berbahaya</h3>
+          <p>Tindakan permanen yang tidak bisa dibatalkan</p>
+        </div>
+        <div class="form-body" style="display:flex;gap:12px;flex-wrap:wrap">
+          <button class="btn-danger" onclick="clearNotif()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+            Hapus Semua Notifikasi
+          </button>
+          <button class="btn-danger" onclick="clearCache()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+            Reset Cache Surat
+          </button>
+          <button class="btn-danger" onclick="typeof Auth!=='undefined'&&Auth.logout()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Keluar (Logout)
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="../assets/js/config.js"></script>
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/log.js"></script>
+<script src="../assets/js/notifications.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+const DEFAULT_USERS=[
+  {username:'admin',      password:'kpu2024',   role:'admin',       name:'Administrator'},
+  {username:'ketua',      password:'ketua2024', role:'ketua',       name:'Ketua KPU'},
+  {username:'sekretaris', password:'sekr2024',  role:'sekretaris',  name:'Sekretaris KPU'},
+];
+
+document.addEventListener('DOMContentLoaded', () => {
+  initLayout('settings','Pengaturan',CONFIG.INSTANSI);
+  loadProfileForm();
+  loadConfig();
+  loadToggles();
+  renderUserList();
+  ActivityLog.render('activityLogContainer', 50);
+});
+
+// ── PROFIL ────────────────────────────────────────────────
+function loadProfileForm(){
+  const user=Auth.getUser();
+  if(!user.username) return;
+  document.getElementById('profileName').textContent=user.name||'—';
+  document.getElementById('profileRole').textContent=user.role||'—';
+  document.getElementById('profileLogin').textContent='Login: '+new Date(user.loginAt||'').toLocaleString('id-ID');
+  document.getElementById('avatarInitials').textContent=(user.name||'A').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('inpUsername').value=user.username||'';
+  document.getElementById('inpName').value=user.name||'';
+}
+
+function saveProfile(){
+  const username=document.getElementById('inpUsername').value.trim();
+  const name=document.getElementById('inpName').value.trim();
+  const pass=document.getElementById('inpPass').value;
+  const conf=document.getElementById('inpPassConf').value;
+  if(!username||!name){Utils.showAlert('Username dan nama tidak boleh kosong','warning');return;}
+  if(pass&&pass!==conf){Utils.showAlert('Password tidak cocok','danger');return;}
+  const users=JSON.parse(localStorage.getItem('kpu_users')||JSON.stringify(DEFAULT_USERS));
+  const user=Auth.getUser();
+  const idx=users.findIndex(u=>u.username===user.username);
+  if(idx>-1){
+    users[idx].name=name;
+    users[idx].username=username;
+    if(pass)users[idx].password=pass;
+    localStorage.setItem('kpu_users',JSON.stringify(users));
+    const upd={...user,name,username,loginAt:user.loginAt};
+    localStorage.setItem('kpu_user',JSON.stringify(upd));
+    ActivityLog.add('Perubahan profil disimpan','info',name);
+    Utils.showAlert('Profil berhasil diperbarui','success');
+    loadProfileForm();
+  }
+}
+
+// ── CONFIG ────────────────────────────────────────────────
+function loadConfig(){
+  document.getElementById('inpSpreadsheetId').value = CONFIG.SPREADSHEET_ID||'';
+  document.getElementById('inpApiKey').value         = CONFIG.API_KEY||'';
+  document.getElementById('inpFormUrl').value        = CONFIG.FORM_URL||'';
+  document.getElementById('inpDisposisiId').value    = CONFIG.DISPOSISI_SHEET_ID||'';
+  document.getElementById('inpInstansi').value       = CONFIG.INSTANSI||'';
+  document.getElementById('inpSistem').value         = CONFIG.SISTEM||'';
+}
+
+async function testKoneksi(){
+  const sid = document.getElementById('inpSpreadsheetId').value.trim();
+  const box = document.getElementById('statusKoneksi');
+  box.style.display = 'block';
+  box.style.background = '#EBF8FF';
+  box.style.border = '1px solid #BEE3F8';
+  box.style.color = '#2B6CB0';
+  box.innerHTML = '⏳ Menguji koneksi ke Google Sheets...';
+
+  if (!sid) {
+    box.style.background = '#FFF5F5'; box.style.border = '1px solid #FEB2B2'; box.style.color = '#C53030';
+    box.innerHTML = '❌ Spreadsheet ID tidak boleh kosong';
+    return;
+  }
+
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${sid}/gviz/tq?tqx=out:json&sheet=Surat%20Masuk%20Ketua`;
+    const res = await fetch(url);
+    const txt = await res.text();
+    const js  = JSON.parse(txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);\s*$/)?.[1]||'{}');
+    if (js.status === 'ok') {
+      const jumlah = js.table?.rows?.length || 0;
+      box.style.background = '#F0FFF4'; box.style.border = '1px solid #9AE6B4'; box.style.color = '#276749';
+      box.innerHTML = `✅ Koneksi berhasil! Ditemukan ${jumlah} data di sheet "Surat Masuk Ketua"`;
+    } else {
+      throw new Error(js.errors?.[0]?.message || 'Gagal membaca data');
+    }
+  } catch(e) {
+    box.style.background = '#FFF5F5'; box.style.border = '1px solid #FEB2B2'; box.style.color = '#C53030';
+    box.innerHTML = `❌ Koneksi gagal: ${e.message}<br><small>Pastikan spreadsheet sudah di-share "Anyone with link"</small>`;
+  }
+}
+
+function saveConfig(){
+  const cfg = {
+    SPREADSHEET_ID:     document.getElementById('inpSpreadsheetId').value.trim(),
+    API_KEY:            document.getElementById('inpApiKey').value.trim(),
+    FORM_URL:           document.getElementById('inpFormUrl').value.trim(),
+    DISPOSISI_SHEET_ID: document.getElementById('inpDisposisiId').value.trim(),
+    INSTANSI:           document.getElementById('inpInstansi').value.trim(),
+    SISTEM:             document.getElementById('inpSistem').value.trim(),
+  };
+
+  // Validasi
+  if (!cfg.SPREADSHEET_ID) { Utils.showAlert('Spreadsheet ID wajib diisi','warning'); return; }
+  if (!cfg.INSTANSI)       { Utils.showAlert('Nama Instansi wajib diisi','warning'); return; }
+
+  // Simpan ke localStorage sebagai override — tidak mengubah config.js
+  localStorage.setItem('kpu_config_override', JSON.stringify(cfg));
+  ActivityLog.add('Konfigurasi sistem diperbarui','info', cfg.INSTANSI);
+
+  Utils.showAlert('✅ Konfigurasi disimpan! Halaman akan di-refresh dalam 2 detik...','success');
+
+  // Apply ke CONFIG object langsung (tanpa reload)
+  Object.assign(CONFIG, cfg);
+
+  // Refresh setelah 2 detik agar semua komponen reload
+  setTimeout(() => window.location.reload(), 2000);
+}
+
+// ── TOGGLES ───────────────────────────────────────────────
+function loadToggles(){
+  const dark=localStorage.getItem('kpu_dark_mode')==='1';
+  document.getElementById('togDark').checked=dark;
+  document.getElementById('togNotif').checked=localStorage.getItem('kpu_notif')!=='0';
+  document.getElementById('togHighlight').checked=localStorage.getItem('kpu_highlight')!=='0';
+}
+function saveToggle(key,val){
+  localStorage.setItem('kpu_'+key,val?'1':'0');
+  if(key==='notif') ActivityLog.add('Notifikasi '+(val?'diaktifkan':'dinonaktifkan'),'info');
+}
+
+// ── USERS ─────────────────────────────────────────────────
+function getUsers(){
+  const stored=localStorage.getItem('kpu_users');
+  return stored?JSON.parse(stored):[...DEFAULT_USERS];
+}
+
+function renderUserList(){
+  const users=getUsers();
+  const current=Auth.getUser();
+  const html=users.map((u,i)=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-sm);background:var(--bg-page);border:1px solid var(--border);margin-bottom:8px">
+      <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-dark));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:white;flex-shrink:0">${u.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:600;color:var(--text-main)">${u.name}</div>
+        <div style="font-size:11px;color:var(--text-muted)">@${u.username} · ${u.role}</div>
+      </div>
+      ${u.username!==current.username?`<button onclick="deleteUser(${i})" class="btn-view btn-view-red" style="font-size:11px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>Hapus</button>`:'<span class="badge badge-green" style="font-size:10px">Anda</span>'}
+    </div>`).join('');
+  document.getElementById('userList').innerHTML=html;
+}
+
+function addUser(){
+  const u=document.getElementById('newUsername').value.trim();
+  const n=document.getElementById('newName').value.trim();
+  const p=document.getElementById('newPass').value;
+  const r=document.getElementById('newRole').value;
+  if(!u||!n||!p){Utils.showAlert('Semua field wajib diisi','warning');return;}
+  const users=getUsers();
+  if(users.find(x=>x.username===u)){Utils.showAlert('Username sudah ada','danger');return;}
+  users.push({username:u,name:n,password:p,role:r});
+  localStorage.setItem('kpu_users',JSON.stringify(users));
+  ['newUsername','newName','newPass'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('newRole').value='admin';
+  renderUserList();
+  ActivityLog.add('Pengguna baru ditambahkan','info',n+' ('+r+')');
+  Utils.showAlert('Pengguna '+n+' berhasil ditambahkan','success');
+}
+
+function deleteUser(idx){
+  const users=getUsers();
+  const name=users[idx]?.name;
+  if(!confirm('Hapus pengguna '+name+'?')) return;
+  users.splice(idx,1);
+  localStorage.setItem('kpu_users',JSON.stringify(users));
+  renderUserList();
+  ActivityLog.add('Pengguna dihapus','warning',name);
+  Utils.showAlert('Pengguna dihapus','success');
+}
+
+// ── LOG ───────────────────────────────────────────────────
+function clearLog(){
+  if(!confirm('Hapus semua log aktivitas?')) return;
+  ActivityLog.clear();
+  ActivityLog.render('activityLogContainer',50);
+  Utils.showAlert('Log aktivitas dihapus','success');
+}
+
+// ── DANGER ZONE ───────────────────────────────────────────
+function clearNotif(){
+  if(!confirm('Hapus semua notifikasi?')) return;
+  localStorage.removeItem('kpu_notifications');
+  localStorage.removeItem('kpu_last_urgent_count');
+  Notif.updateBadge();
+  ActivityLog.add('Semua notifikasi dihapus','warning');
+  Utils.showAlert('Notifikasi dihapus','success');
+}
+function clearCache(){
+  if(!confirm('Reset cache data surat? Data akan dimuat ulang dari Google Sheets.')) return;
+  localStorage.removeItem('kpu_last_surat_count');
+  localStorage.removeItem('kpu_last_urgent_count');
+  ActivityLog.add('Cache surat direset','warning');
+  Utils.showAlert('Cache direset. Refresh dashboard untuk memuat ulang.','success');
+}
+</script>
+</body>
+</html>
+
+
+
+
+

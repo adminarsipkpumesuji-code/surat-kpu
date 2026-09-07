@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- Background circle black -->
+  <circle cx="60" cy="60" r="58" fill="#1a1a1a"/>
+  <!-- Inner red/white split -->
+  <clipPath id="inner"><circle cx="60" cy="60" r="44"/></clipPath>
+  <rect x="16" y="16" width="88" height="44" fill="#CC2222" clip-path="url(#inner)"/>
+  <rect x="16" y="60" width="88" height="44" fill="#EEEEEE" clip-path="url(#inner)"/>
+  <!-- Eagle body simplified -->
+  <g transform="translate(60,54)" fill="#D4A017">
+    <!-- body -->
+    <ellipse cx="0" cy="2" rx="10" ry="13"/>
+    <!-- head -->
+    <circle cx="0" cy="-14" r="7"/>
+    <!-- beak -->
+    <polygon points="4,-14 9,-16 5,-11" fill="#D4A017"/>
+    <!-- left wing -->
+    <path d="M-10,-2 Q-35,-18 -38,-8 Q-30,2 -10,8Z"/>
+    <!-- right wing -->
+    <path d="M10,-2 Q35,-18 38,-8 Q30,2 10,8Z"/>
+    <!-- tail -->
+    <path d="M-8,14 Q0,26 8,14 Q4,20 0,22 Q-4,20 -8,14Z"/>
+    <!-- left leg -->
+    <line x1="-4" y1="14" x2="-6" y2="20" stroke="#D4A017" stroke-width="2"/>
+    <line x1="-6" y1="20" x2="-10" y2="22" stroke="#D4A017" stroke-width="1.5"/>
+    <line x1="-6" y1="20" x2="-6" y2="23" stroke="#D4A017" stroke-width="1.5"/>
+    <line x1="-6" y1="20" x2="-3" y2="23" stroke="#D4A017" stroke-width="1.5"/>
+    <!-- right leg -->
+    <line x1="4" y1="14" x2="6" y2="20" stroke="#D4A017" stroke-width="2"/>
+    <line x1="6" y1="20" x2="10" y2="22" stroke="#D4A017" stroke-width="1.5"/>
+    <line x1="6" y1="20" x2="6" y2="23" stroke="#D4A017" stroke-width="1.5"/>
+    <line x1="6" y1="20" x2="3" y2="23" stroke="#D4A017" stroke-width="1.5"/>
+    <!-- shield on chest -->
+    <polygon points="0,-8 -7,0 -5,10 0,12 5,10 7,0" fill="#CC2222" stroke="#D4A017" stroke-width="0.5"/>
+    <line x1="0" y1="-8" x2="0" y2="12" stroke="#D4A017" stroke-width="1"/>
+    <line x1="-7" y1="2" x2="7" y2="2" stroke="#D4A017" stroke-width="1"/>
+    <!-- star -->
+    <polygon points="0,-4 1,-1 4,-1 2,1 3,4 0,2 -3,4 -2,1 -4,-1 -1,-1" fill="#FFD700"/>
+  </g>
+  <!-- Outer ring text arc - KOMISI top -->
+  <path id="topArc" d="M 10,60 A 50,50 0 0,1 110,60" fill="none"/>
+  <text font-family="Arial Black,sans-serif" font-size="10.5" font-weight="900" fill="white" letter-spacing="3">
+    <textPath href="#topArc" startOffset="12%">KOMISI</textPath>
+  </text>
+  <!-- Outer ring text arc - PEMILIHAN UMUM bottom -->
+  <path id="botArc" d="M 8,62 A 52,52 0 0,0 112,62" fill="none"/>
+  <text font-family="Arial Black,sans-serif" font-size="8.5" font-weight="900" fill="white" letter-spacing="2">
+    <textPath href="#botArc" startOffset="4%">PEMILIHAN UMUM</textPath>
+  </text>
+  <!-- two dots left and right -->
+  <circle cx="10" cy="62" r="4" fill="white"/>
+  <circle cx="110" cy="62" r="4" fill="white"/>
+</svg>

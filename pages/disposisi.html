@@ -1,0 +1,523 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lembar Disposisi — KPU Kab. Mesuji</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<aside class="sidebar" id="sidebar"></aside>
+<div class="main-content">
+  <header class="topbar" id="topbar"></header>
+  <main class="page-content">
+    <div id="alertContainer"></div>
+
+    <!-- INFO BANNER -->
+    <div class="alert alert-info" style="margin-bottom:20px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>Pilih surat dari daftar di bawah, lalu klik <strong>"Buka Lembar Disposisi"</strong> — spreadsheet disposisi akan terbuka dengan data surat sudah terisi otomatis.</span>
+    </div>
+
+    <!-- TAB KETUA / SEKRETARIS -->
+    <div style="display:flex;gap:6px;margin-bottom:18px;">
+      <button id="tabKetua" class="btn-tab active" onclick="switchTab('ketua')">
+        Surat Masuk Ketua
+      </button>
+      <button id="tabSekretaris" class="btn-tab" onclick="switchTab('sekretaris')">
+        Surat Masuk Sekretaris
+      </button>
+    </div>
+
+    <!-- TABEL PILIH SURAT -->
+    <div class="table-card">
+      <div class="table-toolbar">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <div class="table-title" id="tableTitle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
+            Pilih Surat untuk Disposisi
+          </div>
+          <span class="badge-count" id="totalBadge">0</span>
+        </div>
+        <div class="table-actions">
+          <div class="search-box" style="width:220px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="searchInput" placeholder="Cari perihal, nomor surat..." oninput="applyFilters()">
+          </div>
+          <select class="filter-select" id="filterStatus" onchange="applyFilters()">
+            <option value="">Semua Status</option>
+            <option value="Diterima">Diterima</option>
+            <option value="Sudah Disposisi">Sudah Disposisi</option>
+            <option value="Pending">Pending</option>
+          </select>
+          <select class="filter-select" id="filterBulan" onchange="applyFilters()">
+            <option value="">Semua Bulan</option>
+            <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option>
+            <option value="4">Apr</option><option value="5">Mei</option><option value="6">Jun</option>
+            <option value="7">Jul</option><option value="8">Agu</option><option value="9">Sep</option>
+            <option value="10">Okt</option><option value="11">Nov</option><option value="12">Des</option>
+          </select>
+          <select class="filter-select" id="filterTahun" onchange="applyFilters()">
+            <option value="">Semua Tahun</option>
+            <option>2026</option><option>2025</option><option>2024</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:36px"></th>
+              <th>Tanggal</th>
+              <th>Kode Surat</th>
+              <th>Asal</th>
+              <th>Perihal</th>
+              <th>Sifat</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <tr><td colspan="8" style="text-align:center;padding:40px;color:#9CA3AF;">
+              <div class="spinner" style="margin:0 auto 10px"></div>Memuat data...
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-footer">
+        <span id="paginasiInfo" style="font-size:12px;color:#6B7280">—</span>
+        <div class="pagination" id="paginasi"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- MODAL DISPOSISI -->
+<div class="modal-overlay" id="modalDisposisi">
+  <div class="modal" style="max-width:640px">
+    <div class="modal-head">
+      <h3 id="modalJudul">Lembar Disposisi</h3>
+      <button class="modal-close" onclick="closeModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+
+      <!-- Preview data surat -->
+      <div style="background:#F8FAFC;border:1px solid #E5E7EB;border-radius:8px;padding:16px;margin-bottom:18px;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#9CA3AF;margin-bottom:10px;">Data Surat</div>
+        <div style="display:grid;grid-template-columns:130px 1fr;gap:7px 10px;font-size:13px;" id="previewData"></div>
+      </div>
+
+      <!-- Pilihan sheet disposisi -->
+      <div style="margin-bottom:16px;">
+        <label style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.3px;color:#6B7280;display:block;margin-bottom:6px;">Lembar Disposisi</label>
+        <div style="display:flex;gap:8px;">
+          <button id="sheetKetua" onclick="selectSheet('ketua')"
+            style="flex:1;padding:10px;border:2px solid #C0392B;border-radius:8px;background:#FDF2F2;color:#C0392B;font-weight:700;font-size:13px;cursor:pointer;transition:all 0.2s;">
+            📋 Lembar Disposisi Ketua
+          </button>
+          <button id="sheetSekretaris" onclick="selectSheet('sekretaris')"
+            style="flex:1;padding:10px;border:2px solid #E5E7EB;border-radius:8px;background:#fff;color:#6B7280;font-weight:600;font-size:13px;cursor:pointer;transition:all 0.2s;">
+            📋 Lembar Disposisi Sekretaris
+          </button>
+        </div>
+      </div>
+
+      <!-- Info cara kerja -->
+      <div style="background:#FFFFF0;border:1px solid #FAF089;border-radius:8px;padding:14px;margin-bottom:18px;font-size:12.5px;color:#975A16;line-height:1.8;">
+        <strong>Cara kerja:</strong><br>
+        1. Klik <strong>"Buka Lembar Disposisi"</strong> di bawah<br>
+        2. Spreadsheet disposisi akan terbuka di tab baru<br>
+        3. Masukkan Kode Surat <code style="background:#FFF;padding:1px 5px;border-radius:3px;font-size:11px;" id="kodePreview">—</code> ke cell <strong>K1</strong> (cell merah)<br>
+        4. Data surat akan terisi otomatis oleh spreadsheet<br>
+        5. Isi bagian disposisi (Yth., Sifat, Catatan, dll.) lalu print
+      </div>
+
+      <!-- Tombol aksi -->
+      <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;">
+        <button onclick="closeModal()" class="btn-secondary">Batal</button>
+        <button onclick="copyKodeSurat()" class="btn-icon" id="btnCopy"
+          style="padding:9px 16px;font-size:13px;font-weight:600;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Salin Kode Surat
+        </button>
+        <button onclick="tandaiSudahDisposisi()" class="btn-icon" id="btnTandai"
+          style="padding:9px 16px;font-size:13px;font-weight:600;background:#F0FFF4;border-color:#9AE6B4;color:#276749;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Tandai Sudah Disposisi
+        </button>
+        <a id="btnBukaDisposisi" href="#" target="_blank" class="btn-primary"
+          onclick="handleBukaDisposisi()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Buka Lembar Disposisi
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/config.js"></script>
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/log.js"></script>
+<script src="../assets/js/notifications.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+// ============================================================
+// DISPOSISI.HTML — Pilih surat & buka lembar disposisi
+// ============================================================
+
+let dataMasukKetua = [], dataMasukSekretaris = [];
+let rawData = [], filteredData = [], currentPage = 1;
+let activeTab = 'ketua';
+let selectedSurat = null;
+let selectedSheet = 'ketua'; // default sheet disposisi
+const ROWS = 15;
+
+// Sheet tab names di spreadsheet disposisi
+const SHEET_TABS = {
+  ketua:      'Lembar Disposisi Ketua',
+  sekretaris: 'Lembar Disposisi Sekretaris',
+};
+
+document.addEventListener('DOMContentLoaded', async () => {
+  initLayout('disposisi', 'Lembar Disposisi', CONFIG.INSTANSI);
+  Utils.showLoading('Memuat data surat masuk...');
+  try {
+    [dataMasukKetua, dataMasukSekretaris] = await Promise.all([
+      SheetsAPI.getSuratMasukKetua(),
+      SheetsAPI.getSuratMasukSekretaris(),
+    ]);
+    // Sort terbaru di atas
+    dataMasukKetua     = sortTerbaru(dataMasukKetua);
+    dataMasukSekretaris = sortTerbaru(dataMasukSekretaris);
+    rawData     = [...dataMasukKetua];
+    filteredData = [...rawData];
+    renderTable();
+  } catch(e) {
+    Utils.showAlert('Gagal memuat data: ' + e.message, 'danger');
+  }
+  Utils.hideLoading();
+});
+
+// ── SORT TERBARU DI ATAS ──────────────────────────────────
+function sortTerbaru(arr) {
+  return arr.slice().sort((a, b) => {
+    const da = new Date(a['Tanggal Surat'] || a['Timestamp'] || 0);
+    const db = new Date(b['Tanggal Surat'] || b['Timestamp'] || 0);
+    return db - da;
+  });
+}
+
+// ── TAB ───────────────────────────────────────────────────
+function switchTab(tab) {
+  activeTab = tab;
+  document.getElementById('tabKetua').className     = 'btn-tab' + (tab === 'ketua'      ? ' active' : '');
+  document.getElementById('tabSekretaris').className = 'btn-tab' + (tab === 'sekretaris' ? ' active' : '');
+
+  const title = document.getElementById('tableTitle');
+  title.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
+    ${tab === 'ketua' ? 'Surat Masuk Ketua' : 'Surat Masuk Sekretaris'}`;
+
+  rawData = tab === 'ketua' ? [...dataMasukKetua] : [...dataMasukSekretaris];
+  selectedSheet = tab;
+  currentPage = 1;
+  document.getElementById('searchInput').value = '';
+  document.getElementById('filterStatus').value = '';
+  document.getElementById('filterBulan').value = '';
+  document.getElementById('filterTahun').value = '';
+  filteredData = sortTerbaru([...rawData]);
+  renderTable();
+}
+
+// ── TABLE ─────────────────────────────────────────────────
+function renderTable() {
+  const tbody = document.getElementById('tableBody');
+  const start = (currentPage - 1) * ROWS;
+  const page  = filteredData.slice(start, start + ROWS);
+  document.getElementById('totalBadge').textContent = filteredData.length + ' surat';
+
+  if (!page.length) {
+    tbody.innerHTML = `<tr><td colspan="8" class="empty-state">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <p>Tidak ada data</p></td></tr>`;
+    document.getElementById('paginasiInfo').textContent = '0 data';
+    document.getElementById('paginasi').innerHTML = '';
+    return;
+  }
+
+  tbody.innerHTML = page.map((d, i) => {
+    const idx    = start + i;
+    const kode   = d['Kode Surat'] || d['Nomor Surat'] || '—';
+    const perihal = d['Perihal'] || '—';
+    const asal   = d['Asal'] || '—';
+    const sifat  = d['Sifat'] || '—';
+    const status = d['Status'] || '—';
+    const tgl    = Utils.formatDate(d['Tanggal Surat'] || d['Timestamp']);
+    const sudahDisposisi = status === 'Sudah Disposisi';
+
+    const sifatCls  = {Penting:'badge-red',Segera:'badge-yellow',Rahasia:'badge-purple',Biasa:'badge-gray'}[sifat]  || 'badge-gray';
+    const statusCls = {Diterima:'badge-green','Sudah Disposisi':'badge-yellow',Pending:'badge-red'}[status] || 'badge-gray';
+
+    return `<tr style="${sudahDisposisi ? 'opacity:0.6' : ''}">
+      <td style="text-align:center">
+        <input type="radio" name="suratSelected" value="${idx}"
+          onchange="selectSurat(${idx})"
+          style="width:15px;height:15px;accent-color:#C0392B;cursor:pointer;">
+      </td>
+      <td style="white-space:nowrap;color:#6B7280;font-size:12px">${tgl}</td>
+      <td class="td-mono">${Utils.truncate(kode, 22)}</td>
+      <td class="td-truncate" style="max-width:150px" title="${asal}">${Utils.truncate(asal, 26)}</td>
+      <td class="td-truncate" style="max-width:240px" title="${perihal}">${Utils.truncate(perihal, 52)}</td>
+      <td><span class="badge ${sifatCls}">${sifat}</span></td>
+      <td><span class="badge ${statusCls}"><span class="badge-dot"></span>${status}</span></td>
+      <td style="white-space:nowrap">
+        <button class="btn-view btn-view-gray" onclick="bukaDisposisiLangsung(${idx})"
+          style="font-size:11.5px;gap:4px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+          Disposisi
+        </button>
+      </td>
+    </tr>`;
+  }).join('');
+
+  const total = filteredData.length;
+  const totalPages = Math.ceil(total / ROWS);
+  document.getElementById('paginasiInfo').textContent =
+    `${start+1}–${Math.min(start+ROWS, total)} dari ${total} surat`;
+
+  let btns = `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
+  for (let p = Math.max(1, currentPage-2); p <= Math.min(totalPages, currentPage+2); p++)
+    btns += `<button class="page-btn ${p===currentPage?'active':''}" onclick="goPage(${p})">${p}</button>`;
+  btns += `<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>›</button>`;
+  document.getElementById('paginasi').innerHTML = btns;
+}
+
+function goPage(p) {
+  const max = Math.ceil(filteredData.length / ROWS);
+  if (p < 1 || p > max) return;
+  currentPage = p; renderTable();
+}
+
+function applyFilters() {
+  const kw     = document.getElementById('searchInput').value.toLowerCase();
+  const status = document.getElementById('filterStatus').value;
+  const bulan  = document.getElementById('filterBulan').value;
+  const tahun  = document.getElementById('filterTahun').value;
+  filteredData = sortTerbaru(rawData.filter(d => {
+    const text = JSON.stringify(d).toLowerCase();
+    const tgl  = new Date(d['Tanggal Surat'] || d['Timestamp']);
+    return (!kw     || text.includes(kw)) &&
+           (!status || (d['Status']  || '') === status) &&
+           (!bulan  || String(tgl.getMonth() + 1) === bulan) &&
+           (!tahun  || (d['Tahun']   || String(tgl.getFullYear())) === tahun);
+  }));
+  currentPage = 1; renderTable();
+}
+
+// ── SELECT SURAT ──────────────────────────────────────────
+function selectSurat(idx) {
+  selectedSurat = filteredData[idx];
+}
+
+// ── BUKA DISPOSISI LANGSUNG (dari tombol di tabel) ────────
+function bukaDisposisiLangsung(idx) {
+  selectedSurat = filteredData[idx];
+  // Set sheet disposisi sesuai tab aktif
+  selectedSheet = activeTab;
+  openModal();
+}
+
+// ── MODAL ─────────────────────────────────────────────────
+function openModal() {
+  if (!selectedSurat) {
+    Utils.showAlert('Pilih surat terlebih dahulu', 'warning');
+    return;
+  }
+
+  const d = selectedSurat;
+  const kode    = d['Kode Surat'] || d['Nomor Surat'] || '—';
+  const perihal = d['Perihal'] || '—';
+  const asal    = d['Asal'] || '—';
+  const tgl     = Utils.formatDateLong(d['Tanggal Surat']);
+  const sifat   = d['Sifat'] || '—';
+  const status  = d['Status'] || '—';
+
+  // Judul modal
+  document.getElementById('modalJudul').textContent =
+    'Lembar Disposisi — ' + Utils.truncate(kode, 30);
+
+  // Preview data
+  const fields = [
+    ['Kode Surat', `<strong style="color:#C0392B">${kode}</strong>`],
+    ['Tanggal',    tgl],
+    ['Asal',       asal],
+    ['Perihal',    perihal],
+    ['Sifat',      sifat],
+    ['Status',     status],
+  ];
+  document.getElementById('previewData').innerHTML = fields.map(([l, v]) =>
+    `<div style="font-weight:600;color:#9CA3AF;font-size:12px">${l}</div><div style="font-size:13px">${v}</div>`
+  ).join('');
+
+  // Kode preview untuk instruksi
+  document.getElementById('kodePreview').textContent = kode;
+
+  // Update selected sheet UI
+  selectSheet(selectedSheet);
+
+  // Update link tombol
+  updateDisposisiLink();
+
+  document.getElementById('modalDisposisi').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modalDisposisi').classList.remove('open');
+}
+
+document.getElementById('modalDisposisi').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+// ── PILIH SHEET DISPOSISI ─────────────────────────────────
+function selectSheet(sheet) {
+  selectedSheet = sheet;
+
+  const btnK = document.getElementById('sheetKetua');
+  const btnS = document.getElementById('sheetSekretaris');
+
+  if (sheet === 'ketua') {
+    btnK.style.cssText = 'flex:1;padding:10px;border:2px solid #C0392B;border-radius:8px;background:#FDF2F2;color:#C0392B;font-weight:700;font-size:13px;cursor:pointer;transition:all 0.2s;';
+    btnS.style.cssText = 'flex:1;padding:10px;border:2px solid #E5E7EB;border-radius:8px;background:#fff;color:#6B7280;font-weight:600;font-size:13px;cursor:pointer;transition:all 0.2s;';
+  } else {
+    btnS.style.cssText = 'flex:1;padding:10px;border:2px solid #C0392B;border-radius:8px;background:#FDF2F2;color:#C0392B;font-weight:700;font-size:13px;cursor:pointer;transition:all 0.2s;';
+    btnK.style.cssText = 'flex:1;padding:10px;border:2px solid #E5E7EB;border-radius:8px;background:#fff;color:#6B7280;font-weight:600;font-size:13px;cursor:pointer;transition:all 0.2s;';
+  }
+
+  updateDisposisiLink();
+}
+
+// ── UPDATE LINK SPREADSHEET DISPOSISI ────────────────────
+function updateDisposisiLink() {
+  if (!selectedSurat) return;
+  const sheetName = SHEET_TABS[selectedSheet];
+  // URL langsung ke tab sheet yang dipilih
+  const url = `https://docs.google.com/spreadsheets/d/${CONFIG.DISPOSISI_SHEET_ID}/edit#gid=&range=${CONFIG.DISPOSISI_KODE_CELL}`;
+  // Gunakan URL dengan fragment ke sheet name
+  const urlFinal = `https://docs.google.com/spreadsheets/d/${CONFIG.DISPOSISI_SHEET_ID}/edit`;
+  document.getElementById('btnBukaDisposisi').href = urlFinal;
+}
+
+// ── BUKA DISPOSISI + SALIN KODE OTOMATIS ─────────────────
+function handleBukaDisposisi() {
+  if (!selectedSurat) return;
+  const kode = selectedSurat['Kode Surat'] || selectedSurat['Nomor Surat'] || '';
+
+  // Salin kode surat ke clipboard otomatis
+  if (kode && navigator.clipboard) {
+    navigator.clipboard.writeText(kode).then(() => {
+      Utils.showAlert(
+        `Kode surat <strong>${kode}</strong> berhasil disalin. Tempel ke cell K1 (cell merah) di spreadsheet.`,
+        'success'
+      );
+    }).catch(() => {});
+  }
+
+  // Buka spreadsheet di tab baru (sudah di-handle oleh href di tombol)
+  setTimeout(closeModal, 300);
+}
+
+// ── TANDAI SUDAH DISPOSISI ────────────────────────────────
+function tandaiSudahDisposisi() {
+  if (!selectedSurat) return;
+  const kode = selectedSurat['Kode Surat'] || selectedSurat['Nomor Surat'] || '';
+  
+  if (!confirm(`Tandai surat "${kode}" sebagai Sudah Disposisi?\n\nStatus akan disimpan di browser ini.`)) return;
+
+  // Simpan di localStorage sebagai record disposisi lokal
+  const records = JSON.parse(localStorage.getItem('kpu_disposisi_records') || '[]');
+  const existing = records.findIndex(r => r.kode === kode);
+  const record = {
+    kode,
+    perihal:   selectedSurat['Perihal'] || '',
+    asal:      selectedSurat['Asal'] || '',
+    tglSurat:  selectedSurat['Tanggal Surat'] || '',
+    tglDisposisi: new Date().toISOString(),
+    jenis:     activeTab,
+    sheet:     selectedSheet,
+  };
+  if (existing > -1) records[existing] = record;
+  else records.unshift(record);
+  localStorage.setItem('kpu_disposisi_records', JSON.stringify(records.slice(0, 200)));
+
+  // Update status di data lokal (tampilan)
+  selectedSurat['Status'] = 'Sudah Disposisi';
+  const globalIdx = (activeTab === 'ketua' ? dataMasukKetua : dataMasukSekretaris)
+    .findIndex(d => (d['Kode Surat'] || d['Nomor Surat']) === kode);
+  if (globalIdx > -1) {
+    if (activeTab === 'ketua') dataMasukKetua[globalIdx]['Status'] = 'Sudah Disposisi';
+    else dataMasukSekretaris[globalIdx]['Status'] = 'Sudah Disposisi';
+  }
+
+  // Log aktivitas
+  if (typeof ActivityLog !== 'undefined') {
+    ActivityLog.add(`Disposisi: ${kode}`, 'disposisi', selectedSurat['Perihal'] || '');
+  }
+
+  // Notifikasi
+  if (typeof Notif !== 'undefined') {
+    Notif.add('disposisi', `Surat ${kode} Sudah Didisposisi`, selectedSurat['Perihal'] || '', 'pages/disposisi.html');
+  }
+
+  closeModal();
+  renderTable();
+  Utils.showAlert(`✅ Surat <strong>${kode}</strong> ditandai Sudah Disposisi`, 'success');
+}
+
+// ── SALIN KODE SURAT MANUAL ───────────────────────────────
+function copyKodeSurat() {
+  if (!selectedSurat) return;
+  const kode = selectedSurat['Kode Surat'] || selectedSurat['Nomor Surat'] || '';
+  if (!kode) return;
+
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(kode).then(() => {
+      const btn = document.getElementById('btnCopy');
+      const orig = btn.innerHTML;
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Tersalin!`;
+      btn.style.background = '#F0FFF4';
+      btn.style.borderColor = '#9AE6B4';
+      btn.style.color = '#276749';
+      setTimeout(() => {
+        btn.innerHTML = orig;
+        btn.style.background = '';
+        btn.style.borderColor = '';
+        btn.style.color = '';
+      }, 2000);
+    });
+  } else {
+    // Fallback untuk browser lama
+    const ta = document.createElement('textarea');
+    ta.value = kode;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    Utils.showAlert('Kode surat disalin: ' + kode, 'success');
+  }
+}
+</script>
+</body>
+</html>
+
+
+
+
+

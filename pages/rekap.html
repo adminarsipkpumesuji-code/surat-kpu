@@ -1,0 +1,230 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rekapitulasi — KPU Kabupaten Mesuji</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<aside class="sidebar" id="sidebar"></aside>
+<div class="main-content">
+  <header class="topbar" id="topbar"></header>
+  <main class="page-content">
+    <div id="alertContainer"></div>
+
+    <!-- Filter -->
+    <div style="display:flex;gap:10px;margin-bottom:20px;align-items:center;flex-wrap:wrap;">
+      <span style="font-size:13px;font-weight:600;color:#6B7280">Filter:</span>
+      <select class="filter-select" id="filterTahun" onchange="applyFilter()">
+        <option value="">Semua Tahun</option>
+        <option>2026</option><option>2025</option><option>2024</option>
+      </select>
+      <button class="btn-icon" onclick="exportPDF()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Export PDF
+      </button>
+      <button class="btn-icon" onclick="exportRekapCSV()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export CSV
+      </button>
+      <button class="btn-icon" onclick="window.print()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Cetak
+      </button>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="stats-grid" style="margin-bottom:20px;">
+      <div class="stat-card c-blue">
+        <div class="stat-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="#2B6CB0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg></div>
+        <div class="stat-info"><div class="stat-val" id="rSMK">—</div><div class="stat-lbl">Masuk Ketua</div></div>
+      </div>
+      <div class="stat-card c-orange">
+        <div class="stat-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="#DD6B20" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg></div>
+        <div class="stat-info"><div class="stat-val" id="rSMS">—</div><div class="stat-lbl">Masuk Sekretaris</div></div>
+      </div>
+      <div class="stat-card c-green">
+        <div class="stat-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="#2F855A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div>
+        <div class="stat-info"><div class="stat-val" id="rSKK">—</div><div class="stat-lbl">Keluar Ketua</div></div>
+      </div>
+      <div class="stat-card c-red">
+        <div class="stat-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="#E53E3E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div>
+        <div class="stat-info"><div class="stat-val" id="rSKS">—</div><div class="stat-lbl">Keluar Sekretaris</div></div>
+      </div>
+      <div class="stat-card c-purple">
+        <div class="stat-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="#6B46C1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+        <div class="stat-info"><div class="stat-val" id="rTotal">—</div><div class="stat-lbl">Total Keseluruhan</div></div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts-grid" style="margin-bottom:20px;">
+      <div class="chart-card">
+        <div class="card-header">
+          <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>Distribusi per Bulan</div>
+        </div>
+        <div class="chart-wrap"><canvas id="chartBulan"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="card-header">
+          <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Proporsi</div>
+        </div>
+        <div class="chart-wrap"><canvas id="chartProporsi"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Rekap Table -->
+    <div class="table-card">
+      <div class="table-toolbar">
+        <div class="table-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Rekap per Bulan</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Bulan</th>
+            <th style="text-align:center">Masuk Ketua</th>
+            <th style="text-align:center">Masuk Sekretaris</th>
+            <th style="text-align:center">Keluar Ketua</th>
+            <th style="text-align:center">Keluar Sekretaris</th>
+            <th style="text-align:center">Total</th>
+          </tr></thead>
+          <tbody id="rekapBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="../assets/js/config.js"></script>
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/log.js"></script>
+<script src="../assets/js/notifications.js"></script>
+<script src="../assets/js/pdf-export.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+function exportPDF() {
+  const tahun = document.getElementById('filterTahun').value;
+  PDFExport.exportRekap(tahun);
+}
+
+function exportRekapCSV() {
+  // Gunakan variabel module-level allSMK/allSMS/allSKK/allSKS (bukan smk/sms yang hanya ada di applyFilter)
+  const f=d=>{const tahun=document.getElementById('filterTahun').value;
+    return !tahun||(d['Tahun']||(d['Tanggal Surat']||'').substring(0,4))===tahun;};
+  const fs=allSMK.filter(f), fm=allSMS.filter(f), fk=allSKK.filter(f), fks=allSKS.filter(f);
+  const cnt=(arr,m)=>arr.filter(d=>getMonth(d)===m).length;
+  const BLN2=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  const h=['Bulan','Masuk Ketua','Masuk Sekretaris','Keluar Ketua','Keluar Sekretaris','Total'];
+  const rows=BLN2.map((nama,i)=>{
+    const a=cnt(fs,i),b=cnt(fm,i),c=cnt(fk,i),d=cnt(fks,i);
+    return[nama,a,b,c,d,a+b+c+d];
+  });
+  rows.push(['TOTAL',fs.length,fm.length,fk.length,fks.length,fs.length+fm.length+fk.length+fks.length]);
+  const tahun=document.getElementById('filterTahun').value||'semua';
+  PDFExport.exportCSV(h,rows,`rekap-surat-${tahun}`);
+}
+let allSMK=[],allSMS=[],allSKK=[],allSKS=[];
+let chartB, chartP;
+const BLN=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const COLORS=['#2B6CB0','#DD6B20','#2F855A','#E53E3E'];
+
+document.addEventListener('DOMContentLoaded', async () => {
+  initLayout('rekap','Rekapitulasi',CONFIG.INSTANSI);
+  Utils.showLoading();
+  try {
+    [allSMK,allSMS,allSKK,allSKS]=await Promise.all([
+      SheetsAPI.getSuratMasukKetua(),SheetsAPI.getSuratMasukSekretaris(),
+      SheetsAPI.getSuratKeluarKetua(),SheetsAPI.getSuratKeluarSekretaris()
+    ]);
+    applyFilter();
+  } catch(e){ Utils.showAlert('Gagal: '+e.message,'danger'); }
+  Utils.hideLoading();
+});
+
+function applyFilter(){
+  const tahun=document.getElementById('filterTahun').value;
+  const f=arr=>tahun?arr.filter(d=>(d['Tahun']||(d['Tanggal Surat']||'').substring(0,4))===tahun):arr;
+  const smk=f(allSMK),sms=f(allSMS),skk=f(allSKK),sks=f(allSKS);
+  const total=smk.length+sms.length+skk.length+sks.length;
+  document.getElementById('rSMK').textContent=smk.length;
+  document.getElementById('rSMS').textContent=sms.length;
+  document.getElementById('rSKK').textContent=skk.length;
+  document.getElementById('rSKS').textContent=sks.length;
+  document.getElementById('rTotal').textContent=total;
+  buildBulan(smk,sms,skk,sks);
+  buildProporsi(smk.length,sms.length,skk.length,sks.length);
+  buildTable(smk,sms,skk,sks);
+}
+
+function getMonth(d){const t=new Date(d['Tanggal Surat']||d['Timestamp']);return isNaN(t)?-1:t.getMonth();}
+
+function buildBulan(smk,sms,skk,sks){
+  if(chartB) chartB.destroy();
+  const cnt=(arr,m)=>arr.filter(d=>getMonth(d)===m).length;
+  const ctx=document.getElementById('chartBulan').getContext('2d');
+  chartB=new Chart(ctx,{
+    type:'bar',
+    data:{labels:BLN.map(b=>b.slice(0,3)),
+      datasets:[
+        {label:'Masuk Ketua',data:BLN.map((_,i)=>cnt(smk,i)),backgroundColor:COLORS[0]},
+        {label:'Masuk Sekretaris',data:BLN.map((_,i)=>cnt(sms,i)),backgroundColor:COLORS[1]},
+        {label:'Keluar Ketua',data:BLN.map((_,i)=>cnt(skk,i)),backgroundColor:COLORS[2]},
+        {label:'Keluar Sekretaris',data:BLN.map((_,i)=>cnt(sks,i)),backgroundColor:COLORS[3]},
+      ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11},usePointStyle:true,padding:12}}},
+      scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:10},color:'#9CA3AF'}},
+              y:{stacked:true,beginAtZero:true,grid:{color:'#F3F4F6'},ticks:{font:{size:11},color:'#9CA3AF'}}}}
+  });
+}
+
+function buildProporsi(smk,sms,skk,sks){
+  if(chartP) chartP.destroy();
+  const ctx=document.getElementById('chartProporsi').getContext('2d');
+  chartP=new Chart(ctx,{
+    type:'doughnut',
+    data:{labels:['Masuk Ketua','Masuk Sekretaris','Keluar Ketua','Keluar Sekretaris'],
+      datasets:[{data:[smk,sms,skk,sks],backgroundColor:COLORS,borderWidth:0,hoverOffset:6}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'68%',
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11},usePointStyle:true,padding:12}},
+        tooltip:{callbacks:{label:c=>` ${c.label}: ${c.raw} surat`}}}}
+  });
+}
+
+function buildTable(smk,sms,skk,sks){
+  const cnt=(arr,m)=>arr.filter(d=>getMonth(d)===m).length;
+  let grand=0;
+  const rows=BLN.map((nama,i)=>{
+    const a=cnt(smk,i),b=cnt(sms,i),c=cnt(skk,i),d=cnt(sks,i);
+    const t=a+b+c+d; grand+=t;
+    return `<tr style="${t===0?'color:#D1D5DB':''}">
+      <td style="font-weight:${t>0?'500':'400'}">${nama}</td>
+      <td style="text-align:center">${a||'—'}</td>
+      <td style="text-align:center">${b||'—'}</td>
+      <td style="text-align:center">${c||'—'}</td>
+      <td style="text-align:center">${d||'—'}</td>
+      <td style="text-align:center;font-weight:700;color:${t>0?'#C0392B':'#D1D5DB'}">${t||'—'}</td>
+    </tr>`;
+  });
+  document.getElementById('rekapBody').innerHTML=rows.join('')+
+    `<tr style="background:#FAFAFA;font-weight:700;border-top:2px solid #E5E7EB;">
+      <td>TOTAL</td>
+      <td style="text-align:center;color:#2B6CB0">${smk.length}</td>
+      <td style="text-align:center;color:#DD6B20">${sms.length}</td>
+      <td style="text-align:center;color:#2F855A">${skk.length}</td>
+      <td style="text-align:center;color:#E53E3E">${sks.length}</td>
+      <td style="text-align:center;color:#C0392B;font-size:15px">${grand}</td>
+    </tr>`;
+}
+</script>
+</body>
+</html>
+
+
+
+
+
+

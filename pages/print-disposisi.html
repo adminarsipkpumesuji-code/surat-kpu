@@ -1,0 +1,613 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  
+  <title>Cetak Lembar Disposisi — KPU Kab. Mesuji</title>
+<script>
+// AUTH GUARD — cek login sebelum halaman dimuat
+(function(){
+  if(localStorage.getItem('kpu_logged_in')!=='true'){
+    window.location.replace('../login.html');
+  }
+})();
+</script>
+<style>
+/* RESET TOTAL */
+html,body,div,table,tr,td,span,input,select,button,a,p,h1,h2,h3,img {
+  margin:0; padding:0; box-sizing:border-box;
+  font-family:'Times New Roman',Times,serif;
+}
+body { background:#888; }
+
+/* BAR KONTROL */
+#bar {
+  background:#2C3E50; padding:10px 16px;
+  display:flex; gap:8px; align-items:center;
+  flex-wrap:wrap; position:sticky; top:0; z-index:99;
+}
+#bar input {
+  padding:6px 10px; border:1px solid #555; border-radius:4px;
+  font-size:13px; width:260px; background:#fff; color:#000;
+  font-family:Arial,sans-serif;
+}
+#bar select {
+  padding:6px 8px; border:1px solid #555; border-radius:4px;
+  font-size:13px; background:#fff; color:#000; cursor:pointer;
+  font-family:Arial,sans-serif;
+}
+#bar button {
+  padding:6px 14px; border:none; border-radius:4px;
+  font-size:13px; cursor:pointer; font-weight:600;
+  font-family:Arial,sans-serif;
+}
+.bp { background:#C0392B; color:#fff; }
+.bp:hover { background:#96281B; }
+.br { background:#eee; color:#333; }
+.br:hover { background:#ddd; }
+#sts { font-size:12px; font-weight:600; font-family:Arial,sans-serif; }
+#back { margin-left:auto; font-size:12px; color:#aaa; text-decoration:none; font-family:Arial,sans-serif; }
+
+/* WRAPPER */
+#wrap { display:flex; justify-content:center; padding:30px 20px 60px; }
+
+/* A4 */
+#a4 {
+  width:210mm;
+  background:#fff;
+  box-shadow:0 4px 24px rgba(0,0,0,.3);
+  padding:14mm 16mm 12mm 18mm;
+  /* PENTING: semua warna hitam */
+  color:#000;
+}
+
+/* PAKSA SEMUA HITAM — tidak ada pengecualian */
+#a4 * { color:#000; }
+
+/* KOP */
+#kop { text-align:center; margin-bottom:5mm; }
+#kop img { display:block; width:18mm; height:18mm; object-fit:contain; margin:0 auto 2mm; }
+#kopnama {
+  font-size:12pt; font-weight:bold;
+  text-transform:uppercase; line-height:1.5;
+}
+
+/* JUDUL */
+#judul {
+  text-align:center; font-size:12pt;
+  font-weight:normal; letter-spacing:2px;
+  margin:4mm 0 5mm;
+}
+
+/* ==========================================
+   KOTAK ATAS — border 1px solid #000
+   KOP + Judul + Data Surat dalam 1 kotak
+   ========================================== */
+#katas {
+  width:100%;
+  border:1px solid #000;
+  border-collapse:collapse;
+}
+#katas td { padding:0; }
+
+/* Padding dalam cell kotak atas */
+#katas-cell {
+  padding:4mm 4mm 3mm 6mm;
+}
+
+/* ==========================================
+   TABEL DATA SURAT
+   ========================================== */
+#tdata {
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+}
+#tdata td {
+  padding:0;
+  border:none;
+  vertical-align:top;
+  font-size:11pt;
+  color:#000;
+}
+/* OVERRIDE khusus untuk tval — garis bawah harus muncul */
+#tdata td.tval {
+  border-bottom:1px solid #000 !important;
+  border-top:none !important;
+  border-left:none !important;
+  border-right:none !important;
+  padding:0 1mm 1.5mm 1mm !important;
+  min-height:7mm;
+  outline:none;
+  cursor:text;
+}
+#tdata td.tval.tall { min-height:12mm; }
+  vertical-align:top;
+  font-size:11pt;
+  color:#000;
+}
+.tlbl { width:28mm; white-space:nowrap; padding-bottom:2mm; }
+.tsep { width: 5mm; padding-bottom:2mm; }
+.tval {
+  /* garis bawah saja */
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: 1px solid #000 !important;
+  padding: 0 1mm 1.5mm 1mm;
+  min-height: 7mm;
+  outline: none;
+  cursor: text;
+  font-size: 11pt;
+  color: #000;
+}
+.tval.tall { min-height: 12mm; }
+.tgap { height:2mm; }
+
+/* Baris Tanggal Masuk + No Agenda */
+#tag {
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+  margin-top:2mm;
+}
+#tag td { padding:0; border:none; vertical-align:top; font-size:11pt; color:#000; }
+#tag td.agv  { border-bottom:1px solid #000 !important; border-top:none !important; border-left:none !important; border-right:none !important; padding:0 1mm 1.5mm !important; min-height:7mm; outline:none; cursor:text; }
+#tag td.agv2 { border-bottom:1px solid #000 !important; border-top:none !important; border-left:none !important; border-right:none !important; padding:0 1mm 1.5mm !important; min-height:7mm; outline:none; cursor:text; }
+.agl  { width:28mm; white-space:nowrap; }
+.ags  { width: 5mm; }
+.agl2 { width:24mm; white-space:nowrap; padding-left:8mm; }
+.ags2 { width: 4mm; }
+
+/* ==========================================
+   KOTAK BAWAH — border 1px solid #000
+   Yth, Sifat, Mohon Bantuan, Catatan, TTD
+   ========================================== */
+#kbawah {
+  width:100%;
+  border:1px solid #000;
+  border-collapse:collapse;
+  margin-top:2mm;
+}
+#kbawah td { padding:0; }
+
+/* Padding dalam cell kotak bawah */
+.kbcell { padding:2.5mm 3.5mm 2.5mm 6mm; font-size:11pt; color:#000; }
+
+/* ==========================================
+   YTH — tabel titik-titik
+   ========================================== */
+#tyth {
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+}
+#tyth td { padding:0; border:none; vertical-align:top; font-size:11pt; color:#000; }
+.ythlbl { width:10mm; white-space:nowrap; padding-bottom:2mm; }
+.ythsep { width: 5mm; padding-bottom:2mm; }
+.ythval {
+  border-bottom:1px dotted #000;
+  padding:0 0 1.5mm 1mm;
+  min-height:7mm;
+  outline:none;
+  cursor:text;
+  font-size:11pt;
+  color:#000;
+}
+.ythgap { height:2mm; }
+
+/* YTH checkbox (Sekretaris) */
+.ycbrow {
+  display:flex; align-items:center; gap:5px;
+  margin-bottom:2.5mm; cursor:pointer;
+  font-size:10.5pt; color:#000;
+}
+.ycbrow:last-child { margin-bottom:0; }
+
+/* ==========================================
+   CHECKBOX □
+   ========================================== */
+.cb {
+  display:inline-block;
+  width:10px; height:10px;
+  border:1px solid #000;
+  background:#fff;
+  position:relative;
+  flex-shrink:0;
+  cursor:pointer;
+  vertical-align:middle;
+}
+.cb.on::after {
+  content:'✓';
+  position:absolute; top:-2px; left:0;
+  font-size:8pt; font-weight:bold; color:#000;
+  line-height:1; font-family:Arial,sans-serif;
+}
+
+/* ==========================================
+   SIFAT
+   ========================================== */
+#tsifat { width:100%; border-collapse:collapse; }
+#tsifat td { padding:0; border:none; vertical-align:top; font-size:11pt; color:#000; }
+.sflbl { width:11mm; white-space:nowrap; }
+.sfsep { width: 5mm; }
+.sfk1  { width:46%; }
+.sfk2  { }
+.sfitem {
+  display:flex; align-items:center; gap:5px;
+  margin-bottom:2.5mm; cursor:pointer;
+  font-size:10.5pt; color:#000;
+}
+.sfitem:last-child { margin-bottom:0; }
+
+/* ==========================================
+   MOHON BANTUAN
+   ========================================== */
+#tmb { width:100%; border-collapse:collapse; }
+#tmb td { padding:0; border:none; vertical-align:top; width:50%; }
+.mbitem {
+  display:flex; align-items:center; gap:5px;
+  margin-bottom:2.5mm; cursor:pointer;
+  font-size:10.5pt; color:#000;
+}
+.mbitem:last-child { margin-bottom:0; }
+.mbtitle { display:block; font-size:11pt; margin-bottom:2.5mm; color:#000; }
+
+/* ==========================================
+   CATATAN
+   ========================================== */
+#tcat { width:100%; border-collapse:collapse; }
+#tcat td { padding:0; border:none; vertical-align:top; font-size:11pt; color:#000; }
+.catlbl { width:16mm; white-space:nowrap; padding-top:0.5mm; }
+.catlines { }
+.catline {
+  display:block;
+  border-bottom:1px solid #000;
+  min-height:9mm;
+  outline:none; cursor:text;
+  padding:0 1mm 0.5mm;
+  font-size:11pt; color:#000;
+  width:100%;
+}
+
+/* ==========================================
+   TTD
+   ========================================== */
+#tttd { width:100%; border-collapse:collapse; }
+#tttd td { padding:0; border:none; vertical-align:bottom; font-size:11pt; color:#000; }
+.ttdkiri { width:45%; }
+.ttdkanan { text-align:center; }
+.ttdkota { display:block; font-size:11pt; margin-bottom:17mm; color:#000; }
+.ttdnama { display:inline-block; font-size:11pt; font-weight:bold; outline:none; cursor:text; color:#000; }
+.ttdnip  { display:block; font-size:10pt; outline:none; cursor:text; margin-top:1mm; color:#000; }
+
+/* ==========================================
+   PRINT
+   ========================================== */
+@media print {
+  #bar { display:none !important; }
+  body { background:#fff; }
+  #wrap { padding:0; }
+  #a4 { box-shadow:none; width:210mm; padding:14mm 16mm 12mm 18mm; }
+  * { color:#000 !important; }
+  @page { size:A4 portrait; margin:0; }
+}
+</style>
+</head>
+<body>
+
+<!-- BAR KONTROL -->
+<div id="bar">
+  <input type="text" id="qkode" placeholder="Ketik kode surat (cth: SMK/0001/...)" oninput="cariSurat(this.value)">
+  <select id="jenis" onchange="switchJenis()">
+    <option value="ketua">Lembar Disposisi Ketua</option>
+    <option value="sekretaris">Lembar Disposisi Sekretaris</option>
+  </select>
+  <button class="bp" onclick="window.print()">🖨 Cetak</button>
+  <button class="br" onclick="resetForm()">↺ Reset</button>
+  <span id="sts"></span>
+  <a id="back" href="../index.html">← Dashboard</a>
+  <button class="br" onclick="if(confirm('Yakin keluar?')){localStorage.removeItem('kpu_logged_in');window.location.replace('../login.html');}" style="margin-left:4px;">Keluar</button>
+</div>
+
+<!-- A4 -->
+<div id="wrap"><div id="a4">
+
+  <!-- =====================================
+       KOTAK ATAS: KOP + Judul + Data Surat
+       ===================================== -->
+  <table id="katas" cellspacing="0" cellpadding="0"><tbody><tr>
+    <td id="katas-cell">
+
+      <!-- KOP -->
+      <div id="kop">
+        <img src="../assets/img/logo-kpu.png" alt="KPU" onerror="this.style.display='none'">
+        <div id="kopnama">KETUA KOMISI PEMILIHAN UMUM<br>KABUPATEN MESUJI</div>
+      </div>
+
+      <!-- JUDUL -->
+      <div id="judul">LEMBAR DISPOSISI</div>
+
+      <!-- DATA SURAT -->
+      <table id="tdata" cellspacing="0" cellpadding="0"><tbody>
+        <tr>
+          <td class="tlbl">Dari</td>
+          <td class="tsep">:</td>
+          <td class="tval" id="fDari" contenteditable="true"></td>
+        </tr>
+        <tr><td colspan="3" class="tgap"></td></tr>
+        <tr>
+          <td class="tlbl">No. Surat</td>
+          <td class="tsep">:</td>
+          <td class="tval" id="fNomor" contenteditable="true"></td>
+        </tr>
+        <tr><td colspan="3" class="tgap"></td></tr>
+        <tr>
+          <td class="tlbl">Tanggal Surat</td>
+          <td class="tsep">:</td>
+          <td class="tval" id="fTanggal" contenteditable="true"></td>
+        </tr>
+        <tr><td colspan="3" class="tgap"></td></tr>
+        <tr>
+          <td class="tlbl">Perihal</td>
+          <td class="tsep">:</td>
+          <td class="tval tall" id="fPerihal" contenteditable="true"></td>
+        </tr>
+      </tbody></table>
+
+      <!-- TANGGAL MASUK + NO AGENDA -->
+      <table id="tag" cellspacing="0" cellpadding="0"><tbody><tr>
+        <td class="agl">Tanggal Masuk</td>
+        <td class="ags">:</td>
+        <td class="agv" id="fTglMasuk" contenteditable="true"></td>
+        <td class="agl2">No. Agenda</td>
+        <td class="ags2">:</td>
+        <td class="agv2" id="fAgenda" contenteditable="true"></td>
+      </tr></tbody></table>
+
+    </td>
+  </tr></tbody></table>
+
+  <!-- =====================================
+       KOTAK BAWAH: Yth s/d TTD
+       ===================================== -->
+  <table id="kbawah" cellspacing="0" cellpadding="0"><tbody>
+
+    <!-- YTH -->
+    <tr><td class="kbcell" id="bYth"></td></tr>
+
+    <!-- SIFAT -->
+    <tr><td class="kbcell">
+      <table id="tsifat" cellspacing="0" cellpadding="0"><tbody><tr>
+        <td class="sflbl">Sifat</td>
+        <td class="sfsep">:</td>
+        <td class="sfk1">
+          <div class="sfitem" onclick="tgl('cbBiasa')"><span class="cb" id="cbBiasa"></span><span>Biasa</span></div>
+          <div class="sfitem" onclick="tgl('cbMendesak')"><span class="cb" id="cbMendesak"></span><span>Mendesak</span></div>
+        </td>
+        <td class="sfk2">
+          <div class="sfitem" onclick="tgl('cbKhusus')"><span class="cb" id="cbKhusus"></span><span>Perlu Perhatian Khusus</span></div>
+          <div class="sfitem" onclick="tgl('cbBatasWaktu')"><span class="cb" id="cbBatasWaktu"></span><span>Perlu Perhatian Batas Waktu</span></div>
+        </td>
+      </tr></tbody></table>
+    </td></tr>
+
+    <!-- MOHON BANTUAN -->
+    <tr><td class="kbcell">
+      <span class="mbtitle">Mohon bantuan Saudara untuk :</span>
+      <table id="tmb" cellspacing="0" cellpadding="0"><tbody><tr>
+        <td>
+          <div class="mbitem" onclick="tgl('cbDokumentasi')"><span class="cb" id="cbDokumentasi"></span><span>Dokumentasi /File</span></div>
+          <div class="mbitem" onclick="tgl('cbHadir')"><span class="cb" id="cbHadir"></span><span>Mohon hadir mewakili saya</span></div>
+          <div class="mbitem" onclick="tgl('cbMembicarakan')"><span class="cb" id="cbMembicarakan"></span><span>Membicarakan dengan saya</span></div>
+          <div class="mbitem" onclick="tgl('cbJawaban')"><span class="cb" id="cbJawaban"></span><span>Membuat jawaban/tanggapan</span></div>
+          <div class="mbitem" onclick="tgl('cbIkutHadir')"><span class="cb" id="cbIkutHadir"></span><span>Ikut hadir</span></div>
+          <div class="mbitem" onclick="tgl('cbMemonitor')"><span class="cb" id="cbMemonitor"></span><span>Memonitor</span></div>
+          <div class="mbitem" onclick="tgl('cbMenyiapkan')"><span class="cb" id="cbMenyiapkan"></span><span>Menyiapkan konsep</span></div>
+        </td>
+        <td>
+          <div class="mbitem" onclick="tgl('cbDiketahui')"><span class="cb" id="cbDiketahui"></span><span>Diketahui/sbg. Informasi</span></div>
+          <div class="mbitem" onclick="tgl('cbMempelajari')"><span class="cb" id="cbMempelajari"></span><span>Mempelajari dan memberikan saran</span></div>
+          <div class="mbitem" onclick="tgl('cbMelaksanakan')"><span class="cb" id="cbMelaksanakan"></span><span>Melaksanakan/ menindaklanjuti</span></div>
+          <div class="mbitem" onclick="tgl('cbMemproses')"><span class="cb" id="cbMemproses"></span><span>Memproses sesuai prosedur</span></div>
+          <div class="mbitem" onclick="tgl('cbMenyelesaikan')"><span class="cb" id="cbMenyelesaikan"></span><span>Menyelesaikan sebelum batas waktu</span></div>
+          <div class="mbitem" onclick="tgl('cbMengkoordinasikan')"><span class="cb" id="cbMengkoordinasikan"></span><span>Mengkoordinasikan</span></div>
+        </td>
+      </tr></tbody></table>
+    </td></tr>
+
+    <!-- CATATAN -->
+    <tr><td class="kbcell">
+      <table id="tcat" cellspacing="0" cellpadding="0"><tbody><tr>
+        <td class="catlbl">Catatan</td>
+        <td class="catlines">
+          <span class="catline" contenteditable="true"></span>
+          <span class="catline" contenteditable="true"></span>
+          <span class="catline" contenteditable="true"></span>
+          <span class="catline" contenteditable="true"></span>
+        </td>
+      </tr></tbody></table>
+    </td></tr>
+
+    <!-- TTD -->
+    <tr><td class="kbcell" style="padding-bottom:5mm">
+      <table id="tttd" cellspacing="0" cellpadding="0"><tbody><tr>
+        <td class="ttdkiri">Terima kasih,</td>
+        <td class="ttdkanan">
+          <span class="ttdkota">Brabasan, <span id="ttdTgl"></span></span>
+          <span class="ttdnama" id="ttdNama" contenteditable="true">Samingan, M.Pd.</span>
+          <span class="ttdnip"  id="ttdNip"  contenteditable="true"></span>
+        </td>
+      </tr></tbody></table>
+    </td></tr>
+
+  </tbody></table>
+
+</div></div><!-- end #a4/#wrap -->
+
+<script>
+const SID = '1JdMfzSbzlqA44etCQ5RayYIFJChvsb2JzL7ai3y7ICM';
+
+const PJ = {
+  ketua:       { kop:'KETUA KOMISI PEMILIHAN UMUM<br>KABUPATEN MESUJI',         nama:'Samingan, M.Pd.',          nip:'' },
+  sekretaris:  { kop:'SEKRETARIS<br>KOMISI PEMILIHAN UMUM KABUPATEN MESUJI',    nama:'Febra Oka Mahendra, S.H.', nip:'' }
+};
+
+const YTH_SEKR = [
+  'Kasubbag Keuangan, Umum dan Logistik',
+  'Kasubbag Perencanaan, Data dan Informasi',
+  'Kasubbag Teknis dan Hukum',
+  'Kasubbag Partisipasi dan Hubmas dan SDM'
+];
+
+let allMasuk = [];
+
+window.addEventListener('DOMContentLoaded', async () => {
+  // Tanggal hari ini
+  document.getElementById('ttdTgl').textContent =
+    new Date().toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
+  switchJenis();
+  await loadData();
+});
+
+async function loadData() {
+  try {
+    const fetchSheet = async name => {
+      const url = `https://docs.google.com/spreadsheets/d/${SID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(name)}`;
+      const txt = await (await fetch(url)).text();
+      const js  = JSON.parse(txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);\s*$/)[1]);
+      if (js.status !== 'ok') return [];
+      const h = js.table.cols.map(c => (c.label||c.id||'').trim());
+      return js.table.rows.map(row => {
+        const o = {};
+        h.forEach((k,i) => {
+          const c = row.c?.[i];
+          let v = '';
+          if (c && c.v != null) {
+            if (typeof c.v === 'string' && c.v.startsWith('Date(')) {
+              const m = c.v.match(/Date\((\d+),(\d+),(\d+)\)/);
+              v = m ? new Date(+m[1],+m[2],+m[3]).toISOString().split('T')[0] : (c.f||c.v);
+            } else v = c.f || String(c.v);
+          }
+          o[k] = v.trim();
+        });
+        return o;
+      });
+    };
+    const norm = s => (s||'').toLowerCase().replace(/sekertaris/g,'sekretaris').trim();
+    const smkAll = await fetchSheet('Surat Masuk Ketua');
+    const smsAll = await fetchSheet('Surat Masuk Sekretaris');
+    const smk = smkAll.filter(d => !norm(d['Jenis Surat']||'') || norm(d['Jenis Surat']||'').includes('masuk ketua'));
+    const sms = smsAll.filter(d => norm(d['Jenis Surat']||d['Jenis Surat ']||'').includes('masuk sekretaris'));
+    allMasuk = [...smk.map(d=>({...d,_j:'ketua'})), ...sms.map(d=>({...d,_j:'sekretaris'}))];
+  } catch(e) { console.warn('loadData:', e.message); }
+}
+
+function switchJenis() {
+  const j = document.getElementById('jenis').value;
+  const p = PJ[j];
+  document.getElementById('kopnama').innerHTML = p.kop;
+  document.getElementById('ttdNama').textContent = p.nama;
+  document.getElementById('ttdNip').textContent  = p.nip;
+  renderYth(j);
+}
+
+function renderYth(j) {
+  const el = document.getElementById('bYth');
+  if (j === 'ketua') {
+    // Kolom lebar: 10mm (label), 5mm (sep), sisa (value)
+    // Baris 2-4: kolom label KOSONG tapi lebarnya SAMA agar ":" sejajar
+    el.innerHTML = `
+      <table cellspacing="0" cellpadding="0"
+             style="width:100%;border-collapse:collapse;table-layout:fixed;font-size:11pt;color:#000">
+        <colgroup>
+          <col style="width:10mm">
+          <col style="width:5mm">
+          <col>
+        </colgroup>
+        <tbody>
+          <tr>
+            <td style="border:none;padding-bottom:2mm;white-space:nowrap;font-size:11pt;color:#000">Yth.</td>
+            <td style="border:none;padding-bottom:2mm;font-size:11pt;color:#000">:</td>
+            <td style="border:none;border-bottom:1px dotted #000;padding:0 0 1.5mm 1mm;min-height:7mm;outline:none;cursor:text;font-size:11pt;color:#000" contenteditable="true"></td>
+          </tr>
+          <tr><td colspan="3" style="height:2mm;border:none;padding:0"></td></tr>
+          <tr>
+            <td style="border:none;padding-bottom:2mm;font-size:11pt;color:#000"></td>
+            <td style="border:none;padding-bottom:2mm;font-size:11pt;color:#000">:</td>
+            <td style="border:none;border-bottom:1px dotted #000;padding:0 0 1.5mm 1mm;min-height:7mm;outline:none;cursor:text;font-size:11pt;color:#000" contenteditable="true"></td>
+          </tr>
+          <tr><td colspan="3" style="height:2mm;border:none;padding:0"></td></tr>
+          <tr>
+            <td style="border:none;padding-bottom:2mm;font-size:11pt;color:#000"></td>
+            <td style="border:none;padding-bottom:2mm;font-size:11pt;color:#000">:</td>
+            <td style="border:none;border-bottom:1px dotted #000;padding:0 0 1.5mm 1mm;min-height:7mm;outline:none;cursor:text;font-size:11pt;color:#000" contenteditable="true"></td>
+          </tr>
+          <tr><td colspan="3" style="height:2mm;border:none;padding:0"></td></tr>
+          <tr>
+            <td style="border:none;padding-bottom:2mm;font-size:11pt;color:#000"></td>
+            <td style="border:none;padding-bottom:2mm;font-size:11pt;color:#000">:</td>
+            <td style="border:none;border-bottom:1px dotted #000;padding:0 0 1.5mm 1mm;min-height:7mm;outline:none;cursor:text;font-size:11pt;color:#000" contenteditable="true"></td>
+          </tr>
+        </tbody>
+      </table>`;
+  } else {
+    const rows = YTH_SEKR.map((lb,i) =>
+      `<div style="display:flex;align-items:center;gap:5px;margin-bottom:2.5mm;cursor:pointer;font-size:10.5pt;color:#000" onclick="tgl('yc${i}')">
+         <span class="cb" id="yc${i}"></span>
+         <span style="font-size:10.5pt;color:#000">${lb}</span>
+       </div>`).join('');
+    el.innerHTML = `
+      <table cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse">
+        <tbody><tr>
+          <td style="width:10mm;white-space:nowrap;border:none;font-size:11pt;color:#000">Yth.</td>
+          <td style="width:5mm;border:none;font-size:11pt;color:#000">:</td>
+          <td style="border:none;padding:0;font-size:11pt;color:#000">${rows}</td>
+        </tr></tbody>
+      </table>`;
+  }
+}
+
+function cariSurat(q) {
+  const s = document.getElementById('sts');
+  s.textContent = '';
+  if (!q.trim()) return;
+  const f = allMasuk.find(d =>
+    (d['Kode Surat']||d['Nomor Surat']||'').toLowerCase().includes(q.trim().toLowerCase())
+  );
+  if (f) {
+    document.getElementById('jenis').value = f._j||'ketua';
+    switchJenis();
+    const fmt = r => r ? new Date(r).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}) : '';
+    const set = (id,v) => { const e=document.getElementById(id); if(e) e.textContent=(v||'').trim(); };
+    set('fDari',    f['Asal']||'');
+    set('fNomor',   f['Kode Surat']||f['Nomor Surat']||'');
+    set('fTanggal', fmt(f['Tanggal Surat']));
+    set('fPerihal', f['Perihal']||'');
+    set('fTglMasuk',fmt(f['Tanggal Surat']));
+    s.style.color = 'lightgreen';
+    s.textContent = '✅ ' + (f['Kode Surat']||f['Nomor Surat']);
+  } else {
+    s.style.color = '#ff6b6b';
+    s.textContent = '❌ Tidak ditemukan';
+  }
+}
+
+function tgl(id) { const e=document.getElementById(id); if(e) e.classList.toggle('on'); }
+
+function resetForm() {
+  document.getElementById('qkode').value = '';
+  document.getElementById('sts').textContent = '';
+  ['fDari','fNomor','fTanggal','fPerihal','fTglMasuk','fAgenda']
+    .forEach(id => { const e=document.getElementById(id); if(e) e.textContent=''; });
+  document.querySelectorAll('.catline').forEach(l => l.textContent='');
+  document.querySelectorAll('.cb.on').forEach(cb => cb.classList.remove('on'));
+}
+</script>
+</body>
+</html>
+
+
+
+
