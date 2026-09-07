@@ -336,7 +336,7 @@ function renderTable(){
     const isNew=tgl>=threeDaysAgo;
     const isUrgent=(d['Sifat']||'').match(/penting|segera/i)&&(d['Status']||'')!=='Sudah Disposisi';
     const rowClass=isNew?'highlight-new':isUrgent?'highlight-urgent':'';
-    const nomor=d['Kode Klasifikasi']||d['Kode Surat']||d['Nomor Surat']||'—';
+    const nomor=d['Nomor Surat']||d['Kode Klasifikasi']||d['Kode Surat']||'—';
     const perihal=d['Perihal']||'—';
     const asal=d['Asal']||d['Tujuan']||'—';
     const sifat=d['Sifat']||'—';
@@ -420,11 +420,13 @@ function sortTable(key){
 function showDetail(idx){
   const d=filteredData[idx]; if(!d) return;
   const rows=[
-    ['Jenis Surat',d._jenis],['Kode Surat',d['Kode Surat']],
-    ['Nomor Surat',d['Nomor Surat']],['Tanggal Surat',Utils.formatDateLong(d['Tanggal Surat'])],
+    ['Jenis Surat',d._jenis],
+    ['Kode Surat',d['Kode Surat']],
+    ['Nomor Surat',d['Nomor Surat']||d['Kode Klasifikasi']],
+    ['Tanggal Surat',Utils.formatDateLong(d['Tanggal Surat'])],
     ['Asal',d['Asal']],['Tujuan',d['Tujuan']],['Perihal',d['Perihal']],
     ['Sifat',d['Sifat']],['Status',d['Status']],
-    ['Kode Klasifikasi',d['Kode Klasifikasi']],['File Dokumen',d['File']||d['Link File']],
+    ['File Dokumen',d['File']||d['Link File']],
   ];
   document.getElementById('modalBody').innerHTML=rows.map(([l,v])=>`
     <div class="detail-row">
