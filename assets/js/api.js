@@ -52,8 +52,10 @@ const SheetsAPI = {
           if (typeof cell.v === "string" && cell.v.startsWith("Date(")) {
             const parts = cell.v.match(/Date\((\d+),(\d+),(\d+)\)/);
             if (parts) {
-              const d = new Date(parts[1], parts[2], parts[3]);
-              val = d.toISOString().split("T")[0]; // format YYYY-MM-DD
+              const y = parts[1];
+              const m = String(parseInt(parts[2]) + 1).padStart(2, '0');
+              const day = String(parts[3]).padStart(2, '0');
+              val = `${y}-${m}-${day}`; // format YYYY-MM-DD tanpa konversi UTC
             } else {
               val = cell.f || String(cell.v);
             }
@@ -165,6 +167,12 @@ const Utils = {
   /** Format tanggal ke dd Mmm yyyy */
   formatDate(str) {
     if (!str) return "-";
+    // Parse manual YYYY-MM-DD agar tidak kena konversi UTC
+    if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+      const [y, m, d] = str.split('-').map(Number);
+      const date = new Date(y, m - 1, d);
+      return date.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+    }
     const d = new Date(str);
     if (isNaN(d)) return str;
     return d.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
@@ -173,6 +181,12 @@ const Utils = {
   /** Format tanggal panjang */
   formatDateLong(str) {
     if (!str) return "-";
+    // Parse manual YYYY-MM-DD agar tidak kena konversi UTC
+    if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+      const [y, m, d] = str.split('-').map(Number);
+      const date = new Date(y, m - 1, d);
+      return date.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+    }
     const d = new Date(str);
     if (isNaN(d)) return str;
     return d.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
