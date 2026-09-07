@@ -127,7 +127,7 @@ function renderTable(){
     return `<tr>
       <td style="text-align:center;color:#9CA3AF;font-size:12px">${start+i+1}</td>
       <td style="white-space:nowrap;color:#6B7280;font-size:12px">${Utils.formatDate(d['Tanggal Surat']||d['Timestamp'])}</td>
-      <td class="td-mono">${Utils.truncate(d['Kode Klasifikasi']||d['Kode Surat']||'—',28)}</td>
+      <td class="td-mono">${Utils.truncate(d['Nomor Surat']||d['Kode Klasifikasi']||d['Kode Surat']||'—',28)}</td>
       <td class="td-truncate" style="max-width:160px" title="${d['Asal']||''}">${Utils.truncate(d['Asal']||'—',28)}</td>
       <td class="td-truncate" style="max-width:220px" title="${d['Perihal']||''}">${Utils.truncate(d['Perihal']||'—',50)}</td>
       <td><span class="badge ${sifatCls}">${sifat}</span></td>
@@ -170,7 +170,7 @@ function resetFilter(){
 function showDetail(idx){
   const d=filteredData[idx];if(!d)return;
   document.getElementById('modalBody').innerHTML=[
-    ['Kode Surat',d['Kode Surat']],['Nomor Surat',d['Kode Klasifikasi']],
+    ['Kode Surat',d['Kode Surat']],['Nomor Surat',d['Nomor Surat']||d['Kode Klasifikasi']],
     ['Tanggal Surat',Utils.formatDateLong(d['Tanggal Surat'])],
     ['Asal',d['Asal']],['Tujuan',d['Tujuan']],['Perihal',d['Perihal']],
     ['Sifat',d['Sifat']],['Status',d['Status']],['File',d['File']||d['Link File']],
