@@ -72,7 +72,7 @@
             <tr>
               <th style="width:36px"></th>
               <th>Tanggal</th>
-              <th>Kode Surat</th>
+              <th>Nomor Surat</th>
               <th>Asal</th>
               <th>Perihal</th>
               <th>Sifat</th>
@@ -254,7 +254,7 @@ function renderTable() {
 
   tbody.innerHTML = page.map((d, i) => {
     const idx    = start + i;
-    const kode   = d['Kode Surat'] || d['Nomor Surat'] || '—';
+    const kode   = d['Nomor Surat'] || d['Kode Klasifikasi'] || d['Kode Surat'] || '—';
     const perihal = d['Perihal'] || '—';
     const asal   = d['Asal'] || '—';
     const sifat  = d['Sifat'] || '—';
@@ -342,7 +342,7 @@ function openModal() {
   }
 
   const d = selectedSurat;
-  const kode    = d['Kode Surat'] || d['Nomor Surat'] || '—';
+  const kode    = d['Nomor Surat'] || d['Kode Klasifikasi'] || d['Kode Surat'] || '—';
   const perihal = d['Perihal'] || '—';
   const asal    = d['Asal'] || '—';
   const tgl     = Utils.formatDateLong(d['Tanggal Surat']);
@@ -355,7 +355,8 @@ function openModal() {
 
   // Preview data
   const fields = [
-    ['Kode Surat', `<strong style="color:#C0392B">${kode}</strong>`],
+    ['Kode Surat', `<strong style="color:#C0392B">${d['Kode Surat'] || '—'}</strong>`],
+    ['Nomor Surat', d['Nomor Surat'] || d['Kode Klasifikasi'] || '—'],
     ['Tanggal',    tgl],
     ['Asal',       asal],
     ['Perihal',    perihal],
