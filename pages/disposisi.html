@@ -329,9 +329,6 @@ function selectSurat(idx) {
 // ── BUKA DISPOSISI LANGSUNG (dari tombol di tabel) ────────
 function bukaDisposisiLangsung(idx) {
   selectedSurat = filteredData[idx];
-  // DEBUG: log semua key data surat
-  console.log('[DEBUG DISPOSISI] Data surat:', JSON.stringify(selectedSurat));
-  // Set sheet disposisi sesuai tab aktif
   selectedSheet = activeTab;
   openModal();
 }
@@ -366,7 +363,7 @@ function openModal() {
     ['Status',     status],
   ];
   document.getElementById('previewData').innerHTML = fields.map(([l, v]) =>
-    `<div style="font-weight:600;color:#9CA3AF;font-size:12px">${l}</div><div style="font-size:13px">${v}</div>`
+    `<div style="font-weight:600;color:#6B7280;font-size:12px">${l}</div><div style="font-size:13px;color:#1F2937">${v}</div>`
   ).join('');
 
   // Kode preview untuk instruksi
