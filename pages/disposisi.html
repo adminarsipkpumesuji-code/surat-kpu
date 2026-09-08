@@ -329,6 +329,8 @@ function selectSurat(idx) {
 // ── BUKA DISPOSISI LANGSUNG (dari tombol di tabel) ────────
 function bukaDisposisiLangsung(idx) {
   selectedSurat = filteredData[idx];
+  // DEBUG: log semua key data surat
+  console.log('[DEBUG DISPOSISI] Data surat:', JSON.stringify(selectedSurat));
   // Set sheet disposisi sesuai tab aktif
   selectedSheet = activeTab;
   openModal();
