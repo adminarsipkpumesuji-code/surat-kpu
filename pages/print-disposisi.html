@@ -294,6 +294,7 @@ body { background:#888; }
   @page { size:A4 portrait; margin:0; }
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
@@ -305,6 +306,7 @@ body { background:#888; }
     <option value="sekretaris">Lembar Disposisi Sekretaris</option>
   </select>
   <button class="bp" onclick="window.print()">🖨 Cetak</button>
+  <button class="bp" onclick="simpanPDF()" style="background:#1a6fa8;" id="btnPDF">💾 Simpan PDF</button>
   <button class="br" onclick="resetForm()">↺ Reset</button>
   <span id="sts"></span>
   <a id="back" href="../index.html">← Dashboard</a>
@@ -603,6 +605,34 @@ function resetForm() {
     .forEach(id => { const e=document.getElementById(id); if(e) e.textContent=''; });
   document.querySelectorAll('.catline').forEach(l => l.textContent='');
   document.querySelectorAll('.cb.on').forEach(cb => cb.classList.remove('on'));
+}
+
+function simpanPDF() {
+  const btn = document.getElementById('btnPDF');
+  btn.textContent = '⏳ Menyimpan...';
+  btn.disabled = true;
+
+  // Ambil nama file dari nomor surat
+  const nomor = document.getElementById('fNomor')?.textContent?.trim() || 'disposisi';
+  const namaFile = 'Lembar-Disposisi-' + nomor.replace(/[\/\\:*?"<>|]/g, '-') + '.pdf';
+
+  const el = document.getElementById('a4');
+  const opt = {
+    margin:      0,
+    filename:    namaFile,
+    image:       { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true, logging: false },
+    jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+
+  html2pdf().set(opt).from(el).save().then(() => {
+    btn.textContent = '💾 Simpan PDF';
+    btn.disabled = false;
+  }).catch(e => {
+    btn.textContent = '💾 Simpan PDF';
+    btn.disabled = false;
+    alert('Gagal menyimpan PDF: ' + e.message);
+  });
 }
 </script>
 </body>
