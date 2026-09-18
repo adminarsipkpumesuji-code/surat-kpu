@@ -191,54 +191,56 @@ body {
   margin-right:4mm;
 }
 
-/* Section Sifat - HORIZONTAL SEJAJAR */
+/* Section Sifat - HORIZONTAL INLINE */
 .sec-sifat {
   margin-bottom:4mm;
 }
 .sifat-row {
   display:flex;
-  align-items:center;
   font-size:10.5pt;
 }
 .sifat-row .lb {
   width:14mm;
   flex-shrink:0;
+  align-self:flex-start;
+  padding-top:1px;
 }
 .sifat-row .sp {
   width:4mm;
   flex-shrink:0;
+  align-self:flex-start;
+  padding-top:1px;
 }
 .sifat-row .items {
   flex:1;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  column-gap:25mm;
-  row-gap:1.5mm;
+  display:flex;
+  flex-wrap:wrap;
+  gap:0 25mm;
 }
 .sifat-item {
   display:flex;
   align-items:center;
   font-size:10pt;
   cursor:pointer;
+  white-space:nowrap;
+  margin-bottom:1.5mm;
 }
 .sifat-item .cb {
   margin-right:4mm;
 }
 
-/* Section Mohon Bantuan */
+/* Section Mohon Bantuan - SAMA SEPERTI SIFAT */
 .sec-bantuan {
   margin-bottom:4mm;
 }
 .bantuan-title {
   font-size:10.5pt;
-  margin-bottom:2.5mm;
+  margin-bottom:2mm;
 }
 .bantuan-grid {
   display:flex;
-  gap:8mm;
-}
-.bantuan-col {
-  flex:1;
+  flex-wrap:wrap;
+  gap:0 10mm;
 }
 .bantuan-item {
   display:flex;
@@ -246,6 +248,8 @@ body {
   font-size:10pt;
   margin-bottom:1.5mm;
   cursor:pointer;
+  white-space:nowrap;
+  width:calc(50% - 5mm);
 }
 .bantuan-item .cb {
   margin-right:4mm;
@@ -423,61 +427,57 @@ body {
     <div class="sec-bantuan">
       <div class="bantuan-title">Mohon bantuan Saudara untuk :</div>
       <div class="bantuan-grid">
-        <div class="bantuan-col">
-          <div class="bantuan-item" onclick="tgl('cbDokumentasi')">
-            <span class="cb" id="cbDokumentasi"></span>
-            <span>Dokumentasi /File</span>
-          </div>
-          <div class="bantuan-item" onclick="tgl('cbHadir')">
-            <span class="cb" id="cbHadir"></span>
-            <span>Mohon Hadir mewakili saya</span>
-          </div>
-          <div class="bantuan-item" onclick="tgl('cbMembicarakan')">
-            <span class="cb" id="cbMembicarakan"></span>
-            <span>Membicarakan dengan saya</span>
-          </div>
-          <div class="bantuan-item" onclick="tgl('cbJawaban')">
-            <span class="cb" id="cbJawaban"></span>
-            <span>Membuat jawaban/tanggapan</span>
-          </div>
-          <div class="bantuan-item" onclick="tgl('cbIkutHadir')">
-            <span class="cb" id="cbIkutHadir"></span>
-            <span>Ikut hadir</span>
-          </div>
-          <div class="bantuan-item" onclick="tgl('cbMemonitor')">
-            <span class="cb" id="cbMemonitor"></span>
-            <span>Memonitor</span>
-          </div>
-          <div class="bantuan-item" onclick="tgl('cbMenyiapkan')">
-            <span class="cb" id="cbMenyiapkan"></span>
-            <span>Menyiapkan konsep</span>
-          </div>
+        <div class="bantuan-item" onclick="tgl('cbDokumentasi')">
+          <span class="cb" id="cbDokumentasi"></span>
+          <span>Dokumentasi /File</span>
         </div>
-        <div class="bantuan-col">
-          <div class="bantuan-item" onclick="tgl('cbDiketahui')">
-            <span class="cb" id="cbDiketahui"></span>
-            <span>Diketahui/sbg. Informasi</span>
-          </div>
-          <div class="bantuan-item" onclick="tgl('cbMempelajari')">
-            <span class="cb" id="cbMempelajari"></span>
-            <span>Mempelajari dan memberikan saran</span>
-          </div>
-          <div class="bantuan-item" onclick="tgl('cbMelaksanakan')">
-            <span class="cb" id="cbMelaksanakan"></span>
-            <span>melaksanakan/menindaklanjuti</span>
-          </div>
-          <div class="bantuan-item" onclick="tgl('cbMemproses')">
-            <span class="cb" id="cbMemproses"></span>
-            <span>Memproses sesuai prosedur</span>
-          </div>
-          <div class="bantuan-item" onclick="tgl('cbMenyelesaikan')">
-            <span class="cb" id="cbMenyelesaikan"></span>
-            <span>Menyelesaikan sebelum batas waktu</span>
-          </div>
-          <div class="bantuan-item" onclick="tgl('cbMengkoordinasikan')">
-            <span class="cb" id="cbMengkoordinasikan"></span>
-            <span>Mengkoordinasikan</span>
-          </div>
+        <div class="bantuan-item" onclick="tgl('cbDiketahui')">
+          <span class="cb" id="cbDiketahui"></span>
+          <span>Diketahui/sbg. Informasi</span>
+        </div>
+        <div class="bantuan-item" onclick="tgl('cbHadir')">
+          <span class="cb" id="cbHadir"></span>
+          <span>Mohon Hadir mewakili saya</span>
+        </div>
+        <div class="bantuan-item" onclick="tgl('cbMempelajari')">
+          <span class="cb" id="cbMempelajari"></span>
+          <span>Mempelajari dan memberikan saran</span>
+        </div>
+        <div class="bantuan-item" onclick="tgl('cbMembicarakan')">
+          <span class="cb" id="cbMembicarakan"></span>
+          <span>Membicarakan dengan saya</span>
+        </div>
+        <div class="bantuan-item" onclick="tgl('cbMelaksanakan')">
+          <span class="cb" id="cbMelaksanakan"></span>
+          <span>melaksanakan/menindaklanjuti</span>
+        </div>
+        <div class="bantuan-item" onclick="tgl('cbJawaban')">
+          <span class="cb" id="cbJawaban"></span>
+          <span>Membuat jawaban/tanggapan</span>
+        </div>
+        <div class="bantuan-item" onclick="tgl('cbMemproses')">
+          <span class="cb" id="cbMemproses"></span>
+          <span>Memproses sesuai prosedur</span>
+        </div>
+        <div class="bantuan-item" onclick="tgl('cbIkutHadir')">
+          <span class="cb" id="cbIkutHadir"></span>
+          <span>Ikut hadir</span>
+        </div>
+        <div class="bantuan-item" onclick="tgl('cbMenyelesaikan')">
+          <span class="cb" id="cbMenyelesaikan"></span>
+          <span>Menyelesaikan sebelum batas waktu</span>
+        </div>
+        <div class="bantuan-item" onclick="tgl('cbMemonitor')">
+          <span class="cb" id="cbMemonitor"></span>
+          <span>Memonitor</span>
+        </div>
+        <div class="bantuan-item" onclick="tgl('cbMengkoordinasikan')">
+          <span class="cb" id="cbMengkoordinasikan"></span>
+          <span>Mengkoordinasikan</span>
+        </div>
+        <div class="bantuan-item" onclick="tgl('cbMenyiapkan')">
+          <span class="cb" id="cbMenyiapkan"></span>
+          <span>Menyiapkan konsep</span>
         </div>
       </div>
     </div>
