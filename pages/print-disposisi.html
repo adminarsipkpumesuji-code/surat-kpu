@@ -553,8 +553,27 @@ let allMasuk = [];
 window.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('ttdTgl').textContent =
     new Date().toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
+  
+  // Baca parameter URL untuk auto-fill
+  const params = new URLSearchParams(window.location.search);
+  const kodeSurat = params.get('kode');
+  const jenisParam = params.get('jenis'); // 'ketua' atau 'sekretaris'
+  
+  // Set jenis disposisi dari parameter
+  if (jenisParam && (jenisParam === 'ketua' || jenisParam === 'sekretaris')) {
+    document.getElementById('jenis').value = jenisParam;
+  }
+  
   switchJenis();
   await loadData();
+  
+  // Auto-fill data surat jika ada parameter kode
+  if (kodeSurat) {
+    setTimeout(() => {
+      document.getElementById('qkode').value = kodeSurat;
+      cariSurat(kodeSurat);
+    }, 500);
+  }
 });
 
 async function loadData() {

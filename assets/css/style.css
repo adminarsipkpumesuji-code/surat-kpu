@@ -530,6 +530,8 @@ tbody td {
 .btn-view-blue:hover  { background:rgba(43,108,176,0.2); }
 .btn-view-gray   { background:rgba(74,85,104,0.08); color:#4A5568; }
 .btn-view-gray:hover  { background:rgba(74,85,104,0.15); }
+.btn-view-green  { background:rgba(34,139,34,0.1);  color:#228B22; }
+.btn-view-green:hover { background:rgba(34,139,34,0.2); }
 .btn-view-red    { background:rgba(197,48,48,0.1);  color:#C53030; }
 .btn-view-red:hover   { background:rgba(197,48,48,0.2); }
 .btn-view-green  { background:rgba(47,133,90,0.1);  color:#2F855A; }

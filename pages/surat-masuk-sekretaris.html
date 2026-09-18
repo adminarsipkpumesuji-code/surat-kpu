@@ -132,6 +132,9 @@ function renderTable(){
       <td class="td-truncate" style="max-width:220px" title="${d['Perihal']||''}">${Utils.truncate(d['Perihal']||'—',50)}</td>
       <td><span class="badge ${sifatCls}">${sifat}</span></td>
       <td style="white-space:nowrap;display:flex;gap:5px">
+        <button class="btn-view btn-view-green" onclick="bukaDisposisi('${d['Nomor Surat']||d['Kode Klasifikasi']||d['Kode Surat']||''}', 'sekretaris')" title="Buat Lembar Disposisi">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>Disposisi
+        </button>
         ${file?`<a href="${file}" target="_blank" class="btn-view btn-view-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>File</a>`:''}
         <button class="btn-view btn-view-gray" onclick="showDetail(${idx})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Detail</button>
       </td></tr>`;
@@ -189,6 +192,16 @@ function exportCSV(){
   const rows=filteredData.map((d,i)=>[i+1,d['Tanggal Surat']||'',d['Kode Klasifikasi']||d['Kode Surat']||'',(d['Asal']||'').replace(/,/g,';'),(d['Perihal']||'').replace(/,/g,';'),d['Sifat']||'',d['Status']||'']);
   const csv=[h,...rows].map(r=>r.join(',')).join('\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv'}));a.download='surat-masuk-sekretaris.csv';a.click();
+}
+
+// Fungsi untuk membuka halaman disposisi dengan auto-fill data surat
+function bukaDisposisi(kodeSurat, jenis) {
+  if (!kodeSurat) {
+    alert('Nomor surat tidak tersedia');
+    return;
+  }
+  // Redirect ke halaman print-disposisi dengan parameter
+  window.location.href = `disposisi.html?kode=${encodeURIComponent(kodeSurat)}&jenis=${jenis}`;
 }
 </script>
 </body>
