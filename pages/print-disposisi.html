@@ -162,12 +162,12 @@ body {
 
 /* Section Yth */
 .sec-yth {
-  margin-bottom:1.5mm;
+  margin-bottom:1.2mm;
 }
 .yth-line {
   display:flex;
   font-size:11.5pt;
-  margin-bottom:0.8mm;
+  margin-bottom:0.6mm;
   line-height:1.05;
 }
 .yth-line .lb {
@@ -179,9 +179,9 @@ body {
 .yth-line .vl {
   flex:1;
   border-bottom:1px dotted #000;
-  min-height:4mm;
+  min-height:3.8mm;
   padding-left:2mm;
-  padding-bottom:0.3mm;
+  padding-bottom:0.2mm;
   outline:none;
   line-height:1.15;
 }
@@ -264,7 +264,7 @@ body {
 
 /* Section Catatan */
 .sec-catatan {
-  margin-bottom:1.5mm;
+  margin-bottom:1.2mm;
 }
 .catatan-row {
   display:flex;
@@ -281,10 +281,10 @@ body {
   display:block;
   width:100%;
   border-bottom:1px solid #000;
-  min-height:5.5mm;
-  margin-bottom:0.8mm;
+  min-height:5mm;
+  margin-bottom:0.6mm;
   padding-left:2mm;
-  padding-bottom:0.3mm;
+  padding-bottom:0.2mm;
   outline:none;
   font-size:11.5pt;
   line-height:1.15;
@@ -500,7 +500,6 @@ body {
         <div class="lines">
           <span class="cat-line" contenteditable="true"></span>
           <span class="cat-line" contenteditable="true"></span>
-          <span class="cat-line" contenteditable="true"></span>
         </div>
       </div>
     </div>
@@ -614,11 +613,6 @@ function renderYth(j) {
         <span class="sp">:</span>
         <span class="vl" contenteditable="true"></span>
       </div>
-      <div class="yth-line">
-        <span class="lb"></span>
-        <span class="sp">:</span>
-        <span class="vl" contenteditable="true"></span>
-      </div>
     `;
   } else {
     const items = YTH_SEKR.map((txt, i) => `
@@ -629,7 +623,7 @@ function renderYth(j) {
     `).join('');
     
     el.innerHTML = `
-      <div style="display:flex;font-size:11.5pt;margin-bottom:1.5mm;line-height:1.05;">
+      <div style="display:flex;font-size:11.5pt;margin-bottom:1.2mm;line-height:1.05;">
         <span style="width:14mm;">Yth.</span>
         <span style="width:4mm;">:</span>
         <div style="flex:1;">${items}</div>
