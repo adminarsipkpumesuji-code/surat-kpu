@@ -56,51 +56,51 @@ body {
   min-height:297mm;
   background:#fff;
   box-shadow:0 4px 24px rgba(0,0,0,.3);
-  padding:8mm 12mm 8mm 12mm;
+  padding:6mm 10mm 6mm 10mm;
   color:#000;
 }
 
 /* KOTAK ATAS - TERMASUK LOGO DAN KOP */
 .kotak-atas {
   border:1.5px solid #000;
-  padding:4mm 6mm 5mm 6mm;
-  margin-bottom:2mm;
+  padding:3mm 5mm 4mm 5mm;
+  margin-bottom:1.5mm;
 }
 
 /* HEADER - DI DALAM BORDER */
 .header {
   text-align:center;
-  margin-bottom:4mm;
+  margin-bottom:3mm;
 }
 .header img {
   width:18mm;
   height:18mm;
   object-fit:contain;
-  margin:0 auto 2mm;
+  margin:0 auto 1.5mm;
   display:block;
 }
 .kop1 {
   font-size:12pt;
   font-weight:normal;
   text-transform:uppercase;
-  line-height:1.2;
-  margin-bottom:3mm;
+  line-height:1.15;
+  margin-bottom:2.5mm;
 }
 .judul {
   font-size:12pt;
   font-weight:normal;
   letter-spacing:0.5px;
-  margin-bottom:3mm;
+  margin-bottom:2.5mm;
 }
 
 /* Tabel Surat */
 .tb-surat {
   width:100%;
   border-collapse:collapse;
-  margin-bottom:3mm;
+  margin-bottom:2.5mm;
 }
 .tb-surat td {
-  padding:0 0 1.5mm 0;
+  padding:0 0 1.2mm 0;
   vertical-align:top;
   font-size:12pt;
 }
@@ -114,11 +114,11 @@ body {
 .tb-surat .vl {
   border-bottom:1px solid #000;
   padding-left:2mm;
-  min-height:5.5mm;
+  min-height:5mm;
   outline:none;
 }
 .tb-surat .vl.tall {
-  min-height:12mm;
+  min-height:11mm;
 }
 
 /* Row Agenda */
@@ -153,17 +153,17 @@ body {
 /* KOTAK BAWAH */
 .kotak-bawah {
   border:1.5px solid #000;
-  padding:4mm 6mm 5mm 6mm;
+  padding:3mm 5mm 4mm 5mm;
 }
 
 /* Section Yth */
 .sec-yth {
-  margin-bottom:3mm;
+  margin-bottom:2.5mm;
 }
 .yth-line {
   display:flex;
   font-size:12pt;
-  margin-bottom:1.5mm;
+  margin-bottom:1.2mm;
 }
 .yth-line .lb {
   width:14mm;
@@ -174,7 +174,7 @@ body {
 .yth-line .vl {
   flex:1;
   border-bottom:1px dotted #000;
-  min-height:5.5mm;
+  min-height:5mm;
   padding-left:2mm;
   outline:none;
 }
@@ -184,7 +184,7 @@ body {
   display:flex;
   align-items:center;
   font-size:12pt;
-  margin-bottom:1mm;
+  margin-bottom:0.8mm;
   cursor:pointer;
 }
 .yth-cb .cb {
@@ -193,7 +193,7 @@ body {
 
 /* Section Sifat - HORIZONTAL SEJAJAR */
 .sec-sifat {
-  margin-bottom:3mm;
+  margin-bottom:2.5mm;
 }
 .sifat-row {
   display:flex;
@@ -213,7 +213,7 @@ body {
   display:grid;
   grid-template-columns:1fr 1fr;
   column-gap:25mm;
-  row-gap:1mm;
+  row-gap:0.8mm;
 }
 .sifat-item {
   display:flex;
@@ -227,17 +227,17 @@ body {
 
 /* Section Mohon Bantuan */
 .sec-bantuan {
-  margin-bottom:3mm;
+  margin-bottom:2.5mm;
 }
 .bantuan-title {
   font-size:12pt;
-  margin-bottom:1.5mm;
+  margin-bottom:1.2mm;
 }
 .bantuan-grid {
   display:grid;
   grid-template-columns:1fr 1fr;
   column-gap:10mm;
-  row-gap:1mm;
+  row-gap:0.8mm;
   padding-left:18mm;
 }
 .bantuan-item {
@@ -252,7 +252,7 @@ body {
 
 /* Section Catatan */
 .sec-catatan {
-  margin-bottom:4mm;
+  margin-bottom:3mm;
 }
 .catatan-row {
   display:flex;
@@ -268,8 +268,8 @@ body {
   display:block;
   width:100%;
   border-bottom:1px solid #000;
-  min-height:8mm;
-  margin-bottom:2mm;
+  min-height:7mm;
+  margin-bottom:1.5mm;
   padding-left:2mm;
   outline:none;
   font-size:12pt;
@@ -288,13 +288,13 @@ body {
   text-align:center;
 }
 .ttd-tempat {
-  margin-bottom:16mm;
+  margin-bottom:14mm;
 }
 .ttd-nama {
   outline:none;
 }
 .ttd-nip {
-  margin-top:1.5mm;
+  margin-top:1mm;
   outline:none;
   font-size:11pt;
 }
@@ -614,7 +614,7 @@ function renderYth(j) {
     `).join('');
     
     el.innerHTML = `
-      <div style="display:flex;font-size:12pt;margin-bottom:3mm;">
+      <div style="display:flex;font-size:12pt;margin-bottom:2.5mm;">
         <span style="width:14mm;">Yth.</span>
         <span style="width:4mm;">:</span>
         <div style="flex:1;">${items}</div>
