@@ -18,14 +18,14 @@
   const kodeSurat = params.get('kode');
   const jenis = params.get('jenis'); // 'ketua' atau 'sekretaris'
 
+  // Jika tidak ada parameter, redirect ke print-disposisi tanpa parameter
   if (!kodeSurat) {
-    alert('Kode surat tidak ditemukan');
-    window.history.back();
+    window.location.replace('print-disposisi.html');
     return;
   }
 
   // Redirect ke print-disposisi.html dengan parameter
-  window.location.replace(`print-disposisi.html?kode=${encodeURIComponent(kodeSurat)}&jenis=${jenis}`);
+  window.location.replace(`print-disposisi.html?kode=${encodeURIComponent(kodeSurat)}&jenis=${jenis || 'ketua'}`);
 })();
 </script>
 </head>

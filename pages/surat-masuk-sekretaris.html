@@ -196,8 +196,8 @@ function exportCSV(){
 
 // Fungsi untuk membuka halaman disposisi dengan auto-fill data surat
 function bukaDisposisi(kodeSurat, jenis) {
-  if (!kodeSurat) {
-    alert('Nomor surat tidak tersedia');
+  if (!kodeSurat || kodeSurat === '—' || kodeSurat.trim() === '') {
+    alert('Kode surat tidak tersedia untuk surat ini');
     return;
   }
   // Redirect ke halaman print-disposisi dengan parameter
