@@ -177,10 +177,37 @@ const DEFAULT_USERS = [
   { username: 'sekretaris',  password: 'sekr2024',   role: 'sekretaris', name: 'Sekretaris KPU' },
 ];
 
-// Redirect jika sudah login
-if (localStorage.getItem('kpu_logged_in') === 'true') {
-  window.location.replace('index.html');
+// Tampilkan pesan jika ada (dari session expired)
+const loginMessage = sessionStorage.getItem('kpu_login_message');
+if (loginMessage) {
+  const msgDiv = document.createElement('div');
+  msgDiv.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(239,68,68,0.95);color:white;padding:12px 20px;border-radius:8px;font-size:13px;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,0.3);animation:slideDown 0.3s ease;';
+  msgDiv.textContent = loginMessage;
+  document.body.appendChild(msgDiv);
+  sessionStorage.removeItem('kpu_login_message');
+  setTimeout(() => {
+    msgDiv.style.animation = 'slideUp 0.3s ease';
+    setTimeout(() => msgDiv.remove(), 300);
+  }, 5000);
 }
+
+// Redirect jika sudah login DAN session masih valid
+const checkSession = () => {
+  const isLoggedIn = localStorage.getItem('kpu_logged_in') === 'true';
+  const expiryTime = parseInt(localStorage.getItem('kpu_login_expiry') || '0');
+  const now = new Date().getTime();
+  
+  if (isLoggedIn && expiryTime > now) {
+    window.location.replace('index.html');
+  } else if (isLoggedIn && expiryTime <= now) {
+    localStorage.removeItem('kpu_logged_in');
+    localStorage.removeItem('kpu_login_time');
+    localStorage.removeItem('kpu_login_expiry');
+    localStorage.removeItem('kpu_user');
+  }
+};
+
+checkSession();
 
 function doLogin(e) {
   e.preventDefault();
@@ -198,8 +225,13 @@ function doLogin(e) {
     const found  = users.find(u => u.username === user && u.password === pass);
 
     if (found) {
-      // Simpan session
+      // Simpan session dengan expiry
+      const loginTime = new Date().getTime();
+      const expiryTime = loginTime + (8 * 60 * 60 * 1000); // 8 jam
+      
       localStorage.setItem('kpu_logged_in', 'true');
+      localStorage.setItem('kpu_login_time', loginTime.toString());
+      localStorage.setItem('kpu_login_expiry', expiryTime.toString());
       localStorage.setItem('kpu_user', JSON.stringify({
         username: found.username,
         name:     found.name,

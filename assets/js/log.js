@@ -78,6 +78,22 @@ const Auth = {
       window.location.replace(base + 'login.html');
       return false;
     }
+    
+    // Cek session expiry
+    const expiryTime = parseInt(localStorage.getItem('kpu_login_expiry') || '0');
+    const now = new Date().getTime();
+    
+    if (expiryTime > 0 && expiryTime <= now) {
+      localStorage.removeItem('kpu_logged_in');
+      localStorage.removeItem('kpu_login_time');
+      localStorage.removeItem('kpu_login_expiry');
+      localStorage.removeItem('kpu_user');
+      const base = window.location.pathname.includes('/pages/') ? '../' : '';
+      sessionStorage.setItem('kpu_login_message', 'Sesi telah berakhir. Silakan login kembali.');
+      window.location.replace(base + 'login.html');
+      return false;
+    }
+    
     return true;
   },
 
@@ -91,6 +107,8 @@ const Auth = {
     const user = this.getUser();
     ActivityLog.add(`Logout: ${user.name || 'User'}`, 'logout');
     localStorage.removeItem('kpu_logged_in');
+    localStorage.removeItem('kpu_login_time');
+    localStorage.removeItem('kpu_login_expiry');
     localStorage.removeItem('kpu_user');
     const base = window.location.pathname.includes('/pages/') ? '../' : '';
     window.location.replace(base + 'login.html');
