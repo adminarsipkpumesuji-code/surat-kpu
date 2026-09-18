@@ -60,10 +60,17 @@ body {
   color:#000;
 }
 
-/* HEADER - DI LUAR BORDER */
+/* KOTAK ATAS - TERMASUK LOGO DAN KOP */
+.kotak-atas {
+  border:1.5px solid #000;
+  padding:5mm 7mm 6mm 7mm;
+  margin-bottom:2.5mm;
+}
+
+/* HEADER - DI DALAM BORDER */
 .header {
   text-align:center;
-  margin-bottom:6mm;
+  margin-bottom:5mm;
 }
 .header img {
   width:22mm;
@@ -83,13 +90,7 @@ body {
   font-size:11pt;
   font-weight:normal;
   letter-spacing:0.5px;
-}
-
-/* KOTAK ATAS */
-.kotak-atas {
-  border:1.5px solid #000;
-  padding:5mm 7mm 6mm 7mm;
-  margin-bottom:2.5mm;
+  margin-bottom:4mm;
 }
 
 /* Tabel Surat */
@@ -190,36 +191,34 @@ body {
   margin-right:4mm;
 }
 
-/* Section Sifat - SEJAJAR HORIZONTAL */
+/* Section Sifat - HORIZONTAL SEJAJAR */
 .sec-sifat {
   margin-bottom:4mm;
 }
 .sifat-row {
   display:flex;
-  align-items:flex-start;
+  align-items:center;
   font-size:10.5pt;
 }
 .sifat-row .lb {
   width:14mm;
-  padding-top:1px;
+  flex-shrink:0;
 }
 .sifat-row .sp {
   width:4mm;
-  padding-top:1px;
+  flex-shrink:0;
 }
 .sifat-row .items {
   flex:1;
-  display:flex;
-  gap:25mm;
-}
-.sifat-col {
-  flex:1;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  column-gap:25mm;
+  row-gap:1.5mm;
 }
 .sifat-item {
   display:flex;
   align-items:center;
   font-size:10pt;
-  margin-bottom:1.5mm;
   cursor:pointer;
 }
 .sifat-item .cb {
@@ -341,15 +340,16 @@ body {
 
 <div id="wrap"><div id="a4">
 
-  <!-- HEADER -->
-  <div class="header">
-    <img src="../assets/img/logo-kpu.png" alt="KPU">
-    <div class="kop1" id="kop1">KETUA KOMISI PEMILIHAN UMUM<br>KABUPATEN MESUJI</div>
-    <div class="judul">LEMBAR DISPOSISI</div>
-  </div>
-
-  <!-- KOTAK ATAS -->
+  <!-- KOTAK ATAS - DENGAN LOGO DAN KOP DI DALAM -->
   <div class="kotak-atas">
+    
+    <!-- HEADER -->
+    <div class="header">
+      <img src="../assets/img/logo-kpu.png" alt="KPU">
+      <div class="kop1" id="kop1">KETUA KOMISI PEMILIHAN UMUM<br>KABUPATEN MESUJI</div>
+      <div class="judul">LEMBAR DISPOSISI</div>
+    </div>
+
     <table class="tb-surat">
       <tr>
         <td class="lb">Dari</td>
@@ -399,25 +399,21 @@ body {
         <span class="lb">Sifat</span>
         <span class="sp">:</span>
         <div class="items">
-          <div class="sifat-col">
-            <div class="sifat-item" onclick="tgl('cbBiasa')">
-              <span class="cb" id="cbBiasa"></span>
-              <span>Biasa</span>
-            </div>
-            <div class="sifat-item" onclick="tgl('cbMendesak')">
-              <span class="cb" id="cbMendesak"></span>
-              <span>Mendesak</span>
-            </div>
+          <div class="sifat-item" onclick="tgl('cbBiasa')">
+            <span class="cb" id="cbBiasa"></span>
+            <span>Biasa</span>
           </div>
-          <div class="sifat-col">
-            <div class="sifat-item" onclick="tgl('cbKhusus')">
-              <span class="cb" id="cbKhusus"></span>
-              <span>Perlu Perhatian Khusus</span>
-            </div>
-            <div class="sifat-item" onclick="tgl('cbBatasWaktu')">
-              <span class="cb" id="cbBatasWaktu"></span>
-              <span>Perlu Perhatian Batas Waktu</span>
-            </div>
+          <div class="sifat-item" onclick="tgl('cbKhusus')">
+            <span class="cb" id="cbKhusus"></span>
+            <span>Perlu Perhatian Khusus</span>
+          </div>
+          <div class="sifat-item" onclick="tgl('cbMendesak')">
+            <span class="cb" id="cbMendesak"></span>
+            <span>Mendesak</span>
+          </div>
+          <div class="sifat-item" onclick="tgl('cbBatasWaktu')">
+            <span class="cb" id="cbBatasWaktu"></span>
+            <span>Perlu Perhatian Batas Waktu</span>
           </div>
         </div>
       </div>
