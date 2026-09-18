@@ -2,192 +2,216 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<link rel="icon" type="image/png" href="../assets/img/favicon.png">
-<title>Cetak Lembar Disposisi — KPU Kab. Mesuji</title>
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  
+  <title>Cetak Lembar Disposisi — KPU Kab. Mesuji</title>
 <script>
+// AUTH GUARD — cek login sebelum halaman dimuat
 (function(){
   if(localStorage.getItem('kpu_logged_in')!=='true'){
     window.location.replace('../login.html');
   }
 })();
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
-*{ margin:0; padding:0; box-sizing:border-box; }
-html,body{ font-family:'Times New Roman',Times,serif; font-size:11pt; color:#000; background:#888; }
-
-/* ── BAR KONTROL ── */
-#bar{
-  background:#2C3E50; padding:10px 16px;
-  display:flex; gap:8px; align-items:center; flex-wrap:wrap;
-  position:sticky; top:0; z-index:99;
-  font-family:Arial,sans-serif;
+/* RESET TOTAL */
+html,body,div,table,tr,td,span,input,select,button,a,p,h1,h2,h3,img {
+  margin:0; padding:0; box-sizing:border-box;
+  font-family:'Times New Roman',Times,serif;
 }
-#bar input{
+body { background:#888; }
+
+/* BAR KONTROL */
+#bar {
+  background:#2C3E50; padding:10px 16px;
+  display:flex; gap:8px; align-items:center;
+  flex-wrap:wrap; position:sticky; top:0; z-index:99;
+}
+#bar input {
   padding:6px 10px; border:1px solid #555; border-radius:4px;
   font-size:13px; width:260px; background:#fff; color:#000;
+  font-family:Arial,sans-serif;
 }
-#bar select{
+#bar select {
   padding:6px 8px; border:1px solid #555; border-radius:4px;
   font-size:13px; background:#fff; color:#000; cursor:pointer;
+  font-family:Arial,sans-serif;
 }
-#bar button{
+#bar button {
   padding:6px 14px; border:none; border-radius:4px;
   font-size:13px; cursor:pointer; font-weight:600;
+  font-family:Arial,sans-serif;
 }
-.bp{ background:#C0392B; color:#fff; }
-.bp:hover{ background:#96281B; }
-.bpdf{ background:#1a6fa8; color:#fff; }
-.bpdf:hover{ background:#155a8a; }
-.br{ background:#eee; color:#333; }
-.br:hover{ background:#ddd; }
-#sts{ font-size:12px; font-weight:600; color:#fff; }
-#navlinks{ margin-left:auto; display:flex; gap:8px; align-items:center; }
-#navlinks a{ font-size:12px; color:#aaa; text-decoration:none; }
+.bp { background:#C0392B; color:#fff; }
+.bp:hover { background:#96281B; }
+.br { background:#eee; color:#333; }
+.br:hover { background:#ddd; }
+#sts { font-size:12px; font-weight:600; font-family:Arial,sans-serif; }
+#back { margin-left:auto; font-size:12px; color:#aaa; text-decoration:none; font-family:Arial,sans-serif; }
 
-/* ── WRAPPER ── */
-#wrap{ display:flex; justify-content:center; padding:30px 20px 60px; }
+/* WRAPPER */
+#wrap { display:flex; justify-content:center; padding:30px 20px 60px; }
 
-/* ── A4 ── */
-#a4{
+/* A4 */
+#a4 {
   width:210mm;
-  min-height:297mm;
   background:#fff;
-  box-shadow:0 4px 24px rgba(0,0,0,.35);
-  padding:15mm 15mm 15mm 20mm;
+  box-shadow:0 4px 24px rgba(0,0,0,.3);
+  padding:14mm 16mm 12mm 18mm;
+  /* PENTING: semua warna hitam */
   color:#000;
 }
-#a4 *{ color:#000; }
 
-/* ── KOP ── */
-#kop{
-  text-align:center;
-  padding-bottom:3mm;
-}
-#kop img{
-  display:block;
-  width:22mm; height:22mm;
-  object-fit:contain;
-  margin:0 auto 2mm;
-}
-#kopnama{
-  font-size:12pt;
-  font-weight:bold;
-  text-transform:uppercase;
-  line-height:1.6;
-  letter-spacing:0.3px;
+/* PAKSA SEMUA HITAM — tidak ada pengecualian */
+#a4 * { color:#000; }
+
+/* KOP */
+#kop { text-align:center; margin-bottom:5mm; }
+#kop img { display:block; width:22mm; height:22mm; object-fit:contain; margin:0 auto 2mm; }
+#kopnama {
+  font-size:12pt; font-weight:bold;
+  text-transform:uppercase; line-height:1.5;
 }
 
-/* ── JUDUL ── */
-#judulwrap{
-  text-align:center;
-  margin:3mm 0 4mm;
-}
-#judul{
-  display:inline-block;
-  font-size:12pt;
-  font-weight:bold;
-  letter-spacing:1px;
-  border-bottom:2px solid #000;
-  padding-bottom:1mm;
+/* JUDUL */
+#judul {
+  text-align:center; font-size:12pt;
+  font-weight:normal; letter-spacing:2px;
+  margin:4mm 0 5mm;
 }
 
-/* ── KOTAK ATAS (border penuh) ── */
-#katas{
+/* ==========================================
+   KOTAK ATAS — border 1px solid #000
+   KOP + Judul + Data Surat dalam 1 kotak
+   ========================================== */
+#katas {
   width:100%;
   border:1px solid #000;
   border-collapse:collapse;
-  margin-bottom:2mm;
 }
-#katas-inner{
-  padding:4mm 5mm 4mm 6mm;
+#katas td { padding:0; }
+
+/* Padding dalam cell kotak atas */
+#katas-cell {
+  padding:4mm 4mm 3mm 6mm;
 }
 
-/* ── TABEL DATA SURAT ── */
-#tdata{
+/* ==========================================
+   TABEL DATA SURAT
+   ========================================== */
+#tdata {
   width:100%;
   border-collapse:collapse;
   table-layout:fixed;
 }
-#tdata td{
+#tdata td {
   padding:0;
   border:none;
   vertical-align:top;
   font-size:11pt;
-  line-height:1.4;
+  color:#000;
 }
-.dlbl{ width:30mm; white-space:nowrap; padding-bottom:1.5mm; }
-.dsep{ width:6mm; padding-bottom:1.5mm; }
-.dval{
-  border-bottom:1px solid #000;
-  padding:0 2mm 1mm 1mm;
-  min-height:6.5mm;
-  outline:none; cursor:text;
+/* OVERRIDE khusus untuk tval — garis bawah harus muncul */
+#tdata td.tval {
+  border-bottom:1px solid #000 !important;
+  border-top:none !important;
+  border-left:none !important;
+  border-right:none !important;
+  padding:0 1mm 1.5mm 1mm !important;
+  min-height:7mm;
+  outline:none;
+  cursor:text;
 }
-.dval.tall{ min-height:11mm; }
-.dgap{ height:2mm; }
+#tdata td.tval.tall { min-height:12mm; }
+  vertical-align:top;
+  font-size:11pt;
+  color:#000;
+}
+.tlbl { width:30mm; white-space:nowrap; padding-bottom:2mm; }
+.tsep { width: 5mm; padding-bottom:2mm; }
+.tval {
+  /* garis bawah saja */
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: 1px solid #000 !important;
+  padding: 0 1mm 1.5mm 1mm;
+  min-height: 7mm;
+  outline: none;
+  cursor: text;
+  font-size: 11pt;
+  color: #000;
+}
+.tval.tall { min-height: 12mm; }
+.tgap { height:2mm; }
 
-/* ── BARIS TANGGAL MASUK + NO AGENDA ── */
-#tagrow{
+/* Baris Tanggal Masuk + No Agenda */
+#tag {
   width:100%;
   border-collapse:collapse;
   table-layout:fixed;
   margin-top:2mm;
 }
-#tagrow td{ padding:0; border:none; vertical-align:top; font-size:11pt; }
-.tglbl{ width:30mm; white-space:nowrap; }
-.tgsep{ width:6mm; }
-.tgval{
-  border-bottom:1px solid #000;
-  padding:0 2mm 1mm 1mm;
-  min-height:6.5mm;
-  outline:none; cursor:text;
-}
-.agpad{ width:8mm; }
-.aglbl{ width:22mm; white-space:nowrap; }
-.agsep{ width:5mm; }
-.agval{
-  border-bottom:1px solid #000;
-  padding:0 2mm 1mm 1mm;
-  min-height:6.5mm;
-  outline:none; cursor:text;
-}
+#tag td { padding:0; border:none; vertical-align:top; font-size:11pt; color:#000; }
+#tag td.agv  { border-bottom:1px solid #000 !important; border-top:none !important; border-left:none !important; border-right:none !important; padding:0 1mm 1.5mm !important; min-height:7mm; outline:none; cursor:text; }
+#tag td.agv2 { border-bottom:1px solid #000 !important; border-top:none !important; border-left:none !important; border-right:none !important; padding:0 1mm 1.5mm !important; min-height:7mm; outline:none; cursor:text; }
+.agl  { width:30mm; white-space:nowrap; }
+.ags  { width: 5mm; }
+.agl2 { width:24mm; white-space:nowrap; padding-left:8mm; }
+.ags2 { width: 4mm; }
 
-/* ── KOTAK BAWAH ── */
-#kbawah{
+/* ==========================================
+   KOTAK BAWAH — border 1px solid #000
+   Yth, Sifat, Mohon Bantuan, Catatan, TTD
+   ========================================== */
+#kbawah {
   width:100%;
   border:1px solid #000;
   border-collapse:collapse;
+  margin-top:2mm;
 }
-#kbawah td.sec{
-  padding:3mm 5mm 3mm 6mm;
-  border:none;
-  font-size:11pt;
-  vertical-align:top;
-}
-#kbawah tr + tr td.sec{
-  border-top:1px solid #000;
-}
+#kbawah td { padding:0; }
 
-/* ── YTH ── */
-#tyth{
+/* Padding dalam cell kotak bawah */
+.kbcell { padding:2.5mm 3.5mm 2.5mm 6mm; font-size:11pt; color:#000; }
+
+/* ==========================================
+   YTH — tabel titik-titik
+   ========================================== */
+#tyth {
   width:100%;
   border-collapse:collapse;
   table-layout:fixed;
 }
-#tyth td{ padding:0; border:none; vertical-align:top; font-size:11pt; }
-.ythlbl{ width:10mm; white-space:nowrap; padding-bottom:1.5mm; }
-.ythsep{ width:6mm; padding-bottom:1.5mm; }
-.ythval{
-  border-bottom:1px dotted #000;
-  padding:0 1mm 1mm 0;
-  min-height:6.5mm;
-  outline:none; cursor:text;
+#tyth td { padding:0; border:none; vertical-align:top; font-size:11pt; color:#000; }
+.ythlbl { width:10mm; white-space:nowrap; padding-bottom:2mm; }
+.ythsep { width: 5mm; padding-bottom:2mm; }
+.ythval {
+  border-bottom:1px dotted #000 !important;
+  border-top:none !important;
+  border-left:none !important;
+  border-right:none !important;
+  padding:0 0 1.5mm 1mm;
+  min-height:7mm;
+  outline:none;
+  cursor:text;
+  font-size:11pt;
+  color:#000;
 }
-.ythgap{ height:2mm; }
+.ythgap { height:2mm; }
 
-/* ── CHECKBOX ── */
-.cb{
+/* YTH checkbox (Sekretaris) */
+.ycbrow {
+  display:flex; align-items:center; gap:5px;
+  margin-bottom:2.5mm; cursor:pointer;
+  font-size:10.5pt; color:#000;
+}
+.ycbrow:last-child { margin-bottom:0; }
+
+/* ==========================================
+   CHECKBOX □
+   ========================================== */
+.cb {
   display:inline-block;
   width:3.2mm; height:3.2mm;
   border:1px solid #000;
@@ -196,77 +220,87 @@ html,body{ font-family:'Times New Roman',Times,serif; font-size:11pt; color:#000
   flex-shrink:0;
   cursor:pointer;
   vertical-align:middle;
-  margin-right:1mm;
 }
-.cb.on::after{
+.cb.on::after {
   content:'✓';
-  position:absolute; top:-2px; left:0;
-  font-size:7.5pt; font-weight:bold; color:#000;
+  position:absolute; top:-1px; left:0;
+  font-size:8pt; font-weight:bold; color:#000;
   line-height:1; font-family:Arial,sans-serif;
 }
 
-/* ── SIFAT ── */
-#tsifat{ width:100%; border-collapse:collapse; }
-#tsifat td{ padding:0; border:none; vertical-align:top; font-size:11pt; }
-.sflbl{ width:10mm; white-space:nowrap; }
-.sfsep{ width:6mm; }
-.sfk1{ width:48%; }
-.sfk2{ }
-.sfrow{
-  display:flex; align-items:center;
-  margin-bottom:1.5mm; cursor:pointer;
-  font-size:11pt;
+/* ==========================================
+   SIFAT
+   ========================================== */
+#tsifat { width:100%; border-collapse:collapse; }
+#tsifat td { padding:0; border:none; vertical-align:top; font-size:11pt; color:#000; }
+.sflbl { width:11mm; white-space:nowrap; }
+.sfsep { width: 5mm; }
+.sfk1  { width:46%; }
+.sfk2  { }
+.sfitem {
+  display:flex; align-items:center; gap:5px;
+  margin-bottom:2.5mm; cursor:pointer;
+  font-size:10.5pt; color:#000;
 }
-.sfrow:last-child{ margin-bottom:0; }
+.sfitem:last-child { margin-bottom:0; }
 
-/* ── MOHON BANTUAN ── */
-.mbtitle{ font-size:11pt; margin-bottom:2mm; display:block; }
-#tmb{ width:100%; border-collapse:collapse; }
-#tmb td{ padding:0; border:none; vertical-align:top; width:50%; }
-.mbrow{
-  display:flex; align-items:center;
-  margin-bottom:1.5mm; cursor:pointer;
-  font-size:11pt;
+/* ==========================================
+   MOHON BANTUAN
+   ========================================== */
+#tmb { width:100%; border-collapse:collapse; }
+#tmb td { padding:0; border:none; vertical-align:top; width:50%; }
+.mbitem {
+  display:flex; align-items:center; gap:5px;
+  margin-bottom:2.5mm; cursor:pointer;
+  font-size:10.5pt; color:#000;
 }
-.mbrow:last-child{ margin-bottom:0; }
+.mbitem:last-child { margin-bottom:0; }
+.mbtitle { display:block; font-size:11pt; margin-bottom:2.5mm; color:#000; }
 
-/* ── CATATAN ── */
-#tcat{ width:100%; border-collapse:collapse; }
-#tcat td{ padding:0; border:none; vertical-align:top; font-size:11pt; }
-.catlbl{ width:18mm; white-space:nowrap; padding-top:0.5mm; }
-.catsep{ width:6mm; padding-top:0.5mm; }
-.catlines{ }
-.catline{
+/* ==========================================
+   CATATAN
+   ========================================== */
+#tcat { width:100%; border-collapse:collapse; }
+#tcat td { padding:0; border:none; vertical-align:top; font-size:11pt; color:#000; }
+.catlbl { width:16mm; white-space:nowrap; padding-top:0.5mm; }
+.catlines { }
+.catline {
   display:block;
-  border-bottom:1px solid #000;
-  min-height:8mm;
+  border-bottom:1px solid #000 !important;
+  border-top:none !important;
+  border-left:none !important;
+  border-right:none !important;
+  min-height:9mm;
   outline:none; cursor:text;
   padding:0 1mm 0.5mm;
-  font-size:11pt;
+  font-size:11pt; color:#000;
   width:100%;
-  margin-bottom:1.5mm;
 }
-.catline:last-child{ margin-bottom:0; }
 
-/* ── TTD ── */
-#tttd{ width:100%; border-collapse:collapse; }
-#tttd td{ padding:0; border:none; vertical-align:bottom; font-size:11pt; }
-.ttdkiri{ width:45%; vertical-align:bottom; }
-.ttdkanan{ text-align:center; vertical-align:bottom; }
-.ttdkota{ display:block; font-size:11pt; margin-bottom:15mm; }
-.ttdnama{ display:block; font-size:11pt; font-weight:bold; outline:none; cursor:text; }
-.ttdnip{ display:block; font-size:10pt; outline:none; cursor:text; margin-top:1mm; }
+/* ==========================================
+   TTD
+   ========================================== */
+#tttd { width:100%; border-collapse:collapse; }
+#tttd td { padding:0; border:none; vertical-align:bottom; font-size:11pt; color:#000; }
+.ttdkiri { width:45%; }
+.ttdkanan { text-align:center; }
+.ttdkota { display:block; font-size:11pt; margin-bottom:17mm; color:#000; }
+.ttdnama { display:inline-block; font-size:11pt; font-weight:bold; outline:none; cursor:text; color:#000; }
+.ttdnip  { display:block; font-size:10pt; outline:none; cursor:text; margin-top:1mm; color:#000; }
 
-/* ── PRINT ── */
-@media print{
-  #bar{ display:none !important; }
-  body{ background:#fff; }
-  #wrap{ padding:0; }
-  #a4{ box-shadow:none; width:210mm; min-height:297mm; padding:15mm 15mm 15mm 20mm; }
-  * { color:#000 !important; -webkit-print-color-adjust:exact; }
-  @page{ size:A4 portrait; margin:0; }
+/* ==========================================
+   PRINT
+   ========================================== */
+@media print {
+  #bar { display:none !important; }
+  body { background:#fff; }
+  #wrap { padding:0; }
+  #a4 { box-shadow:none; width:210mm; padding:14mm 16mm 12mm 18mm; }
+  * { color:#000 !important; }
+  @page { size:A4 portrait; margin:0; }
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
@@ -278,122 +312,125 @@ html,body{ font-family:'Times New Roman',Times,serif; font-size:11pt; color:#000
     <option value="sekretaris">Lembar Disposisi Sekretaris</option>
   </select>
   <button class="bp" onclick="window.print()">🖨 Cetak</button>
-  <button class="bpdf" id="btnPDF" onclick="simpanPDF()">💾 Simpan PDF</button>
+  <button class="bp" onclick="simpanPDF()" style="background:#1a6fa8;" id="btnPDF">💾 Simpan PDF</button>
   <button class="br" onclick="resetForm()">↺ Reset</button>
   <span id="sts"></span>
-  <div id="navlinks">
-    <a href="../index.html">← Dashboard</a>
-    <button class="br" onclick="if(confirm('Yakin keluar?')){localStorage.removeItem('kpu_logged_in');window.location.replace('../login.html');}">Keluar</button>
-  </div>
+  <a id="back" href="../index.html">← Dashboard</a>
+  <button class="br" onclick="if(confirm('Yakin keluar?')){localStorage.removeItem('kpu_logged_in');window.location.replace('../login.html');}" style="margin-left:4px;">Keluar</button>
 </div>
 
 <!-- A4 -->
 <div id="wrap"><div id="a4">
 
-  <!-- KOTAK ATAS -->
-  <table id="katas" cellspacing="0" cellpadding="0"><tbody><tr><td id="katas-inner">
+  <!-- =====================================
+       KOTAK ATAS: KOP + Judul + Data Surat
+       ===================================== -->
+  <table id="katas" cellspacing="0" cellpadding="0"><tbody><tr>
+    <td id="katas-cell">
 
-    <!-- KOP -->
-    <div id="kop">
-      <img src="../assets/img/logo-kpu.png" alt="KPU" onerror="this.style.display='none'">
-      <div id="kopnama">KETUA KOMISI PEMILIHAN UMUM<br>KABUPATEN MESUJI</div>
-    </div>
+      <!-- KOP -->
+      <div id="kop">
+        <img src="../assets/img/logo-kpu.png" alt="KPU" onerror="this.style.display='none'">
+        <div id="kopnama">KETUA KOMISI PEMILIHAN UMUM<br>KABUPATEN MESUJI</div>
+      </div>
 
-    <!-- JUDUL -->
-    <div id="judulwrap"><span id="judul">LEMBAR DISPOSISI</span></div>
+      <!-- JUDUL -->
+      <div id="judul">LEMBAR DISPOSISI</div>
 
-    <!-- DATA SURAT -->
-    <table id="tdata" cellspacing="0" cellpadding="0"><tbody>
-      <tr>
-        <td class="dlbl">Dari</td>
-        <td class="dsep">:</td>
-        <td class="dval" id="fDari" contenteditable="true"></td>
-      </tr>
-      <tr><td colspan="3" class="dgap"></td></tr>
-      <tr>
-        <td class="dlbl">No. Surat</td>
-        <td class="dsep">:</td>
-        <td class="dval" id="fNomor" contenteditable="true"></td>
-      </tr>
-      <tr><td colspan="3" class="dgap"></td></tr>
-      <tr>
-        <td class="dlbl">Tanggal Surat</td>
-        <td class="dsep">:</td>
-        <td class="dval" id="fTanggal" contenteditable="true"></td>
-      </tr>
-      <tr><td colspan="3" class="dgap"></td></tr>
-      <tr>
-        <td class="dlbl">Perihal</td>
-        <td class="dsep">:</td>
-        <td class="dval tall" id="fPerihal" contenteditable="true"></td>
-      </tr>
-    </tbody></table>
+      <!-- DATA SURAT -->
+      <table id="tdata" cellspacing="0" cellpadding="0"><tbody>
+        <tr>
+          <td class="tlbl">Dari</td>
+          <td class="tsep">:</td>
+          <td class="tval" id="fDari" contenteditable="true"></td>
+        </tr>
+        <tr><td colspan="3" class="tgap"></td></tr>
+        <tr>
+          <td class="tlbl">No. Surat</td>
+          <td class="tsep">:</td>
+          <td class="tval" id="fNomor" contenteditable="true"></td>
+        </tr>
+        <tr><td colspan="3" class="tgap"></td></tr>
+        <tr>
+          <td class="tlbl">Tanggal Surat</td>
+          <td class="tsep">:</td>
+          <td class="tval" id="fTanggal" contenteditable="true"></td>
+        </tr>
+        <tr><td colspan="3" class="tgap"></td></tr>
+        <tr>
+          <td class="tlbl">Perihal</td>
+          <td class="tsep">:</td>
+          <td class="tval tall" id="fPerihal" contenteditable="true"></td>
+        </tr>
+      </tbody></table>
 
-    <!-- TANGGAL MASUK + NO AGENDA -->
-    <table id="tagrow" cellspacing="0" cellpadding="0"><tbody><tr>
-      <td class="tglbl">Tanggal Masuk</td>
-      <td class="tgsep">:</td>
-      <td class="tgval" id="fTglMasuk" contenteditable="true"></td>
-      <td class="agpad"></td>
-      <td class="aglbl">No. Agenda</td>
-      <td class="agsep">:</td>
-      <td class="agval" id="fAgenda" contenteditable="true"></td>
-    </tr></tbody></table>
+      <!-- TANGGAL MASUK + NO AGENDA -->
+      <table id="tag" cellspacing="0" cellpadding="0"><tbody><tr>
+        <td class="agl">Tanggal Masuk</td>
+        <td class="ags">:</td>
+        <td class="agv" id="fTglMasuk" contenteditable="true"></td>
+        <td class="agl2">No. Agenda</td>
+        <td class="ags2">:</td>
+        <td class="agv2" id="fAgenda" contenteditable="true"></td>
+      </tr></tbody></table>
 
-  </td></tr></tbody></table>
+    </td>
+  </tr></tbody></table>
 
-  <!-- KOTAK BAWAH -->
+  <!-- =====================================
+       KOTAK BAWAH: Yth s/d TTD
+       ===================================== -->
   <table id="kbawah" cellspacing="0" cellpadding="0"><tbody>
 
     <!-- YTH -->
-    <tr><td class="sec" id="secYth"></td></tr>
+    <tr><td class="kbcell" id="bYth"></td></tr>
 
     <!-- SIFAT -->
-    <tr><td class="sec">
+    <tr><td class="kbcell">
       <table id="tsifat" cellspacing="0" cellpadding="0"><tbody><tr>
         <td class="sflbl">Sifat</td>
         <td class="sfsep">:</td>
         <td class="sfk1">
-          <div class="sfrow" onclick="tgl('cbBiasa')"><span class="cb" id="cbBiasa"></span>Biasa</div>
-          <div class="sfrow" onclick="tgl('cbMendesak')"><span class="cb" id="cbMendesak"></span>Mendesak</div>
+          <div class="sfitem" onclick="tgl('cbBiasa')"><span class="cb" id="cbBiasa"></span><span>Biasa</span></div>
+          <div class="sfitem" onclick="tgl('cbMendesak')"><span class="cb" id="cbMendesak"></span><span>Mendesak</span></div>
         </td>
         <td class="sfk2">
-          <div class="sfrow" onclick="tgl('cbKhusus')"><span class="cb" id="cbKhusus"></span>Perlu Perhatian Khusus</div>
-          <div class="sfrow" onclick="tgl('cbBatasWaktu')"><span class="cb" id="cbBatasWaktu"></span>Perlu Perhatian Batas Waktu</div>
+          <div class="sfitem" onclick="tgl('cbKhusus')"><span class="cb" id="cbKhusus"></span><span>Perlu Perhatian Khusus</span></div>
+          <div class="sfitem" onclick="tgl('cbBatasWaktu')"><span class="cb" id="cbBatasWaktu"></span><span>Perlu Perhatian Batas Waktu</span></div>
         </td>
       </tr></tbody></table>
     </td></tr>
 
     <!-- MOHON BANTUAN -->
-    <tr><td class="sec">
+    <tr><td class="kbcell">
       <span class="mbtitle">Mohon bantuan Saudara untuk :</span>
       <table id="tmb" cellspacing="0" cellpadding="0"><tbody><tr>
         <td>
-          <div class="mbrow" onclick="tgl('mb1')"><span class="cb" id="mb1"></span>Dokumentasi /File</div>
-          <div class="mbrow" onclick="tgl('mb2')"><span class="cb" id="mb2"></span>Mohon hadir mewakili saya</div>
-          <div class="mbrow" onclick="tgl('mb3')"><span class="cb" id="mb3"></span>Membicarakan dengan saya</div>
-          <div class="mbrow" onclick="tgl('mb4')"><span class="cb" id="mb4"></span>Membuat jawaban/tanggapan</div>
-          <div class="mbrow" onclick="tgl('mb5')"><span class="cb" id="mb5"></span>Ikut hadir</div>
-          <div class="mbrow" onclick="tgl('mb6')"><span class="cb" id="mb6"></span>Memonitor</div>
-          <div class="mbrow" onclick="tgl('mb7')"><span class="cb" id="mb7"></span>Menyiapkan konsep</div>
+          <div class="mbitem" onclick="tgl('cbDokumentasi')"><span class="cb" id="cbDokumentasi"></span><span>Dokumentasi /File</span></div>
+          <div class="mbitem" onclick="tgl('cbHadir')"><span class="cb" id="cbHadir"></span><span>Mohon hadir mewakili saya</span></div>
+          <div class="mbitem" onclick="tgl('cbMembicarakan')"><span class="cb" id="cbMembicarakan"></span><span>Membicarakan dengan saya</span></div>
+          <div class="mbitem" onclick="tgl('cbJawaban')"><span class="cb" id="cbJawaban"></span><span>Membuat jawaban/tanggapan</span></div>
+          <div class="mbitem" onclick="tgl('cbIkutHadir')"><span class="cb" id="cbIkutHadir"></span><span>Ikut hadir</span></div>
+          <div class="mbitem" onclick="tgl('cbMemonitor')"><span class="cb" id="cbMemonitor"></span><span>Memonitor</span></div>
+          <div class="mbitem" onclick="tgl('cbMenyiapkan')"><span class="cb" id="cbMenyiapkan"></span><span>Menyiapkan konsep</span></div>
         </td>
         <td>
-          <div class="mbrow" onclick="tgl('mb8')"><span class="cb" id="mb8"></span>Diketahui/sbg. Informasi</div>
-          <div class="mbrow" onclick="tgl('mb9')"><span class="cb" id="mb9"></span>Mempelajari dan memberikan saran</div>
-          <div class="mbrow" onclick="tgl('mb10')"><span class="cb" id="mb10"></span>Melaksanakan/ menindaklanjuti</div>
-          <div class="mbrow" onclick="tgl('mb11')"><span class="cb" id="mb11"></span>Memproses sesuai prosedur</div>
-          <div class="mbrow" onclick="tgl('mb12')"><span class="cb" id="mb12"></span>Menyelesaikan sebelum batas waktu</div>
-          <div class="mbrow" onclick="tgl('mb13')"><span class="cb" id="mb13"></span>Mengkoordinasikan</div>
+          <div class="mbitem" onclick="tgl('cbDiketahui')"><span class="cb" id="cbDiketahui"></span><span>Diketahui/sbg. Informasi</span></div>
+          <div class="mbitem" onclick="tgl('cbMempelajari')"><span class="cb" id="cbMempelajari"></span><span>Mempelajari dan memberikan saran</span></div>
+          <div class="mbitem" onclick="tgl('cbMelaksanakan')"><span class="cb" id="cbMelaksanakan"></span><span>Melaksanakan/ menindaklanjuti</span></div>
+          <div class="mbitem" onclick="tgl('cbMemproses')"><span class="cb" id="cbMemproses"></span><span>Memproses sesuai prosedur</span></div>
+          <div class="mbitem" onclick="tgl('cbMenyelesaikan')"><span class="cb" id="cbMenyelesaikan"></span><span>Menyelesaikan sebelum batas waktu</span></div>
+          <div class="mbitem" onclick="tgl('cbMengkoordinasikan')"><span class="cb" id="cbMengkoordinasikan"></span><span>Mengkoordinasikan</span></div>
         </td>
       </tr></tbody></table>
     </td></tr>
 
     <!-- CATATAN -->
-    <tr><td class="sec">
+    <tr><td class="kbcell">
       <table id="tcat" cellspacing="0" cellpadding="0"><tbody><tr>
         <td class="catlbl">Catatan</td>
-        <td class="catsep">:</td>
         <td class="catlines">
+          <span class="catline" contenteditable="true"></span>
           <span class="catline" contenteditable="true"></span>
           <span class="catline" contenteditable="true"></span>
           <span class="catline" contenteditable="true"></span>
@@ -402,27 +439,27 @@ html,body{ font-family:'Times New Roman',Times,serif; font-size:11pt; color:#000
     </td></tr>
 
     <!-- TTD -->
-    <tr><td class="sec" style="padding-top:4mm;padding-bottom:6mm;">
+    <tr><td class="kbcell" style="padding-bottom:5mm">
       <table id="tttd" cellspacing="0" cellpadding="0"><tbody><tr>
         <td class="ttdkiri">Terima kasih,</td>
         <td class="ttdkanan">
           <span class="ttdkota">Brabasan, <span id="ttdTgl"></span></span>
           <span class="ttdnama" id="ttdNama" contenteditable="true">Samingan, M.Pd.</span>
-          <span class="ttdnip" id="ttdNip" contenteditable="true"></span>
+          <span class="ttdnip"  id="ttdNip"  contenteditable="true"></span>
         </td>
       </tr></tbody></table>
     </td></tr>
 
   </tbody></table>
 
-</div></div>
+</div></div><!-- end #a4/#wrap -->
 
 <script>
 const SID = '1JdMfzSbzlqA44etCQ5RayYIFJChvsb2JzL7ai3y7ICM';
 
 const PJ = {
-  ketua:      { kop:'KETUA KOMISI PEMILIHAN UMUM<br>KABUPATEN MESUJI',       nama:'Samingan, M.Pd.',          nip:'' },
-  sekretaris: { kop:'SEKRETARIS<br>KOMISI PEMILIHAN UMUM KABUPATEN MESUJI',  nama:'Febra Oka Mahendra, S.H.', nip:'' }
+  ketua:       { kop:'KETUA KOMISI PEMILIHAN UMUM<br>KABUPATEN MESUJI',         nama:'Samingan, M.Pd.',          nip:'' },
+  sekretaris:  { kop:'SEKRETARIS<br>KOMISI PEMILIHAN UMUM KABUPATEN MESUJI',    nama:'Febra Oka Mahendra, S.H.', nip:'' }
 };
 
 const YTH_SEKR = [
@@ -435,6 +472,7 @@ const YTH_SEKR = [
 let allMasuk = [];
 
 window.addEventListener('DOMContentLoaded', async () => {
+  // Tanggal hari ini
   document.getElementById('ttdTgl').textContent =
     new Date().toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
   switchJenis();
@@ -452,15 +490,13 @@ async function loadData() {
       return js.table.rows.map(row => {
         const o = {};
         h.forEach((k,i) => {
-          const c = row.c?.[i]; let v = '';
+          const c = row.c?.[i];
+          let v = '';
           if (c && c.v != null) {
             if (typeof c.v === 'string' && c.v.startsWith('Date(')) {
               const m = c.v.match(/Date\((\d+),(\d+),(\d+)\)/);
-              if (m) {
-                const y=m[1], mo=String(+m[2]+1).padStart(2,'0'), d=String(m[3]).padStart(2,'0');
-                v = `${y}-${mo}-${d}`;
-              } else v = c.f||c.v;
-            } else v = c.f||String(c.v);
+              v = m ? new Date(+m[1],+m[2],+m[3]).toISOString().split('T')[0] : (c.f||c.v);
+            } else v = c.f || String(c.v);
           }
           o[k] = v.trim();
         });
@@ -470,7 +506,7 @@ async function loadData() {
     const norm = s => (s||'').toLowerCase().replace(/sekertaris/g,'sekretaris').trim();
     const smkAll = await fetchSheet('Surat Masuk Ketua');
     const smsAll = await fetchSheet('Surat Masuk Sekretaris');
-    const smk = smkAll.filter(d => !norm(d['Jenis Surat']||'')||norm(d['Jenis Surat']||'').includes('masuk ketua'));
+    const smk = smkAll.filter(d => !norm(d['Jenis Surat']||'') || norm(d['Jenis Surat']||'').includes('masuk ketua'));
     const sms = smsAll.filter(d => norm(d['Jenis Surat']||d['Jenis Surat ']||'').includes('masuk sekretaris'));
     allMasuk = [...smk.map(d=>({...d,_j:'ketua'})), ...sms.map(d=>({...d,_j:'sekretaris'}))];
   } catch(e) { console.warn('loadData:', e.message); }
@@ -486,44 +522,56 @@ function switchJenis() {
 }
 
 function renderYth(j) {
-  const el = document.getElementById('secYth');
+  const el = document.getElementById('bYth');
   if (j === 'ketua') {
+    // Kolom lebar: 10mm (label), 5mm (sep), sisa (value)
+    // Baris 2-4: kolom label KOSONG tapi lebarnya SAMA agar ":" sejajar
     el.innerHTML = `
-      <table id="tyth" cellspacing="0" cellpadding="0"><tbody>
-        <tr>
-          <td class="ythlbl">Yth.</td>
-          <td class="ythsep">:</td>
-          <td class="ythval" contenteditable="true"></td>
-        </tr>
-        <tr><td colspan="3" class="ythgap"></td></tr>
-        <tr>
-          <td class="ythlbl"></td>
-          <td class="ythsep">:</td>
-          <td class="ythval" contenteditable="true"></td>
-        </tr>
-        <tr><td colspan="3" class="ythgap"></td></tr>
-        <tr>
-          <td class="ythlbl"></td>
-          <td class="ythsep">:</td>
-          <td class="ythval" contenteditable="true"></td>
-        </tr>
-        <tr><td colspan="3" class="ythgap"></td></tr>
-        <tr>
-          <td class="ythlbl"></td>
-          <td class="ythsep">:</td>
-          <td class="ythval" contenteditable="true"></td>
-        </tr>
-      </tbody></table>`;
+      <table cellspacing="0" cellpadding="0"
+             style="width:100%;border-collapse:collapse;table-layout:fixed;font-size:11pt;color:#000">
+        <colgroup>
+          <col style="width:10mm">
+          <col style="width:5mm">
+          <col>
+        </colgroup>
+        <tbody>
+          <tr>
+            <td style="border:none;padding-bottom:2mm;white-space:nowrap;font-size:11pt;color:#000">Yth.</td>
+            <td style="border:none;padding-bottom:2mm;font-size:11pt;color:#000">:</td>
+            <td style="border:none;border-bottom:1px dotted #000 !important;border-top:none !important;border-left:none !important;border-right:none !important;padding:0 0 1.5mm 1mm;min-height:7mm;outline:none;cursor:text;font-size:11pt;color:#000" contenteditable="true"></td>
+          </tr>
+          <tr><td colspan="3" style="height:2mm;border:none;padding:0"></td></tr>
+          <tr>
+            <td style="border:none;padding-bottom:2mm;font-size:11pt;color:#000"></td>
+            <td style="border:none;padding-bottom:2mm;font-size:11pt;color:#000">:</td>
+            <td style="border:none;border-bottom:1px dotted #000 !important;border-top:none !important;border-left:none !important;border-right:none !important;padding:0 0 1.5mm 1mm;min-height:7mm;outline:none;cursor:text;font-size:11pt;color:#000" contenteditable="true"></td>
+          </tr>
+          <tr><td colspan="3" style="height:2mm;border:none;padding:0"></td></tr>
+          <tr>
+            <td style="border:none;padding-bottom:2mm;font-size:11pt;color:#000"></td>
+            <td style="border:none;padding-bottom:2mm;font-size:11pt;color:#000">:</td>
+            <td style="border:none;border-bottom:1px dotted #000 !important;border-top:none !important;border-left:none !important;border-right:none !important;padding:0 0 1.5mm 1mm;min-height:7mm;outline:none;cursor:text;font-size:11pt;color:#000" contenteditable="true"></td>
+          </tr>
+          <tr><td colspan="3" style="height:2mm;border:none;padding:0"></td></tr>
+          <tr>
+            <td style="border:none;padding-bottom:2mm;font-size:11pt;color:#000"></td>
+            <td style="border:none;padding-bottom:2mm;font-size:11pt;color:#000">:</td>
+            <td style="border:none;border-bottom:1px dotted #000 !important;border-top:none !important;border-left:none !important;border-right:none !important;padding:0 0 1.5mm 1mm;min-height:7mm;outline:none;cursor:text;font-size:11pt;color:#000" contenteditable="true"></td>
+          </tr>
+        </tbody>
+      </table>`;
   } else {
     const rows = YTH_SEKR.map((lb,i) =>
-      `<div class="mbrow" onclick="tgl('yc${i}')"><span class="cb" id="yc${i}"></span>${lb}</div>`
-    ).join('');
+      `<div style="display:flex;align-items:center;gap:5px;margin-bottom:2.5mm;cursor:pointer;font-size:10.5pt;color:#000" onclick="tgl('yc${i}')">
+         <span class="cb" id="yc${i}"></span>
+         <span style="font-size:10.5pt;color:#000">${lb}</span>
+       </div>`).join('');
     el.innerHTML = `
-      <table cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;table-layout:fixed">
+      <table cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse">
         <tbody><tr>
-          <td style="width:10mm;white-space:nowrap;border:none;font-size:11pt;">Yth.</td>
-          <td style="width:6mm;border:none;font-size:11pt;">:</td>
-          <td style="border:none;font-size:11pt;">${rows}</td>
+          <td style="width:10mm;white-space:nowrap;border:none;font-size:11pt;color:#000">Yth.</td>
+          <td style="width:5mm;border:none;font-size:11pt;color:#000">:</td>
+          <td style="border:none;padding:0;font-size:11pt;color:#000">${rows}</td>
         </tr></tbody>
       </table>`;
   }
@@ -539,22 +587,15 @@ function cariSurat(q) {
   if (f) {
     document.getElementById('jenis').value = f._j||'ketua';
     switchJenis();
-    const fmt = r => {
-      if (!r) return '';
-      if (/^\d{4}-\d{2}-\d{2}$/.test(r)) {
-        const [y,m,d] = r.split('-').map(Number);
-        return new Date(y,m-1,d).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
-      }
-      return new Date(r).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
-    };
+    const fmt = r => r ? new Date(r).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}) : '';
     const set = (id,v) => { const e=document.getElementById(id); if(e) e.textContent=(v||'').trim(); };
     set('fDari',    f['Asal']||'');
-    set('fNomor',   f['Nomor Surat']||f['Kode Klasifikasi']||f['Kode Surat']||'');
+    set('fNomor',   f['Kode Surat']||f['Nomor Surat']||'');
     set('fTanggal', fmt(f['Tanggal Surat']));
     set('fPerihal', f['Perihal']||'');
     set('fTglMasuk',fmt(f['Tanggal Surat']));
     s.style.color = 'lightgreen';
-    s.textContent = '✅ ' + (f['Nomor Surat']||f['Kode Surat']||'');
+    s.textContent = '✅ ' + (f['Kode Surat']||f['Nomor Surat']);
   } else {
     s.style.color = '#ff6b6b';
     s.textContent = '❌ Tidak ditemukan';
@@ -576,19 +617,33 @@ function simpanPDF() {
   const btn = document.getElementById('btnPDF');
   btn.textContent = '⏳ Menyimpan...';
   btn.disabled = true;
-  const nomor = (document.getElementById('fNomor')?.textContent||'disposisi').trim();
-  const namaFile = 'Lembar-Disposisi-' + nomor.replace(/[\/\\:*?"<>|]/g,'-') + '.pdf';
+
+  // Ambil nama file dari nomor surat
+  const nomor = document.getElementById('fNomor')?.textContent?.trim() || 'disposisi';
+  const namaFile = 'Lembar-Disposisi-' + nomor.replace(/[\/\\:*?"<>|]/g, '-') + '.pdf';
+
+  const el = document.getElementById('a4');
   const opt = {
-    margin: 0,
-    filename: namaFile,
-    image: { type:'jpeg', quality:0.98 },
-    html2canvas: { scale:2, useCORS:true, logging:false },
-    jsPDF: { unit:'mm', format:'a4', orientation:'portrait' }
+    margin:      0,
+    filename:    namaFile,
+    image:       { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true, logging: false },
+    jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
-  html2pdf().set(opt).from(document.getElementById('a4')).save()
-    .then(() => { btn.textContent='💾 Simpan PDF'; btn.disabled=false; })
-    .catch(e => { btn.textContent='💾 Simpan PDF'; btn.disabled=false; alert('Gagal: '+e.message); });
+
+  html2pdf().set(opt).from(el).save().then(() => {
+    btn.textContent = '💾 Simpan PDF';
+    btn.disabled = false;
+  }).catch(e => {
+    btn.textContent = '💾 Simpan PDF';
+    btn.disabled = false;
+    alert('Gagal menyimpan PDF: ' + e.message);
+  });
 }
 </script>
 </body>
 </html>
+
+
+
+
