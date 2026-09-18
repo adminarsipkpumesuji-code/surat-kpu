@@ -667,9 +667,12 @@ function cariSurat(q) {
   const s = document.getElementById('sts');
   s.textContent = '';
   if (!q.trim()) return;
-  const f = allMasuk.find(d =>
-    (d['Kode Surat']||d['Nomor Surat']||'').toLowerCase().includes(q.trim().toLowerCase())
-  );
+  const f = allMasuk.find(d => {
+    const kode = d['Kode Klasifikasi']||d['Kode Surat']||d['Kode']||'';
+    const nomor = d['Nomor Surat']||'';
+    return kode.toLowerCase().includes(q.trim().toLowerCase()) || 
+           nomor.toLowerCase().includes(q.trim().toLowerCase());
+  });
   if (f) {
     document.getElementById('jenis').value = f._j||'ketua';
     switchJenis();
@@ -679,12 +682,12 @@ function cariSurat(q) {
       if(e) e.textContent=(v||'').trim();
     };
     set('fDari',    f['Asal']||'');
-    set('fNomor',   f['Nomor Surat']||f['Kode Surat']||'');
+    set('fNomor',   f['Nomor Surat']||f['Kode Klasifikasi']||f['Kode Surat']||'');
     set('fTanggal', fmt(f['Tanggal Surat']));
     set('fPerihal', f['Perihal']||'');
     set('fTglMasuk',fmt(f['Tanggal Surat']));
     s.style.color = 'lightgreen';
-    s.textContent = '✅ ' + (f['Kode Surat']||f['Nomor Surat']);
+    s.textContent = '✅ ' + (f['Kode Klasifikasi']||f['Kode Surat']||f['Nomor Surat']);
   } else {
     s.style.color = '#ff6b6b';
     s.textContent = '❌ Tidak ditemukan';
