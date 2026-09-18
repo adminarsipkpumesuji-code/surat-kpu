@@ -5,7 +5,6 @@
 <link rel="icon" type="image/png" href="../assets/img/favicon.png">
 <title>Cetak Lembar Disposisi — KPU Kab. Mesuji</title>
 <script>
-// AUTH GUARD
 (function(){
   if(localStorage.getItem('kpu_logged_in')!=='true'){
     window.location.replace('../login.html');
@@ -13,9 +12,7 @@
 })();
 </script>
 <style>
-* {
-  margin:0; padding:0; box-sizing:border-box;
-}
+* { margin:0; padding:0; box-sizing:border-box; }
 body {
   font-family:'Times New Roman',Times,serif;
   background:#888;
@@ -59,277 +56,255 @@ body {
   min-height:297mm;
   background:#fff;
   box-shadow:0 4px 24px rgba(0,0,0,.3);
-  padding:15mm 20mm;
+  padding:12mm 18mm 12mm 18mm;
   color:#000;
 }
 
-/* LOGO DAN KOP */
+/* HEADER */
 .header {
   text-align:center;
-  margin-bottom:6mm;
+  margin-bottom:5mm;
 }
 .header img {
-  width:22mm;
-  height:22mm;
+  width:20mm;
+  height:20mm;
   object-fit:contain;
   margin:0 auto 2mm;
   display:block;
 }
-.header .kop-text {
-  font-size:11pt;
+.kop1 {
+  font-size:10.5pt;
   font-weight:normal;
-  line-height:1.3;
   text-transform:uppercase;
-  color:#000;
+  line-height:1.2;
+  margin-bottom:4mm;
 }
-.header .judul {
-  font-size:11pt;
+.judul {
+  font-size:10.5pt;
   font-weight:normal;
   letter-spacing:0.5px;
-  margin-top:5mm;
-  color:#000;
 }
 
-/* KOTAK ATAS - Data Surat */
-.box-atas {
-  border:1px solid #000;
-  padding:5mm 8mm 6mm 8mm;
+/* KOTAK ATAS */
+.kotak-atas {
+  border:1.5px solid #000;
+  padding:4mm 6mm 5mm 6mm;
   margin-bottom:2mm;
 }
 
-/* Tabel Data Surat */
-.tabel-surat {
+/* Tabel Surat */
+.tb-surat {
   width:100%;
   border-collapse:collapse;
+  margin-bottom:3mm;
 }
-.tabel-surat tr {
-  height:8mm;
-}
-.tabel-surat tr.tall {
-  height:13mm;
-}
-.tabel-surat td {
-  padding:0;
+.tb-surat td {
+  padding:0 0 1.5mm 0;
   vertical-align:top;
-  font-size:10.5pt;
-  color:#000;
+  font-size:10pt;
 }
-.tabel-surat .label {
-  width:35mm;
-  padding-right:0;
+.tb-surat .lb {
+  width:30mm;
 }
-.tabel-surat .sep {
-  width:5mm;
-  text-align:center;
+.tb-surat .sp {
+  width:4mm;
+  text-align:left;
 }
-.tabel-surat .value {
+.tb-surat .vl {
   border-bottom:1px solid #000;
-  padding-left:3mm;
-  padding-bottom:0.5mm;
+  padding-left:2mm;
+  min-height:5mm;
   outline:none;
 }
+.tb-surat .vl.tall {
+  min-height:12mm;
+}
 
-/* Baris Tanggal Masuk + No Agenda */
+/* Row Agenda */
 .row-agenda {
   display:flex;
-  margin-top:3mm;
+  font-size:10pt;
 }
-.row-agenda .kiri {
+.row-agenda > div {
   display:flex;
+}
+.row-agenda .left {
   flex:1;
 }
-.row-agenda .kanan {
-  display:flex;
+.row-agenda .right {
   flex:1;
-  padding-left:5mm;
+  padding-left:3mm;
 }
-.row-agenda .lbl {
-  width:35mm;
-  font-size:10.5pt;
+.row-agenda .lb {
+  width:30mm;
 }
 .row-agenda .sp {
-  width:5mm;
-  text-align:center;
+  width:4mm;
 }
-.row-agenda .val {
+.row-agenda .vl {
   flex:1;
   border-bottom:1px solid #000;
-  padding-left:3mm;
-  padding-bottom:0.5mm;
+  padding-left:2mm;
+  min-height:5mm;
   outline:none;
-  font-size:10.5pt;
 }
 
-/* KOTAK BAWAH - Disposisi */
-.box-bawah {
-  border:1px solid #000;
-  padding:5mm 8mm 6mm 8mm;
+/* KOTAK BAWAH */
+.kotak-bawah {
+  border:1.5px solid #000;
+  padding:4mm 6mm 5mm 6mm;
 }
 
-/* Yth */
-.section-yth {
-  margin-bottom:4mm;
+/* Section Yth */
+.sec-yth {
+  margin-bottom:3mm;
 }
-.yth-row {
+.yth-line {
   display:flex;
-  margin-bottom:2mm;
+  font-size:10pt;
+  margin-bottom:1.5mm;
 }
-.yth-row .lbl {
-  width:15mm;
-  font-size:10.5pt;
+.yth-line .lb {
+  width:12mm;
 }
-.yth-row .sp {
-  width:5mm;
-  text-align:center;
-  font-size:10.5pt;
+.yth-line .sp {
+  width:4mm;
 }
-.yth-row .val {
+.yth-line .vl {
   flex:1;
   border-bottom:1px dotted #000;
-  padding-bottom:0.5mm;
-  padding-left:3mm;
+  min-height:5mm;
+  padding-left:2mm;
   outline:none;
-  font-size:10.5pt;
-  min-height:5.5mm;
 }
 
-/* Yth checkbox untuk Sekretaris */
-.yth-checkbox {
+/* Yth checkbox */
+.yth-cb {
   display:flex;
   align-items:center;
-  margin-bottom:1.5mm;
-  font-size:10pt;
+  font-size:9.5pt;
+  margin-bottom:1mm;
   cursor:pointer;
 }
-.yth-checkbox .cb {
-  margin-right:5mm;
-  font-size:10pt;
+.yth-cb .cb {
+  margin-right:4mm;
 }
 
-/* Sifat */
-.section-sifat {
-  margin-bottom:4mm;
+/* Section Sifat */
+.sec-sifat {
+  margin-bottom:3mm;
 }
 .sifat-row {
   display:flex;
-  font-size:10.5pt;
+  font-size:10pt;
 }
-.sifat-row .lbl {
-  width:15mm;
+.sifat-row .lb {
+  width:12mm;
 }
 .sifat-row .sp {
-  width:5mm;
-  text-align:center;
+  width:4mm;
 }
 .sifat-row .items {
   flex:1;
   display:flex;
-  gap:25mm;
+  gap:20mm;
 }
 .sifat-col {
-  display:flex;
-  flex-direction:column;
-  gap:1.5mm;
+  flex:1;
 }
 .sifat-item {
   display:flex;
   align-items:center;
+  font-size:9.5pt;
+  margin-bottom:1mm;
   cursor:pointer;
-  font-size:10pt;
 }
 .sifat-item .cb {
-  margin-right:5mm;
-  font-size:10pt;
+  margin-right:4mm;
 }
 
-/* Mohon Bantuan */
-.section-bantuan {
-  margin-bottom:4mm;
+/* Section Mohon Bantuan */
+.sec-bantuan {
+  margin-bottom:3mm;
 }
 .bantuan-title {
-  font-size:10.5pt;
-  margin-bottom:2.5mm;
+  font-size:10pt;
+  margin-bottom:2mm;
 }
-.bantuan-cols {
+.bantuan-grid {
   display:flex;
-  gap:8mm;
+  gap:6mm;
 }
 .bantuan-col {
   flex:1;
-  display:flex;
-  flex-direction:column;
-  gap:1.5mm;
 }
 .bantuan-item {
   display:flex;
   align-items:center;
+  font-size:9.5pt;
+  margin-bottom:1mm;
   cursor:pointer;
-  font-size:10pt;
 }
 .bantuan-item .cb {
-  margin-right:5mm;
-  font-size:10pt;
+  margin-right:4mm;
 }
 
-/* Catatan */
-.section-catatan {
-  margin-bottom:5mm;
+/* Section Catatan */
+.sec-catatan {
+  margin-bottom:4mm;
 }
 .catatan-row {
   display:flex;
+  font-size:10pt;
 }
-.catatan-row .lbl {
+.catatan-row .lb {
   width:18mm;
-  font-size:10.5pt;
-  padding-top:0.5mm;
 }
 .catatan-row .lines {
   flex:1;
 }
-.catatan-line {
+.cat-line {
   display:block;
   width:100%;
   border-bottom:1px solid #000;
-  min-height:9mm;
-  margin-bottom:2.5mm;
-  padding-left:3mm;
-  padding-bottom:0.5mm;
+  min-height:8mm;
+  margin-bottom:2mm;
+  padding-left:2mm;
   outline:none;
-  font-size:10.5pt;
+  font-size:10pt;
 }
 
-/* TTD */
-.section-ttd {
+/* Section TTD */
+.sec-ttd {
   display:flex;
-  padding-top:3mm;
+  font-size:10pt;
 }
-.ttd-kiri {
+.ttd-left {
   flex:1;
-  font-size:10.5pt;
 }
-.ttd-kanan {
+.ttd-right {
   flex:1;
   text-align:center;
-  font-size:10.5pt;
 }
 .ttd-tempat {
-  margin-bottom:18mm;
+  margin-bottom:16mm;
 }
 .ttd-nama {
-  font-weight:normal;
   outline:none;
 }
 .ttd-nip {
-  margin-top:1.5mm;
+  margin-top:1mm;
   outline:none;
+  font-size:9.5pt;
 }
 
-/* Checkbox simbol */
+/* Checkbox */
 .cb {
+  font-size:9pt;
   user-select:none;
 }
 .cb::before {
-  content:'▭';
+  content:'☐';
 }
 .cb.on::before {
   content:'☑';
@@ -347,9 +322,8 @@ body {
 </head>
 <body>
 
-<!-- BAR KONTROL -->
 <div id="bar">
-  <input type="text" id="qkode" placeholder="Ketik kode surat (cth: SMK/0001/...)" oninput="cariSurat(this.value)">
+  <input type="text" id="qkode" placeholder="Ketik kode surat" oninput="cariSurat(this.value)">
   <select id="jenis" onchange="switchJenis()">
     <option value="ketua">Lembar Disposisi Ketua</option>
     <option value="sekretaris">Lembar Disposisi Sekretaris</option>
@@ -362,65 +336,64 @@ body {
   <button class="br" onclick="if(confirm('Yakin keluar?')){localStorage.removeItem('kpu_logged_in');window.location.replace('../login.html');}" style="margin-left:4px;">Keluar</button>
 </div>
 
-<!-- A4 -->
 <div id="wrap"><div id="a4">
 
   <!-- HEADER -->
   <div class="header">
     <img src="../assets/img/logo-kpu.png" alt="KPU">
-    <div class="kop-text" id="kopText">KETUA KOMISI PEMILIHAN UMUM<br>KABUPATEN MESUJI</div>
+    <div class="kop1" id="kop1">KETUA KOMISI PEMILIHAN UMUM<br>KABUPATEN MESUJI</div>
     <div class="judul">LEMBAR DISPOSISI</div>
   </div>
 
-  <!-- KOTAK ATAS: Data Surat -->
-  <div class="box-atas">
-    <table class="tabel-surat">
+  <!-- KOTAK ATAS -->
+  <div class="kotak-atas">
+    <table class="tb-surat">
       <tr>
-        <td class="label">Dari</td>
-        <td class="sep">:</td>
-        <td class="value" contenteditable="true" id="fDari"></td>
+        <td class="lb">Dari</td>
+        <td class="sp">:</td>
+        <td class="vl" contenteditable="true" id="fDari"></td>
       </tr>
       <tr>
-        <td class="label">No. Surat</td>
-        <td class="sep">:</td>
-        <td class="value" contenteditable="true" id="fNomor"></td>
+        <td class="lb">No. Surat</td>
+        <td class="sp">:</td>
+        <td class="vl" contenteditable="true" id="fNomor"></td>
       </tr>
       <tr>
-        <td class="label">Tanggal Surat</td>
-        <td class="sep">:</td>
-        <td class="value" contenteditable="true" id="fTanggal"></td>
+        <td class="lb">Tanggal Surat</td>
+        <td class="sp">:</td>
+        <td class="vl" contenteditable="true" id="fTanggal"></td>
       </tr>
-      <tr class="tall">
-        <td class="label">Perihal</td>
-        <td class="sep">:</td>
-        <td class="value" contenteditable="true" id="fPerihal"></td>
+      <tr>
+        <td class="lb">Perihal</td>
+        <td class="sp">:</td>
+        <td class="vl tall" contenteditable="true" id="fPerihal"></td>
       </tr>
     </table>
 
     <div class="row-agenda">
-      <div class="kiri">
-        <span class="lbl">Tanggal Masuk</span>
+      <div class="left">
+        <span class="lb">Tanggal Masuk</span>
         <span class="sp">:</span>
-        <span class="val" contenteditable="true" id="fTglMasuk"></span>
+        <span class="vl" contenteditable="true" id="fTglMasuk"></span>
       </div>
-      <div class="kanan">
-        <span class="lbl">No. Agenda</span>
+      <div class="right">
+        <span class="lb">No. Agenda</span>
         <span class="sp">:</span>
-        <span class="val" contenteditable="true" id="fAgenda"></span>
+        <span class="vl" contenteditable="true" id="fAgenda"></span>
       </div>
     </div>
   </div>
 
-  <!-- KOTAK BAWAH: Disposisi -->
-  <div class="box-bawah">
+  <!-- KOTAK BAWAH -->
+  <div class="kotak-bawah">
     
-    <!-- YTH (akan diisi via JS) -->
-    <div class="section-yth" id="sectionYth"></div>
+    <!-- YTH -->
+    <div class="sec-yth" id="secYth"></div>
 
     <!-- SIFAT -->
-    <div class="section-sifat">
+    <div class="sec-sifat">
       <div class="sifat-row">
-        <span class="lbl">Sifat</span>
+        <span class="lb">Sifat</span>
         <span class="sp">:</span>
         <div class="items">
           <div class="sifat-col">
@@ -448,9 +421,9 @@ body {
     </div>
 
     <!-- MOHON BANTUAN -->
-    <div class="section-bantuan">
+    <div class="sec-bantuan">
       <div class="bantuan-title">Mohon bantuan Saudara untuk :</div>
-      <div class="bantuan-cols">
+      <div class="bantuan-grid">
         <div class="bantuan-col">
           <div class="bantuan-item" onclick="tgl('cbDokumentasi')">
             <span class="cb" id="cbDokumentasi"></span>
@@ -511,22 +484,22 @@ body {
     </div>
 
     <!-- CATATAN -->
-    <div class="section-catatan">
+    <div class="sec-catatan">
       <div class="catatan-row">
-        <span class="lbl">Catatan</span>
+        <span class="lb">Catatan</span>
         <div class="lines">
-          <span class="catatan-line" contenteditable="true"></span>
-          <span class="catatan-line" contenteditable="true"></span>
-          <span class="catatan-line" contenteditable="true"></span>
-          <span class="catatan-line" contenteditable="true"></span>
+          <span class="cat-line" contenteditable="true"></span>
+          <span class="cat-line" contenteditable="true"></span>
+          <span class="cat-line" contenteditable="true"></span>
+          <span class="cat-line" contenteditable="true"></span>
         </div>
       </div>
     </div>
 
     <!-- TTD -->
-    <div class="section-ttd">
-      <div class="ttd-kiri">Terima kasih,</div>
-      <div class="ttd-kanan">
+    <div class="sec-ttd">
+      <div class="ttd-left">Terima kasih,</div>
+      <div class="ttd-right">
         <div class="ttd-tempat">Brabasan, <span id="ttdTgl"></span></div>
         <div class="ttd-nama" contenteditable="true" id="ttdNama">Samingan, M.Pd.</div>
         <div class="ttd-nip" contenteditable="true" id="ttdNip"></div>
@@ -607,54 +580,50 @@ async function loadData() {
 function switchJenis() {
   const j = document.getElementById('jenis').value;
   const p = PJ[j];
-  document.getElementById('kopText').innerHTML = p.kop;
+  document.getElementById('kop1').innerHTML = p.kop;
   document.getElementById('ttdNama').textContent = p.nama;
   document.getElementById('ttdNip').textContent = p.nip;
   renderYth(j);
 }
 
 function renderYth(j) {
-  const el = document.getElementById('sectionYth');
+  const el = document.getElementById('secYth');
   if (j === 'ketua') {
-    // Yth dengan 4 baris titik-titik
     el.innerHTML = `
-      <div class="yth-row">
-        <span class="lbl">Yth.</span>
+      <div class="yth-line">
+        <span class="lb">Yth.</span>
         <span class="sp">:</span>
-        <span class="val" contenteditable="true"></span>
+        <span class="vl" contenteditable="true"></span>
       </div>
-      <div class="yth-row">
-        <span class="lbl"></span>
+      <div class="yth-line">
+        <span class="lb"></span>
         <span class="sp">:</span>
-        <span class="val" contenteditable="true"></span>
+        <span class="vl" contenteditable="true"></span>
       </div>
-      <div class="yth-row">
-        <span class="lbl"></span>
+      <div class="yth-line">
+        <span class="lb"></span>
         <span class="sp">:</span>
-        <span class="val" contenteditable="true"></span>
+        <span class="vl" contenteditable="true"></span>
       </div>
-      <div class="yth-row">
-        <span class="lbl"></span>
+      <div class="yth-line">
+        <span class="lb"></span>
         <span class="sp">:</span>
-        <span class="val" contenteditable="true"></span>
+        <span class="vl" contenteditable="true"></span>
       </div>
     `;
   } else {
-    // Yth dengan checkbox untuk Sekretaris
     const items = YTH_SEKR.map((txt, i) => `
-      <div class="yth-checkbox" onclick="tgl('yc${i}')">
+      <div class="yth-cb" onclick="tgl('yc${i}')">
         <span class="cb" id="yc${i}"></span>
         <span>${txt}</span>
       </div>
     `).join('');
     
     el.innerHTML = `
-      <div class="yth-row">
-        <span class="lbl">Yth.</span>
-        <span class="sp">:</span>
-        <div style="flex:1;">
-          ${items}
-        </div>
+      <div style="display:flex;font-size:10pt;margin-bottom:3mm;">
+        <span style="width:12mm;">Yth.</span>
+        <span style="width:4mm;">:</span>
+        <div style="flex:1;">${items}</div>
       </div>
     `;
   }
@@ -701,12 +670,9 @@ function resetForm() {
       const e=document.getElementById(id);
       if(e) e.textContent='';
     });
-  document.querySelectorAll('.catatan-line').forEach(l => l.textContent='');
+  document.querySelectorAll('.cat-line').forEach(l => l.textContent='');
   document.querySelectorAll('.cb.on').forEach(cb => cb.classList.remove('on'));
-  
-  // Reset Yth jika ketua
-  const yths = document.querySelectorAll('.yth-row .val');
-  yths.forEach(y => y.textContent='');
+  document.querySelectorAll('.yth-line .vl').forEach(y => y.textContent='');
 }
 
 function simpanPDF() {
