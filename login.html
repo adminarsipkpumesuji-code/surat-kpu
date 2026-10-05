@@ -172,9 +172,10 @@
 // ── AUTH CONFIG ───────────────────────────────────────────
 // Default credentials (simpan di localStorage setelah pertama kali)
 const DEFAULT_USERS = [
-  { username: 'admin',       password: 'kpu2024',    role: 'admin',    name: 'Administrator' },
-  { username: 'ketua',       password: 'ketua2024',  role: 'ketua',    name: 'Ketua KPU' },
-  { username: 'sekretaris',  password: 'sekr2024',   role: 'sekretaris', name: 'Sekretaris KPU' },
+  { username: 'admin',       password: 'kpu2024',    role: 'admin',       name: 'Administrator' },
+  { username: 'subag',       password: 'subag2024',  role: 'admin_subag', name: 'Admin Subbagian' },
+  { username: 'ketua',       password: 'ketua2024',  role: 'ketua',       name: 'Ketua KPU' },
+  { username: 'sekretaris',  password: 'sekr2024',   role: 'sekretaris',  name: 'Sekretaris KPU' },
 ];
 
 // Tampilkan pesan jika ada (dari session expired)
