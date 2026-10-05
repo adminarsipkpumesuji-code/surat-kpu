@@ -51,6 +51,15 @@ function _logoPath() {
 function renderSidebar(activeId) {
   const user = JSON.parse(localStorage.getItem('kpu_user') || '{}');
   const initials = (user.name || 'A').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+  
+  // Format role label
+  const roleLabels = {
+    'admin': 'Admin',
+    'admin_subag': 'Admin Subag',
+    'ketua': 'Ketua',
+    'sekretaris': 'Sekretaris'
+  };
+  const roleLabel = roleLabels[user.role] || user.role || 'admin';
 
   // Filter menu berdasarkan role
   const filteredItems = typeof RBAC !== 'undefined' 
@@ -86,7 +95,7 @@ function renderSidebar(activeId) {
         <div class="sidebar-avatar">${initials}</div>
         <div class="sidebar-user-info">
           <div class="sidebar-user-name">${user.name || 'Administrator'}</div>
-          <div class="sidebar-user-role">${user.role || 'admin'}</div>
+          <div class="sidebar-user-role">${roleLabel}</div>
         </div>
       </div>
     </div>`;

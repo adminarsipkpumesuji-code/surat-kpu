@@ -201,6 +201,7 @@
               <input type="password" id="newPass" class="filter-input" placeholder="Password">
               <select id="newRole" class="filter-select" style="width:100%">
                 <option value="admin">Admin</option>
+                <option value="admin_subag">Admin Subag</option>
                 <option value="ketua">Ketua</option>
                 <option value="sekretaris">Sekretaris</option>
               </select>
@@ -283,8 +284,18 @@ document.addEventListener('DOMContentLoaded', () => {
 function loadProfileForm(){
   const user=Auth.getUser();
   if(!user.username) return;
+  
+  // Format role label
+  const roleLabels = {
+    'admin': 'Admin',
+    'admin_subag': 'Admin Subag',
+    'ketua': 'Ketua',
+    'sekretaris': 'Sekretaris'
+  };
+  const roleLabel = roleLabels[user.role] || user.role;
+  
   document.getElementById('profileName').textContent=user.name||'—';
-  document.getElementById('profileRole').textContent=user.role||'—';
+  document.getElementById('profileRole').textContent=roleLabel||'—';
   document.getElementById('profileLogin').textContent='Login: '+new Date(user.loginAt||'').toLocaleString('id-ID');
   document.getElementById('avatarInitials').textContent=(user.name||'A').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
   document.getElementById('inpUsername').value=user.username||'';
@@ -405,12 +416,24 @@ function getUsers(){
 function renderUserList(){
   const users=getUsers();
   const current=Auth.getUser();
+  
+  // Helper function untuk format role label
+  const formatRole = (role) => {
+    const roleLabels = {
+      'admin': 'Admin',
+      'admin_subag': 'Admin Subag',
+      'ketua': 'Ketua',
+      'sekretaris': 'Sekretaris'
+    };
+    return roleLabels[role] || role;
+  };
+  
   const html=users.map((u,i)=>`
     <div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-sm);background:var(--bg-page);border:1px solid var(--border);margin-bottom:8px">
       <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-dark));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:white;flex-shrink:0">${u.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}</div>
       <div style="flex:1;min-width:0">
         <div style="font-size:13px;font-weight:600;color:var(--text-main)">${u.name}</div>
-        <div style="font-size:11px;color:var(--text-muted)">@${u.username} · ${u.role}</div>
+        <div style="font-size:11px;color:var(--text-muted)">@${u.username} · ${formatRole(u.role)}</div>
       </div>
       ${u.username!==current.username?`<button onclick="deleteUser(${i})" class="btn-view btn-view-red" style="font-size:11px">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>Hapus</button>`:'<span class="badge badge-green" style="font-size:10px">Anda</span>'}
@@ -431,7 +454,17 @@ function addUser(){
   ['newUsername','newName','newPass'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('newRole').value='admin';
   renderUserList();
-  ActivityLog.add('Pengguna baru ditambahkan','info',n+' ('+r+')');
+  
+  // Format role label untuk log
+  const roleLabels = {
+    'admin': 'Admin',
+    'admin_subag': 'Admin Subag',
+    'ketua': 'Ketua',
+    'sekretaris': 'Sekretaris'
+  };
+  const roleLabel = roleLabels[r] || r;
+  
+  ActivityLog.add('Pengguna baru ditambahkan','info',n+' ('+roleLabel+')');
   Utils.showAlert('Pengguna '+n+' berhasil ditambahkan','success');
 }
 
