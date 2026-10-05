@@ -18,7 +18,7 @@
 
     <!-- STAT CARDS -->
     <div class="stats-grid" id="statsGrid">
-      <div class="stat-card c-blue" onclick="location.href='pages/surat-masuk-ketua.html'" title="Lihat Surat Masuk Ketua">
+      <div class="stat-card c-blue" data-role-access="admin,admin_subag,ketua" onclick="location.href='pages/surat-masuk-ketua.html'" title="Lihat Surat Masuk Ketua">
         <div class="stat-icon-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke="#2B6CB0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg>
         </div>
@@ -28,7 +28,7 @@
           <div class="stat-delta" id="deltaSMK">— bulan ini</div>
         </div>
       </div>
-      <div class="stat-card c-orange" onclick="location.href='pages/surat-masuk-sekretaris.html'" title="Lihat Surat Masuk Sekretaris">
+      <div class="stat-card c-orange" data-role-access="admin,admin_subag,sekretaris" onclick="location.href='pages/surat-masuk-sekretaris.html'" title="Lihat Surat Masuk Sekretaris">
         <div class="stat-icon-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke="#DD6B20" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg>
         </div>
@@ -38,7 +38,7 @@
           <div class="stat-delta" id="deltaSMS">— bulan ini</div>
         </div>
       </div>
-      <div class="stat-card c-green" onclick="location.href='pages/surat-keluar-ketua.html'" title="Lihat Surat Keluar Ketua">
+      <div class="stat-card c-green" data-role-access="admin,admin_subag,ketua" onclick="location.href='pages/surat-keluar-ketua.html'" title="Lihat Surat Keluar Ketua">
         <div class="stat-icon-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke="#2F855A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
         </div>
@@ -48,7 +48,7 @@
           <div class="stat-delta" id="deltaSKK">— bulan ini</div>
         </div>
       </div>
-      <div class="stat-card c-red" onclick="location.href='pages/surat-keluar-sekretaris.html'" title="Lihat Surat Keluar Sekretaris">
+      <div class="stat-card c-red" data-role-access="admin,admin_subag,sekretaris" onclick="location.href='pages/surat-keluar-sekretaris.html'" title="Lihat Surat Keluar Sekretaris">
         <div class="stat-icon-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke="#E53E3E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
         </div>
@@ -58,7 +58,7 @@
           <div class="stat-delta" id="deltaSKS">— bulan ini</div>
         </div>
       </div>
-      <div class="stat-card c-purple">
+      <div class="stat-card c-purple" data-role-access="admin,admin_subag,ketua,sekretaris">
         <div class="stat-icon-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke="#6B46C1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         </div>
@@ -68,7 +68,7 @@
           <div class="stat-delta">semua kategori</div>
         </div>
       </div>
-      <div class="stat-card c-teal" onclick="location.href='pages/disposisi.html'">
+      <div class="stat-card c-teal" data-role-access="admin,admin_subag,ketua,sekretaris" onclick="location.href='pages/disposisi.html'">
         <div class="stat-icon-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke="#2C7A7B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
         </div>
@@ -78,7 +78,7 @@
           <div class="stat-delta">sudah ditindaklanjuti</div>
         </div>
       </div>
-      <div class="stat-card c-yellow">
+      <div class="stat-card c-yellow" data-role-access="admin,admin_subag,ketua,sekretaris">
         <div class="stat-icon-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke="#975A16" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         </div>
@@ -170,7 +170,8 @@
           </div>
           <select class="filter-select" id="filterJenis" onchange="applyFilter()">
             <option value="">Semua Jenis</option>
-            <option>Surat Masuk Ketua</option>
+            <!-- Options akan di-populate berdasarkan role -->
+          </select>
             <option>Surat Masuk Sekretaris</option>
             <option>Surat Keluar Ketua</option>
             <option>Surat Keluar Sekretaris</option>
@@ -262,38 +263,87 @@ const COLORS={smk:'#2B6CB0',sms:'#DD6B20',skk:'#2F855A',sks:'#E53E3E'};
 
 document.addEventListener('DOMContentLoaded', async () => {
   initLayout('dashboard','Dashboard',CONFIG.INSTANSI);
+  
+  // Hide stat cards berdasarkan role
+  const userRole = typeof RBAC !== 'undefined' ? RBAC.getCurrentRole() : null;
+  document.querySelectorAll('.stat-card[data-role-access]').forEach(card => {
+    const allowedRoles = card.getAttribute('data-role-access').split(',');
+    if (userRole && !allowedRoles.includes(userRole)) {
+      card.style.display = 'none';
+    }
+  });
+  
+  // Populate dropdown Jenis Surat berdasarkan role
+  const jenisSelect = document.getElementById('filterJenis');
+  if (userRole === 'ketua') {
+    jenisSelect.innerHTML = `
+      <option value="">Semua Jenis</option>
+      <option>Surat Masuk Ketua</option>
+      <option>Surat Keluar Ketua</option>
+    `;
+  } else if (userRole === 'sekretaris') {
+    jenisSelect.innerHTML = `
+      <option value="">Semua Jenis</option>
+      <option>Surat Masuk Sekretaris</option>
+      <option>Surat Keluar Sekretaris</option>
+    `;
+  } else {
+    // Admin dan Admin Subag
+    jenisSelect.innerHTML = `
+      <option value="">Semua Jenis</option>
+      <option>Surat Masuk Ketua</option>
+      <option>Surat Masuk Sekretaris</option>
+      <option>Surat Keluar Ketua</option>
+      <option>Surat Keluar Sekretaris</option>
+    `;
+  }
+  
   Utils.showLoading('Memuat data dari Google Sheets...');
   try {
     const {smk,sms,skk,sks} = await SheetsAPI.getAllData();
-    rawSMK=smk; rawSMS=sms; rawSKK=skk; rawSKS=sks;
+    
+    // Filter data berdasarkan role
+    let dataSMK = smk, dataSMS = sms, dataSKK = skk, dataSKS = sks;
+    
+    if (userRole === 'ketua') {
+      // Ketua hanya lihat surat ketua
+      dataSMS = [];
+      dataSKS = [];
+    } else if (userRole === 'sekretaris') {
+      // Sekretaris hanya lihat surat sekretaris
+      dataSMK = [];
+      dataSKK = [];
+    }
+    
+    rawSMK=dataSMK; rawSMS=dataSMS; rawSKK=dataSKK; rawSKS=dataSKS;
 
     const tag=(arr,j)=>arr.map(r=>({...r,_jenis:j}));
-    allData=[...tag(smk,'Surat Masuk Ketua'),...tag(sms,'Surat Masuk Sekretaris'),
-             ...tag(skk,'Surat Keluar Ketua'),...tag(sks,'Surat Keluar Sekretaris')]
+    allData=[...tag(dataSMK,'Surat Masuk Ketua'),...tag(dataSMS,'Surat Masuk Sekretaris'),
+             ...tag(dataSKK,'Surat Keluar Ketua'),...tag(dataSKS,'Surat Keluar Sekretaris')]
       .sort((a,b)=>new Date(b['Tanggal Surat']||b['Timestamp']||0)-new Date(a['Tanggal Surat']||a['Timestamp']||0));
     filteredData=[...allData];
 
     // Stat cards
     const now=new Date(); const m=now.getMonth(); const y=now.getFullYear();
     const thisM=arr=>arr.filter(d=>{const t=new Date(d['Tanggal Surat']||d['Timestamp']);return t.getMonth()===m&&t.getFullYear()===y;}).length;
-    document.getElementById('statSMK').textContent=smk.length;
-    document.getElementById('statSMS').textContent=sms.length;
-    document.getElementById('statSKK').textContent=skk.length;
-    document.getElementById('statSKS').textContent=sks.length;
+    document.getElementById('statSMK').textContent=dataSMK.length;
+    document.getElementById('statSMS').textContent=dataSMS.length;
+    document.getElementById('statSKK').textContent=dataSKK.length;
+    document.getElementById('statSKS').textContent=dataSKS.length;
     document.getElementById('statTotal').textContent=allData.length;
-    document.getElementById('statDisposisi').textContent=Utils.countTerdisposisi([...smk,...sms]);
-    document.getElementById('statPerhatian').textContent=Utils.countPerluPerhatian([...smk,...sms]);
-    document.getElementById('deltaSMK').textContent=thisM(smk)+' bulan ini';
-    document.getElementById('deltaSMS').textContent=thisM(sms)+' bulan ini';
-    document.getElementById('deltaSKK').textContent=thisM(skk)+' bulan ini';
-    document.getElementById('deltaSKS').textContent=thisM(sks)+' bulan ini';
+    document.getElementById('statDisposisi').textContent=Utils.countTerdisposisi([...dataSMK,...dataSMS]);
+    document.getElementById('statPerhatian').textContent=Utils.countPerluPerhatian([...dataSMK,...dataSMS]);
+    document.getElementById('deltaSMK').textContent=thisM(dataSMK)+' bulan ini';
+    document.getElementById('deltaSMS').textContent=thisM(dataSMS)+' bulan ini';
+    document.getElementById('deltaSKK').textContent=thisM(dataSKK)+' bulan ini';
+    document.getElementById('deltaSKS').textContent=thisM(dataSKS)+' bulan ini';
 
     renderTable();
     buildAllCharts();
 
     // Deteksi surat baru & urgent
-    Notif.detectNewSurat(smk,sms,skk,sks);
-    Notif.detectUrgent(smk,sms);
+    Notif.detectNewSurat(dataSMK,dataSMS,dataSKK,dataSKS);
+    Notif.detectUrgent(dataSMK,dataSMS);
     Notif.updateBadge();
     ActivityLog.add('Membuka Dashboard','view',`Total ${allData.length} surat dimuat`);
 
