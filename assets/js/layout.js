@@ -52,8 +52,13 @@ function renderSidebar(activeId) {
   const user = JSON.parse(localStorage.getItem('kpu_user') || '{}');
   const initials = (user.name || 'A').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
 
+  // Filter menu berdasarkan role
+  const filteredItems = typeof RBAC !== 'undefined' 
+    ? RBAC.filterMenuItems(NAV_ITEMS)
+    : NAV_ITEMS;
+
   let navHtml = '';
-  NAV_ITEMS.forEach(item => {
+  filteredItems.forEach(item => {
     if (item.section) {
       navHtml += `<span class="nav-label">${item.section}</span>`;
     }
