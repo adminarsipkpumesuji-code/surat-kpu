@@ -31,7 +31,8 @@ const RBAC = {
     'rekap': ['admin', 'admin_subag', 'ketua', 'sekretaris'],
     'search': ['admin', 'admin_subag', 'ketua', 'sekretaris'],
     
-    // Settings - hanya Admin
+    // Input & Settings - hanya Admin dan Admin Subag
+    'tambah': ['admin', 'admin_subag'],
     'settings': ['admin']
   },
   
@@ -145,7 +146,8 @@ if (typeof window !== 'undefined' && !window.location.pathname.includes('login.h
     else if (path.includes('surat-masuk-sekretaris')) pageId = 'sms';
     else if (path.includes('surat-keluar-ketua')) pageId = 'skk';
     else if (path.includes('surat-keluar-sekretaris')) pageId = 'sks';
-    else if (path.includes('print-disposisi')) pageId = 'print';
+    else if (path.includes('tambah-surat')) pageId = 'tambah';
+    else if (path.includes('print-disposisi') || path.includes('disposisi')) pageId = 'print';
     else if (path.includes('statistik')) pageId = 'statistik';
     else if (path.includes('settings')) pageId = 'settings';
     else if (path.includes('rekap')) pageId = 'rekap';

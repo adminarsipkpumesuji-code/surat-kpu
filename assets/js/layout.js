@@ -82,13 +82,13 @@ function renderSidebar(activeId) {
     </a>
     <nav class="sidebar-nav">${navHtml}</nav>
     <div class="sidebar-footer">
-      <a class="sidebar-user" href="${_resolvePath('pages/settings.html')}">
+      <div class="sidebar-user">
         <div class="sidebar-avatar">${initials}</div>
         <div class="sidebar-user-info">
           <div class="sidebar-user-name">${user.name || 'Administrator'}</div>
           <div class="sidebar-user-role">${user.role || 'admin'}</div>
         </div>
-      </a>
+      </div>
     </div>`;
 }
 
@@ -96,6 +96,11 @@ function renderTopbar(title, subtitle) {
   const now = new Date();
   const dateStr = now.toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
   const isDark  = document.documentElement.getAttribute('data-theme') === 'dark';
+  
+  // Get current user role for conditional rendering
+  const user = JSON.parse(localStorage.getItem('kpu_user') || '{}');
+  const canAccessSettings = typeof RBAC !== 'undefined' ? RBAC.hasAccess('settings') : true;
+  const canAddSurat = typeof RBAC !== 'undefined' ? RBAC.hasAccess('tambah') : true;
 
   return `
     <div class="topbar-left">
@@ -118,18 +123,20 @@ function renderTopbar(title, subtitle) {
       <button class="topbar-btn" id="darkToggle" onclick="toggleDarkMode()" title="Dark Mode">
         <span id="darkIcon">${isDark ? ICONS.sun : ICONS.moon}</span>
       </button>
-      <!-- Settings -->
+      <!-- Settings (hanya untuk admin) -->
+      ${canAccessSettings ? `
       <a href="${_resolvePath('pages/settings.html')}" class="topbar-btn" title="Pengaturan">
         ${ICONS.settings}
-      </a>
+      </a>` : ''}
       <!-- Logout -->
       <button class="topbar-btn" onclick="typeof Auth !== 'undefined' && Auth.logout()" title="Keluar">
         ${ICONS.logout}
       </button>
-      <!-- Add surat -->
+      <!-- Add surat (hanya untuk admin/admin_subag) -->
+      ${canAddSurat ? `
       <a href="${_resolvePath('pages/tambah-surat.html')}" class="btn-add">
         ${ICONS.addBtn} Input Surat
-      </a>
+      </a>` : ''}
     </div>`;
 }
 
