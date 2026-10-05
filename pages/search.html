@@ -31,10 +31,7 @@
             <label>Jenis Surat</label>
             <select id="fJenis" onchange="doSearch()">
               <option value="">Semua Jenis</option>
-              <option>Surat Masuk Ketua</option>
-              <option>Surat Masuk Sekretaris</option>
-              <option>Surat Keluar Ketua</option>
-              <option>Surat Keluar Sekretaris</option>
+              <!-- Options akan di-populate berdasarkan role -->
             </select>
           </div>
         </div>
@@ -149,13 +146,65 @@ const ROWS=20;
 
 document.addEventListener('DOMContentLoaded', async () => {
   initLayout('search','Pencarian Lanjutan',CONFIG.INSTANSI);
+  
+  // Populate dropdown Jenis Surat berdasarkan role
+  const userRole = typeof RBAC !== 'undefined' ? RBAC.getCurrentRole() : null;
+  const jenisSelect = document.getElementById('fJenis');
+  
+  if (userRole === 'ketua') {
+    jenisSelect.innerHTML = `
+      <option value="">Semua Jenis</option>
+      <option>Surat Masuk Ketua</option>
+      <option>Surat Keluar Ketua</option>
+    `;
+  } else if (userRole === 'sekretaris') {
+    jenisSelect.innerHTML = `
+      <option value="">Semua Jenis</option>
+      <option>Surat Masuk Sekretaris</option>
+      <option>Surat Keluar Sekretaris</option>
+    `;
+  } else {
+    // Admin dan Admin Subag
+    jenisSelect.innerHTML = `
+      <option value="">Semua Jenis</option>
+      <option>Surat Masuk Ketua</option>
+      <option>Surat Masuk Sekretaris</option>
+      <option>Surat Keluar Ketua</option>
+      <option>Surat Keluar Sekretaris</option>
+    `;
+  }
+  
   Utils.showLoading('Memuat semua data surat...');
   try {
     const {smk,sms,skk,sks}=await SheetsAPI.getAllData();
     const tag=(arr,j)=>arr.map(r=>({...r,_jenis:j}));
-    allData=[...tag(smk,'Surat Masuk Ketua'),...tag(sms,'Surat Masuk Sekretaris'),
-             ...tag(skk,'Surat Keluar Ketua'),...tag(sks,'Surat Keluar Sekretaris')]
-      .sort((a,b)=>new Date(b['Tanggal Surat']||0)-new Date(a['Tanggal Surat']||0));
+    
+    // Filter data berdasarkan role user
+    let dataSource = [];
+    
+    if (userRole === 'ketua') {
+      // Ketua hanya lihat surat ketua
+      dataSource = [
+        ...tag(smk,'Surat Masuk Ketua'),
+        ...tag(skk,'Surat Keluar Ketua')
+      ];
+    } else if (userRole === 'sekretaris') {
+      // Sekretaris hanya lihat surat sekretaris
+      dataSource = [
+        ...tag(sms,'Surat Masuk Sekretaris'),
+        ...tag(sks,'Surat Keluar Sekretaris')
+      ];
+    } else {
+      // Admin dan Admin Subag lihat semua
+      dataSource = [
+        ...tag(smk,'Surat Masuk Ketua'),
+        ...tag(sms,'Surat Masuk Sekretaris'),
+        ...tag(skk,'Surat Keluar Ketua'),
+        ...tag(sks,'Surat Keluar Sekretaris')
+      ];
+    }
+    
+    allData = dataSource.sort((a,b)=>new Date(b['Tanggal Surat']||0)-new Date(a['Tanggal Surat']||0));
     filteredData=[...allData];
 
     // Cek apakah ada parameter ?q= dari pencarian global topbar

@@ -25,8 +25,7 @@
       </select>
       <select class="filter-select" id="fJenis" onchange="applyFilter()">
         <option value="">Semua Jenis</option>
-        <option>Surat Masuk Ketua</option><option>Surat Masuk Sekretaris</option>
-        <option>Surat Keluar Ketua</option><option>Surat Keluar Sekretaris</option>
+        <!-- Options akan di-populate berdasarkan role -->
       </select>
       <button class="btn-icon" onclick="exportStatistikPDF()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
@@ -155,12 +154,56 @@ const COLORS=['#2B6CB0','#DD6B20','#2F855A','#E53E3E'];
 
 document.addEventListener('DOMContentLoaded', async () => {
   initLayout('statistik','Statistik',CONFIG.INSTANSI);
+  
+  // Populate dropdown Jenis Surat berdasarkan role
+  const userRole = typeof RBAC !== 'undefined' ? RBAC.getCurrentRole() : null;
+  const jenisSelect = document.getElementById('fJenis');
+  
+  if (userRole === 'ketua') {
+    jenisSelect.innerHTML = `
+      <option value="">Semua Jenis</option>
+      <option>Surat Masuk Ketua</option>
+      <option>Surat Keluar Ketua</option>
+    `;
+  } else if (userRole === 'sekretaris') {
+    jenisSelect.innerHTML = `
+      <option value="">Semua Jenis</option>
+      <option>Surat Masuk Sekretaris</option>
+      <option>Surat Keluar Sekretaris</option>
+    `;
+  } else {
+    // Admin dan Admin Subag
+    jenisSelect.innerHTML = `
+      <option value="">Semua Jenis</option>
+      <option>Surat Masuk Ketua</option>
+      <option>Surat Masuk Sekretaris</option>
+      <option>Surat Keluar Ketua</option>
+      <option>Surat Keluar Sekretaris</option>
+    `;
+  }
+  
   Utils.showLoading('Memuat data statistik...');
   try {
-    [rawSMK,rawSMS,rawSKK,rawSKS]=await Promise.all([
-      SheetsAPI.getSuratMasukKetua(),SheetsAPI.getSuratMasukSekretaris(),
-      SheetsAPI.getSuratKeluarKetua(),SheetsAPI.getSuratKeluarSekretaris()
-    ]);
+    // Load data berdasarkan role
+    if (userRole === 'ketua') {
+      [rawSMK,rawSKK]=await Promise.all([
+        SheetsAPI.getSuratMasukKetua(),
+        SheetsAPI.getSuratKeluarKetua()
+      ]);
+      rawSMS = []; rawSKS = []; // Kosongkan data sekretaris
+    } else if (userRole === 'sekretaris') {
+      [rawSMS,rawSKS]=await Promise.all([
+        SheetsAPI.getSuratMasukSekretaris(),
+        SheetsAPI.getSuratKeluarSekretaris()
+      ]);
+      rawSMK = []; rawSKK = []; // Kosongkan data ketua
+    } else {
+      // Admin dan Admin Subag load semua
+      [rawSMK,rawSMS,rawSKK,rawSKS]=await Promise.all([
+        SheetsAPI.getSuratMasukKetua(),SheetsAPI.getSuratMasukSekretaris(),
+        SheetsAPI.getSuratKeluarKetua(),SheetsAPI.getSuratKeluarSekretaris()
+      ]);
+    }
     applyFilter();
     ActivityLog.add('Membuka Statistik','view');
   } catch(e){ Utils.showAlert('Gagal: '+e.message,'danger'); }

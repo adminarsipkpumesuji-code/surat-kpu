@@ -136,10 +136,28 @@ document.addEventListener('DOMContentLoaded', async () => {
   initLayout('rekap','Rekapitulasi',CONFIG.INSTANSI);
   Utils.showLoading();
   try {
-    [allSMK,allSMS,allSKK,allSKS]=await Promise.all([
-      SheetsAPI.getSuratMasukKetua(),SheetsAPI.getSuratMasukSekretaris(),
-      SheetsAPI.getSuratKeluarKetua(),SheetsAPI.getSuratKeluarSekretaris()
-    ]);
+    // Load data berdasarkan role
+    const userRole = typeof RBAC !== 'undefined' ? RBAC.getCurrentRole() : null;
+    
+    if (userRole === 'ketua') {
+      [allSMK,allSKK]=await Promise.all([
+        SheetsAPI.getSuratMasukKetua(),
+        SheetsAPI.getSuratKeluarKetua()
+      ]);
+      allSMS = []; allSKS = []; // Kosongkan data sekretaris
+    } else if (userRole === 'sekretaris') {
+      [allSMS,allSKS]=await Promise.all([
+        SheetsAPI.getSuratMasukSekretaris(),
+        SheetsAPI.getSuratKeluarSekretaris()
+      ]);
+      allSMK = []; allSKK = []; // Kosongkan data ketua
+    } else {
+      // Admin dan Admin Subag load semua
+      [allSMK,allSMS,allSKK,allSKS]=await Promise.all([
+        SheetsAPI.getSuratMasukKetua(),SheetsAPI.getSuratMasukSekretaris(),
+        SheetsAPI.getSuratKeluarKetua(),SheetsAPI.getSuratKeluarSekretaris()
+      ]);
+    }
     applyFilter();
   } catch(e){ Utils.showAlert('Gagal: '+e.message,'danger'); }
   Utils.hideLoading();
