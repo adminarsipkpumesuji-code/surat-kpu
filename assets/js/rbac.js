@@ -6,33 +6,33 @@ const RBAC = {
   
   // Role definitions
   ROLES: {
-    ADMIN: 'Admin',
-    ADMIN_SUBAG: 'Admin Subag',
-    KETUA: 'Ketua',
-    SEKRETARIS: 'Sekretaris'
+    ADMIN: 'admin',
+    ADMIN_SUBAG: 'admin_subag',
+    KETUA: 'ketua',
+    SEKRETARIS: 'sekretaris'
   },
   
   // Menu access rules
   ACCESS_RULES: {
     // Dashboard - semua bisa akses
-    'dashboard': ['Admin', 'Admin Subag', 'Ketua', 'Sekretaris'],
+    'dashboard': ['admin', 'admin_subag', 'ketua', 'sekretaris'],
     
     // Surat Masuk
-    'smk': ['Admin', 'Admin Subag', 'Ketua'],
-    'sms': ['Admin', 'Admin Subag', 'Sekretaris'],
+    'smk': ['admin', 'admin_subag', 'ketua'],
+    'sms': ['admin', 'admin_subag', 'sekretaris'],
     
     // Surat Keluar
-    'skk': ['Admin', 'Admin Subag', 'Ketua'],
-    'sks': ['Admin', 'Admin Subag', 'Sekretaris'],
+    'skk': ['admin', 'admin_subag', 'ketua'],
+    'sks': ['admin', 'admin_subag', 'sekretaris'],
     
     // Tools
-    'print': ['Admin', 'Admin Subag', 'Ketua', 'Sekretaris'],
-    'statistik': ['Admin', 'Admin Subag', 'Ketua', 'Sekretaris'],
-    'rekap': ['Admin', 'Admin Subag', 'Ketua', 'Sekretaris'],
-    'search': ['Admin', 'Admin Subag', 'Ketua', 'Sekretaris'],
+    'print': ['admin', 'admin_subag', 'ketua', 'sekretaris'],
+    'statistik': ['admin', 'admin_subag', 'ketua', 'sekretaris'],
+    'rekap': ['admin', 'admin_subag', 'ketua', 'sekretaris'],
+    'search': ['admin', 'admin_subag', 'ketua', 'sekretaris'],
     
     // Settings - hanya Admin
-    'settings': ['Admin']
+    'settings': ['admin']
   },
   
   // Get current user
